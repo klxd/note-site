@@ -1,0 +1,56 @@
+{
+  "assetsByChunkName": {
+    "path---java-classloader": [
+      "path---java-classloader-0342926ac944edaf45fa.js",
+      "path---java-classloader-0342926ac944edaf45fa.js.map"
+    ],
+    "component---src-pages-index-js": [
+      "component---src-pages-index-js-ed0cd5829d162d1ca367.js",
+      "component---src-pages-index-js-ed0cd5829d162d1ca367.js.map"
+    ],
+    "path---": [
+      "path----557518bd178906f8d58a.js",
+      "path----557518bd178906f8d58a.js.map"
+    ],
+    "component---node-modules-gatsby-plugin-offline-app-shell-js": [
+      "component---node-modules-gatsby-plugin-offline-app-shell-js-5c4c5a0f7af9dc69d6d7.js",
+      "component---node-modules-gatsby-plugin-offline-app-shell-js-5c4c5a0f7af9dc69d6d7.js.map"
+    ],
+    "component---src-templates-blog-post-js": [
+      "component---src-templates-blog-post-js-808a9eebc9a8d20d1253.js",
+      "component---src-templates-blog-post-js-808a9eebc9a8d20d1253.js.map"
+    ],
+    "component---src-layouts-index-js": [
+      "component---src-layouts-index-js-40f7b5e9d5f5810e2818.js",
+      "component---src-layouts-index-js-40f7b5e9d5f5810e2818.js.map"
+    ],
+    "path---hi-folks": [
+      "path---hi-folks-8c219ec3776d3e0bf62b.js",
+      "path---hi-folks-8c219ec3776d3e0bf62b.js.map"
+    ],
+    "path---index": [
+      "path---index-23a07e281dcae547298f.js",
+      "path---index-23a07e281dcae547298f.js.map"
+    ],
+    "commons": [
+      "commons-f1873a4f7ee992bae8f1.js",
+      "build-js-styles.css",
+      "commons-f1873a4f7ee992bae8f1.js.map",
+      "build-js-styles.css.map"
+    ],
+    "path---offline-plugin-app-shell-fallback": [
+      "path---offline-plugin-app-shell-fallback-a0e39f21c11f6a62c5ab.js",
+      "path---offline-plugin-app-shell-fallback-a0e39f21c11f6a62c5ab.js.map"
+    ],
+    "app": [
+      "app-f2e500313d50dccf2c90.js",
+      "build-js-styles.css",
+      "app-f2e500313d50dccf2c90.js.map",
+      "build-js-styles.css.map"
+    ],
+    "path---markdown-learning": [
+      "path---markdown-learning-567794daa744b5543cc5.js",
+      "path---markdown-learning-567794daa744b5543cc5.js.map"
+    ]
+  }
+}
