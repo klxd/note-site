@@ -12,7 +12,7 @@ class BlogIndex extends React.Component {
     const posts = get(this, "props.data.allMarkdownRemark.edges");
     return (
       <div>
-        <Helmet title={get(this, "props.data.site.siteMetadata.title")} />
+        <Helmet title={siteTitle} />
         <Bio />
         {
           posts.map((post, index) => {
@@ -51,7 +51,7 @@ BlogIndex.propTypes = {
 };
 
 export default BlogIndex
-
+// use when building
 export const pageQuery = graphql`
   query IndexQuery {
     site {
