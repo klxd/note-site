@@ -1,11 +1,8 @@
 {
-  "name": "gatsby-starter-blog",
-  "description": "Starter Gatsby Blog",
-  "version": "1.0.0",
-  "author": "Kyle Mathews <mathews.kyle@gmail.com>",
-  "bugs": {
-    "url": "https://github.com/gatsbyjs/gatsby-starter-blog/issues"
-  },
+  "name": "stone-note",
+  "description": "Note Website",
+  "version": "0.0.1",
+  "author": "Stone Peng",
   "dependencies": {
     "gatsby": "^1.8.12",
     "gatsby-link": "^1.6.8",
@@ -34,22 +31,23 @@
     "gh-pages": "^0.12.0",
     "prettier": "^1.5.3"
   },
-  "homepage": "https://klxd.github.io/stone-app",
+  "homepage": "https://klxd.github.io/note-site",
   "keywords": [
-    "blog", "note"
+    "blog",
+    "note"
   ],
   "license": "MIT",
   "main": "n/a",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gatsbyjs/gatsby-starter-blog.git"
+    "url": "git+https://github.com/klxd/note-site.git"
   },
   "scripts": {
-    "dev": "gatsby develop",
+    "dev": "node $NODE_DEBUG_OPTION ./node_modules/.bin/gatsby develop",
     "lint": "./node_modules/.bin/eslint --ext .js,.jsx --ignore-pattern public .",
     "test": "echo \"Error: no test specified\" && exit 1",
     "format": "prettier --trailing-comma es5 --no-semi --single-quote --write 'src/**/*.js'",
-    "develop": "gatsby  $NODE_DEBUG_OPTION develop",
+    "develop": "gatsby develop",
     "build": "gatsby build",
     "deploy": "gatsby build --prefix-paths && gh-pages -d public",
     "fix-semi": "eslint --quiet --ignore-pattern node_modules --ignore-pattern public --parser babel-eslint --no-eslintrc --rule '{\"semi\": [2, \"never\"], \"no-extra-semi\": [2]}' --fix gatsby-node.js"

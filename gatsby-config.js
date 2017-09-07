@@ -1,7 +1,7 @@
 module.exports = {
-  pathPrefix: `/stone-app`,
+  pathPrefix: `/note-site`,
   siteMetadata: {
-    title: "Stone Blog",
+    title: "Note Site",
     author: "stone",
   },
   plugins: [

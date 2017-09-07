@@ -6,7 +6,7 @@ import {rhythm, scale} from '../utils/typography'
 class Template extends React.Component {
   render() {
     const {location, children} = this.props;
-    let headerText = 'Stone Blog';
+    let headerText = 'Note Site';
     let header;
     if (location.pathname === '/') {
       header = (
