@@ -2,10 +2,39 @@
 title: Markdown Learning
 date: "2017-09-05T22:22:32.169Z"
 path:  "/markdown-learning"
+tags:
+   - remark
+   - markdown
 ---
 
-## Title
-> ### Title
+## 标题
+```markdown
+# H1
+## H2
+### H3
+#### H4
+##### H5
+###### H6
+
+Alt-H1
+===
+
+Alt-H2
+---
+
+```
+# H1
+## H2
+### H3
+#### H4
+##### H5
+###### H6
+
+Alt-H1
+===
+
+Alt-H2
+---
 
 ###代码区块###
 #### 标记方法
@@ -48,6 +77,8 @@ ___
 - ~~删除线~~　使用两个连续波浪线标记，被包围的字词会被转化成用`<del>`包围
 
 
+
+
 ### 列表
 - 无有序列表 使用`-`,`+`或`-`
    - 子列表 前面加三个空格
@@ -60,11 +91,77 @@ ___
 
   对齐list1
 
-不对齐,需要与列表项对齐的段落,前面上有一个空行,再用前导空格决定与哪一列对齐
+不对齐  
+
+- 需要与列表项对齐的段落,前面上有一个空行,再用前导空格决定与哪一列对齐
+
+
+## 链接
+```markdown
+[行内链接](https://example.com)  
+[行内链接(带标题)](https://example.com "示例标题")  
+[索引链接][link to Github]  
+[索引链接(数字索引)][1]  
+[文件链接](../common.js)  
+[缺省链接]
+
+URL文本或带尖号的URL会自动转化成链接，比如https://github.com 或者是
+<http://www.example.com> 
+
+[link to github]: https://github.com
+[1]: https://apple.com
+[缺省链接]: https://abc.com
+```
+[行内链接](https://example.com)  
+[行内链接(带标题)](https://example.com "示例标题")  
+[索引链接][link to Github]  
+[索引链接(数字索引)][1]  
+[文件链接](../common.js)  
+[缺省链接]
+
+URL文本或带尖号的URL会自动转化成链接，比如https://github.com 或者是
+<http://www.example.com> 
+
+[link to github]: https://github.com
+[1]: https://apple.com
+[缺省链接]: https://abc.com
+
+
+## 图片
+```markdown
+图片语法:
+
+行内图片:
+![加载中](https://assets-cdn.github.com/images/spinners/octocat-spinner-32.gif "Logo Title Text 1")
+
+索引图片:
+![头像][logo]
+
+[logo]: https://avatars3.githubusercontent.com/u/16486957?v=4&s=40 "Logo Title Text 2"
+```
+
+图片语法:
+
+行内图片:
+![加载中](https://assets-cdn.github.com/images/spinners/octocat-spinner-32.gif "Logo Title Text 1")
+
+索引图片:
+![头像][logo]
+
+[logo]: https://avatars3.githubusercontent.com/u/16486957?v=4&s=40 "Logo Title Text 2"
+
+
+## 表格
+markdown默认不支持表格
+
+| header | column1 | column2 |
+|-------:|:-------| :-------|
+| row 1  | data1-1 | data1-2 |
+| row 2  | data2-1 | data2-2 |
 
 ###语法高亮实现方法
 
-代码被分割成多个字段(token)
+>代码被分割成多个字段(token)
 - keyword
 - punctuation
 - boolean
