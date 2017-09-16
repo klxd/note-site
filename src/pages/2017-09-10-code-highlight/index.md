@@ -20,17 +20,18 @@ tags:
 - 区块中 *`&` `<` `>`*会自动转成html实体 
 - 区块中各种markdown语法无效
 
-```javascript{1-2,22}
-// long comment...long comment...long comment...long comment... 
+```javascript{1-2}
+// long comment... long comment... long comment... long comment... long comment... 
 var func = function() {
     return false;
 }
+console.log('Hello Javascript');
 ```
 
 ```java
 public void test(String[] args) {
     System.out.println("Java Hello World");
-} 
+}
 ```
 
 ```python
@@ -39,6 +40,7 @@ print s
 ```
 
 ```bash
+echo hello_bash
 pwd 
 cd ./sub_folder
 ```

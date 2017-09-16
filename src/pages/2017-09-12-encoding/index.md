@@ -1,7 +1,7 @@
 ---
 title: Encoding
 date: "2017-09-12T22:22:22.169Z"
-path:  "/markdown-learning"
+path:  "/encoding"
 tags:
    - encoding
    - java

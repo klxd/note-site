@@ -1,1 +1,1 @@
-## GitHub Pages [Stone Site](https://klxd.github.io/stone-app)
+## GitHub Pages [Stone Site](https://klxd.github.io/note-site/)
