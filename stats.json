@@ -16,21 +16,25 @@
       "component---node-modules-gatsby-plugin-offline-app-shell-js-5c4c5a0f7af9dc69d6d7.js",
       "component---node-modules-gatsby-plugin-offline-app-shell-js-5c4c5a0f7af9dc69d6d7.js.map"
     ],
+    "path---encoding": [
+      "path---encoding-55289a6d67b0e7376150.js",
+      "path---encoding-55289a6d67b0e7376150.js.map"
+    ],
     "component---src-templates-blog-post-js": [
       "component---src-templates-blog-post-js-3a930dd409039c75d62a.js",
       "component---src-templates-blog-post-js-3a930dd409039c75d62a.js.map"
     ],
     "component---src-layouts-index-js": [
-      "component---src-layouts-index-js-2ae4666d5c7d072c8db6.js",
-      "component---src-layouts-index-js-2ae4666d5c7d072c8db6.js.map"
+      "component---src-layouts-index-js-59b591e7b925434bca13.js",
+      "component---src-layouts-index-js-59b591e7b925434bca13.js.map"
     ],
     "path---hi-folks": [
       "path---hi-folks-bf1993534d04f98f9e73.js",
       "path---hi-folks-bf1993534d04f98f9e73.js.map"
     ],
     "path---index": [
-      "path---index-48431dc9ea1c21612323.js",
-      "path---index-48431dc9ea1c21612323.js.map"
+      "path---index-33a1e67681518427076f.js",
+      "path---index-33a1e67681518427076f.js.map"
     ],
     "commons": [
       "commons-f1873a4f7ee992bae8f1.js",
@@ -43,14 +47,18 @@
       "path---offline-plugin-app-shell-fallback-a0e39f21c11f6a62c5ab.js.map"
     ],
     "app": [
-      "app-7e841f11e56e7cf1d0f2.js",
+      "app-b8cb8ee692155f41afd2.js",
       "build-js-styles.css",
-      "app-7e841f11e56e7cf1d0f2.js.map",
+      "app-b8cb8ee692155f41afd2.js.map",
       "build-js-styles.css.map"
     ],
+    "path---code-highlight": [
+      "path---code-highlight-669c7de2200a552e0d67.js",
+      "path---code-highlight-669c7de2200a552e0d67.js.map"
+    ],
     "path---markdown-learning": [
-      "path---markdown-learning-e452f1c5ede8037a380e.js",
-      "path---markdown-learning-e452f1c5ede8037a380e.js.map"
+      "path---markdown-learning-6d14ead32ae8f78bd17b.js",
+      "path---markdown-learning-6d14ead32ae8f78bd17b.js.map"
     ]
   }
 }
