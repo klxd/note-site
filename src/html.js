@@ -11,18 +11,17 @@ if (process.env.NODE_ENV === `production`) {
 
 module.exports = class HTML extends React.Component {
   render() {
-    let css
-    if (process.env.NODE_ENV === `production`) {
-      css = (
+    let css = process.env.NODE_ENV === `production` ? (
         <style
           id="gatsby-inlined-css"
-          dangerouslySetInnerHTML={{ __html: stylesStr }}
+          dangerouslySetInnerHTML={{__html: stylesStr}}
         />
-      )
-    }
+      ) : null;
+
     return (
       <html>
         <head>
+          <link rel="shortcut icon" href="/static/favicon.ico"/>
           <meta charSet="utf-8" />
           <meta httpEquiv="x-ua-compatible" content="ie=edge" />
           <meta
@@ -44,4 +43,4 @@ module.exports = class HTML extends React.Component {
       </html>
     )
   }
-}
+};

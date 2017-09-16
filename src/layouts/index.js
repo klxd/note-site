@@ -1,35 +1,24 @@
 import React from 'react'
 import Link from 'gatsby-link'
 import {Container} from 'react-responsive-grid'
-import {rhythm, scale} from '../utils/typography'
 
 require('../css/prism.css');
+require('../css/entry.css');
 
 class Template extends React.Component {
   render() {
     const {location, children} = this.props;
     let headerText = 'Note Site';
-    /**
-     * {...scale(1.5), marginBottom: rhythm(1.5), marginTop: 0,}
-     : {fontFamily: 'Montserrat, sans-serif', marginTop: 0, marginBottom: rhythm(-1),}
-     */
-
+    let isMainPage = location.pathname === '/' || location.pathname === '/note-site/';
     let header = (
-      <h1 style={location.pathname === '/' ?
-        {fontSize: '40px', marginTop: 0} :
-        {fontSize: '20px', marginTop: 0}}>
+      <h1 style={isMainPage ? {fontSize: '40px'} : {fontSize: '20px'}}>
         <Link style={{boxShadow: 'none', textDecoration: 'none', color: 'inherit',}} to={'/'}>
           {headerText}
         </Link>
       </h1>
     );
     return (
-      <Container
-        style={{
-          maxWidth: '36rem',
-          padding: '2rem 1.6rem',
-        }}
-      >
+      <Container style={{maxWidth: '36rem', padding: '2rem 1.6rem',}}>
         {header}
         {children()}
       </Container>
