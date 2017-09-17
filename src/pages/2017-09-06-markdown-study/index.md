@@ -152,6 +152,12 @@ URL文本或带尖号的URL会自动转化成链接，比如https://github.com �
 <a name="表格"></a>
 ## 表格
 markdown默认不支持表格
+```markdown
+| header | column1 | column2 |
+|-------:|:-------| :-------|
+| row 1  | data1-1 | data1-2 |
+| row 2  | data2-1 | data2-2 |
+```
 
 | header | column1 | column2 |
 |-------:|:-------| :-------|

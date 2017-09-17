@@ -1,13 +1,21 @@
 import React from "react"
 
+const packageJosn = require('../package.json');
+const homePageUrl = packageJosn.homepage;
+
+let faviconUrl = '/';
 let stylesStr
 if (process.env.NODE_ENV === `production`) {
   try {
     stylesStr = require(`!raw-loader!../public/styles.css`)
+    faviconUrl = homePageUrl + faviconUrl;
   } catch (e) {
     console.log(e)
   }
 }
+
+
+
 
 module.exports = class HTML extends React.Component {
   render() {
@@ -21,7 +29,7 @@ module.exports = class HTML extends React.Component {
     return (
       <html>
         <head>
-          <link rel="shortcut icon" href="/static/favicon.ico"/>
+          <link rel="shortcut icon" href={faviconUrl + 'favicon.ico'}/>
           <meta charSet="utf-8" />
           <meta httpEquiv="x-ua-compatible" content="ie=edge" />
           <meta
