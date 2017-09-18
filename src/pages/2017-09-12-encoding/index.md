@@ -7,15 +7,41 @@ tags:
    - java
 ---
 
+
+## ASCII
+American Standard Code for Information Interchange，美国信息互换标准代码）
+最常见的英文编码，标准的ASCII码表是128个字符,
+范围是0x00~0x7F (0000 0000 ~ 0111 1111),
+扩展的ASCII字符把最高位也用上了,即共有256个字符。
+
+## ISO 8859-1:1998
+又称`Latin-1`或`西欧语言`
+以ASCII为基础
+
+## UCS
+由ISO（国际标谁化组织）提出,全名Universal Coded Character Set，简称`UCS`。
+
+
+
 ## Unicode
+也叫`unicode`.
 Unicode是计算机科学领域里的一项业界标准,包括字符集、编码方案等。
 Unicode 是为了解决传统的字符编码方案的局限而产生的，它为每种语言中
 的每个字符设定了统一并且唯一的二进制编码，以满足跨语言、跨平台进行
 文本转换、处理的要求。[Unicode Standard](http://www.unicode.org/standard/standard.html)
 中详叙了相关信息。
+原始的unicode编码有以下问题
+> 1. **无法兼容ASCII**如何才能区别unicode和ascii？计算机怎么知道三个字节表示一个符号，而不是分别表示三个符号呢？
+> 2. **浪费存储空间**英文字母只用一个字节表示就够了，如果unicode统一规定，每个符号用三个或四个字节表示，
+> 那么每个英文字母前都必然有二到三个字节是0，这对于存储空间来说是极大的浪费，文本文件的大小会因此大出二三倍，这是难以接受的
+
+
+
 
 ## UTF-8
-UTF-8字符集是Unicode编码的一种，收录于[RFC 2279](https://www.ietf.org/rfc/rfc2279.txt)
+unicode在很长一段时间内无法推广，直到互联网的出现，为解决unicode如何在网络上传输的问题，于是面向传输的众多 UTF（UCS Transfer Format）
+标准出现了，顾名思义，UTF-8就是每次8个位传输数据。
+UTF-8就是在互联网上使用最广的一种unicode的实现方式，收录于[RFC 2279](https://www.ietf.org/rfc/rfc2279.txt)
 中。UTF-8是一种变长编码，对于不同的字符范围使用不同长度的编码。如下表
 
 | UCS-4 range (hex.)   | UTF-8 octet sequence (binary) |
@@ -39,3 +65,5 @@ Unicode编码中特有的一个概念, 表明了文件编码是`大端字节序`
 `FFFE` little endian
 
 在utf-8编码中,BOM只是用于标记这个文件是utf-8格式,并没有声明字节序的作用
+
+[java charset blog](http://lukejin.iteye.com/blog/586088)
