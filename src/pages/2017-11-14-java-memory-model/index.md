@@ -119,3 +119,5 @@ public class Resource {
     }
 }
 ```
+
+[极客学院 内存模型](http://wiki.jikexueyuan.com/project/java-concurrent/java-memory-model.html)
