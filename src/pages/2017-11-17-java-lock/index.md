@@ -191,3 +191,11 @@ public class ReentrantReadWriteLock
 
 
 [Lock接口方法分析](https://github.com/pzxwhc/MineKnowContainer/issues/16)
+
+
+## volatile
+
+当且仅当满足一下**所有**条件时,才应该使用volatile变量
+- 对变量的写入操作不依赖当前变量,或者能确保只有单个线程更新变量的值
+- 该变量不会与其他状态变量一起纳入不变性条件中
+- 在访问变量时不需要加锁
