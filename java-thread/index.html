@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+ <html><head><link rel="shortcut icon" href="https://klxd.github.io/note-site/favicon.ico"/><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="ie=edge"/><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/><link rel="preload" href="/note-site/component---src-layouts-index-js-1d0e8a4ddca23a0bd734.js" as="script"/><link rel="preload" href="/note-site/component---src-templates-blog-post-js-3a930dd409039c75d62a.js" as="script"/><link rel="preload" href="/note-site/path---java-thread-a5fbd4215c8070b3f310.js" as="script"/><link rel="preload" href="/note-site/app-f681dd686c0eb519dc84.js" as="script"/><link rel="preload" href="/note-site/commons-f1873a4f7ee992bae8f1.js" as="script"/><script id="webpack-manifest">
+            //<![CDATA[
+            window.webpackManifest = {"15178676390636814000":"app-f681dd686c0eb519dc84.js","6502461027731969000":"component---node-modules-gatsby-plugin-offline-app-shell-js-5c4c5a0f7af9dc69d6d7.js","7065993314207131000":"component---src-templates-blog-post-js-3a930dd409039c75d62a.js","2345137460201621000":"component---src-pages-index-js-6378d0ae7a3c12297176.js","3954140758598355500":"path----557518bd178906f8d58a.js","13784418321228782000":"path---offline-plugin-app-shell-fallback-a0e39f21c11f6a62c5ab.js","8144719420280132000":"path---hi-folks-bf1993534d04f98f9e73.js","635518864555896600":"path---java-classloader-07f26185a18246ac0648.js","16145541147963748000":"path---markdown-learning-f39e11f7b9f3abdeddb7.js","16026867243005362000":"path---code-highlight-669c7de2200a552e0d67.js","6651855161709604000":"path---encoding-45f86af5f84a06cb065b.js","2844489743973785600":"path---java-collection-framework-249fc9bde7697836913d.js","5979705947894877000":"path---java-array-list-8cc44f2ab7ab429cb90a.js","17443855456295041000":"path---java-linked-list-7e759d78089ca61b4723.js","14935930947158213000":"path---java-array-deque-1562a00b8484be828143.js","13284927628698448000":"path---sql-table-join-5f26c772f26a4c001025.js","6225238164750303000":"path---java-linked-hash-map-7c295af7a4246641bcc5.js","4982180573294444000":"path---java-priority-queue-6535ea3167c56c716000.js","4400958211773590500":"path---java-hash-table-b74c9adc09f9bf650ced.js","5276986228162747000":"path---java-tree-map-31987ccd79a3b60b2896.js","16513549679550345000":"path---java-concurrent-hash-map-2a02105c6d2a173a6671.js","11283977664076340000":"path---java-lock-a2f458b21716f297efed.js","12590616335811600000":"path---java-copy-on-write-array-list-3f2406adb622d800b436.js","11402648288945498000":"path---java-memory-model-ea7cc5f6ee6f5b6fb3ee.js","14194555530695092000":"path---java-serialization-638884f39f9f1a4243a5.js","14317612983713708000":"path---java-thread-a5fbd4215c8070b3f310.js","10420783750355646000":"path---java-thread-local-878c6ef9f57f7d95de1e.js","16820207139262534000":"path---java-thread-pool-5c3eb47545fe77e72255.js","9347362237655822000":"path---index-72e378f34badd07d97bd.js","7489246917808536000":"component---src-layouts-index-js-1d0e8a4ddca23a0bd734.js"}
+            //]]>
+            </script><title data-react-helmet="true">Java Thread | Note Site</title><style id="typography.js">html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}body{margin:0}article,aside,details,figcaption,figure,footer,header,main,menu,nav,section,summary{display:block}audio,canvas,progress,video{display:inline-block}audio:not([controls]){display:none;height:0}progress{vertical-align:baseline}[hidden],template{display:none}a{background-color:transparent;-webkit-text-decoration-skip:objects}a:active,a:hover{outline-width:0}abbr[title]{border-bottom:none;text-decoration:underline;text-decoration:underline dotted}b,strong{font-weight:inherit;font-weight:bolder}dfn{font-style:italic}h1{font-size:2em;margin:.67em 0}mark{background-color:#ff0;color:#000}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}img{border-style:none}svg:not(:root){overflow:hidden}code,kbd,pre,samp{font-family:monospace,monospace;font-size:1em}figure{margin:1em 40px}hr{box-sizing:content-box;height:0;overflow:visible}button,input,optgroup,select,textarea{font:inherit;margin:0}optgroup{font-weight:700}button,input{overflow:visible}button,select{text-transform:none}[type=reset],[type=submit],button,html [type=button]{-webkit-appearance:button}[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner,button::-moz-focus-inner{border-style:none;padding:0}[type=button]:-moz-focusring,[type=reset]:-moz-focusring,[type=submit]:-moz-focusring,button:-moz-focusring{outline:1px dotted ButtonText}fieldset{border:1px solid silver;margin:0 2px;padding:.35em .625em .75em}legend{box-sizing:border-box;color:inherit;display:table;max-width:100%;padding:0;white-space:normal}textarea{overflow:auto}[type=checkbox],[type=radio]{box-sizing:border-box;padding:0}[type=number]::-webkit-inner-spin-button,[type=number]::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}[type=search]::-webkit-search-cancel-button,[type=search]::-webkit-search-decoration{-webkit-appearance:none}::-webkit-input-placeholder{color:inherit;opacity:.54}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}html{font:100%/1.45em 'georgia','serif';box-sizing:border-box;overflow-y:scroll;}*{box-sizing:inherit;}*:before{box-sizing:inherit;}*:after{box-sizing:inherit;}body{color:hsla(0,0%,0%,0.8);font-family:'georgia','serif';font-weight:normal;word-wrap:break-word;font-kerning:normal;-moz-font-feature-settings:"kern", "liga", "clig", "calt";-ms-font-feature-settings:"kern", "liga", "clig", "calt";-webkit-font-feature-settings:"kern", "liga", "clig", "calt";font-feature-settings:"kern", "liga", "clig", "calt";}img{max-width:100%;margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.45rem;}h1{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.45rem;color:inherit;font-family:'-apple-system','BlinkMacSystemFont','Segoe UI','Roboto','Oxygen','Ubuntu','Cantarell','Fira Sans','Droid Sans','Helvetica Neue','sans-serif';font-weight:bold;text-rendering:optimizeLegibility;font-size:2rem;line-height:1.1;}h2{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.45rem;color:inherit;font-family:'-apple-system','BlinkMacSystemFont','Segoe UI','Roboto','Oxygen','Ubuntu','Cantarell','Fira Sans','Droid Sans','Helvetica Neue','sans-serif';font-weight:bold;text-rendering:optimizeLegibility;font-size:1.51572rem;line-height:1.1;}h3{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.45rem;color:inherit;font-family:'-apple-system','BlinkMacSystemFont','Segoe UI','Roboto','Oxygen','Ubuntu','Cantarell','Fira Sans','Droid Sans','Helvetica Neue','sans-serif';font-weight:bold;text-rendering:optimizeLegibility;font-size:1.31951rem;line-height:1.1;}h4{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.45rem;color:inherit;font-family:'-apple-system','BlinkMacSystemFont','Segoe UI','Roboto','Oxygen','Ubuntu','Cantarell','Fira Sans','Droid Sans','Helvetica Neue','sans-serif';font-weight:bold;text-rendering:optimizeLegibility;font-size:1rem;line-height:1.1;}h5{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.45rem;color:inherit;font-family:'-apple-system','BlinkMacSystemFont','Segoe UI','Roboto','Oxygen','Ubuntu','Cantarell','Fira Sans','Droid Sans','Helvetica Neue','sans-serif';font-weight:bold;text-rendering:optimizeLegibility;font-size:0.87055rem;line-height:1.1;}h6{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.45rem;color:inherit;font-family:'-apple-system','BlinkMacSystemFont','Segoe UI','Roboto','Oxygen','Ubuntu','Cantarell','Fira Sans','Droid Sans','Helvetica Neue','sans-serif';font-weight:bold;text-rendering:optimizeLegibility;font-size:0.81225rem;line-height:1.1;}hgroup{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.45rem;}ul{margin-left:1.45rem;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.45rem;list-style-position:outside;list-style-image:none;}ol{margin-left:1.45rem;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.45rem;list-style-position:outside;list-style-image:none;}dl{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.45rem;}dd{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.45rem;}p{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.45rem;}figure{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.45rem;}pre{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.45rem;font-size:0.85rem;line-height:1.45rem;}table{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.45rem;font-size:1rem;line-height:1.45rem;border-collapse:collapse;width:100%;}fieldset{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.45rem;}blockquote{margin-left:1.45rem;margin-right:1.45rem;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.45rem;}form{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.45rem;}noscript{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.45rem;}iframe{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.45rem;}hr{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:calc(1.45rem - 1px);background:hsla(0,0%,0%,0.2);border:none;height:1px;}address{margin-left:0;margin-right:0;margin-top:0;padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;margin-bottom:1.45rem;}b{font-weight:bold;}strong{font-weight:bold;}dt{font-weight:bold;}th{font-weight:bold;}li{margin-bottom:calc(1.45rem / 2);}ol li{padding-left:0;}ul li{padding-left:0;}li > ol{margin-left:1.45rem;margin-bottom:calc(1.45rem / 2);margin-top:calc(1.45rem / 2);}li > ul{margin-left:1.45rem;margin-bottom:calc(1.45rem / 2);margin-top:calc(1.45rem / 2);}blockquote *:last-child{margin-bottom:0;}li *:last-child{margin-bottom:0;}p *:last-child{margin-bottom:0;}li > p{margin-bottom:calc(1.45rem / 2);}code{font-size:0.85rem;line-height:1.45rem;}kbd{font-size:0.85rem;line-height:1.45rem;}samp{font-size:0.85rem;line-height:1.45rem;}abbr{border-bottom:1px dotted hsla(0,0%,0%,0.5);cursor:help;}acronym{border-bottom:1px dotted hsla(0,0%,0%,0.5);cursor:help;}abbr[title]{border-bottom:1px dotted hsla(0,0%,0%,0.5);cursor:help;text-decoration:none;}thead{text-align:left;}td,th{text-align:left;border-bottom:1px solid hsla(0,0%,0%,0.12);font-feature-settings:"tnum";-moz-font-feature-settings:"tnum";-ms-font-feature-settings:"tnum";-webkit-font-feature-settings:"tnum";padding-left:0.96667rem;padding-right:0.96667rem;padding-top:0.725rem;padding-bottom:calc(0.725rem - 1px);}th:first-child,td:first-child{padding-left:0;}th:last-child,td:last-child{padding-right:0;}</style><script>
+  !function(e,t,r){function n(){for(;d[0]&&"loaded"==d[0][f];)c=d.shift(),c[o]=!i.parentNode.insertBefore(c,i)}for(var s,a,c,d=[],i=e.scripts[0],o="onreadystatechange",f="readyState";s=r.shift();)a=e.createElement(t),"async"in i?(a.async=!1,e.head.appendChild(a)):i[f]?(d.push(a),a[o]=n):e.write("<"+t+' src="'+s+'" defer></'+t+">"),a.src=s}(document,"script",[
+  "/note-site/commons-f1873a4f7ee992bae8f1.js","/note-site/app-f681dd686c0eb519dc84.js","/note-site/path---java-thread-a5fbd4215c8070b3f310.js","/note-site/component---src-templates-blog-post-js-3a930dd409039c75d62a.js","/note-site/component---src-layouts-index-js-1d0e8a4ddca23a0bd734.js"
+])
+  </script><style id="gatsby-inlined-css">@font-face{font-family:Montserrat;font-style:normal;font-display:swap;font-weight:100;src:local("Montserrat Thin "),local("Montserrat-Thin"),url(/note-site/static/montserrat-latin-100.50d27986.woff2) format("woff2"),url(/note-site/static/montserrat-latin-100.5e334eff.woff) format("woff")}@font-face{font-family:Montserrat;font-style:italic;font-display:swap;font-weight:100;src:local("Montserrat Thin italic"),local("Montserrat-Thinitalic"),url(/note-site/static/montserrat-latin-100italic.8c070533.woff2) format("woff2"),url(/note-site/static/montserrat-latin-100italic.03e19243.woff) format("woff")}@font-face{font-family:Montserrat;font-style:normal;font-display:swap;font-weight:200;src:local("Montserrat Extra Light "),local("Montserrat-Extra Light"),url(/note-site/static/montserrat-latin-200.4343d3d9.woff2) format("woff2"),url(/note-site/static/montserrat-latin-200.f2022ecd.woff) format("woff")}@font-face{font-family:Montserrat;font-style:italic;font-display:swap;font-weight:200;src:local("Montserrat Extra Light italic"),local("Montserrat-Extra Lightitalic"),url(/note-site/static/montserrat-latin-200italic.116c4c4b.woff2) format("woff2"),url(/note-site/static/montserrat-latin-200italic.89614a60.woff) format("woff")}@font-face{font-family:Montserrat;font-style:normal;font-display:swap;font-weight:300;src:local("Montserrat Light "),local("Montserrat-Light"),url(/note-site/static/montserrat-latin-300.d2ad295b.woff2) format("woff2"),url(/note-site/static/montserrat-latin-300.3a371ee0.woff) format("woff")}@font-face{font-family:Montserrat;font-style:italic;font-display:swap;font-weight:300;src:local("Montserrat Light italic"),local("Montserrat-Lightitalic"),url(/note-site/static/montserrat-latin-300italic.f6b6bf24.woff2) format("woff2"),url(/note-site/static/montserrat-latin-300italic.16521668.woff) format("woff")}@font-face{font-family:Montserrat;font-style:normal;font-display:swap;font-weight:400;src:local("Montserrat Regular "),local("Montserrat-Regular"),url(/note-site/static/montserrat-latin-400.240a8444.woff2) format("woff2"),url(/note-site/static/montserrat-latin-400.b20cc131.woff) format("woff")}@font-face{font-family:Montserrat;font-style:italic;font-display:swap;font-weight:400;src:local("Montserrat Regular italic"),local("Montserrat-Regularitalic"),url(/note-site/static/montserrat-latin-400italic.86172bb8.woff2) format("woff2"),url(/note-site/static/montserrat-latin-400italic.9405e787.woff) format("woff")}@font-face{font-family:Montserrat;font-style:normal;font-display:swap;font-weight:500;src:local("Montserrat Medium "),local("Montserrat-Medium"),url(/note-site/static/montserrat-latin-500.fb8d6b71.woff2) format("woff2"),url(/note-site/static/montserrat-latin-500.50825d47.woff) format("woff")}@font-face{font-family:Montserrat;font-style:italic;font-display:swap;font-weight:500;src:local("Montserrat Medium italic"),local("Montserrat-Mediumitalic"),url(/note-site/static/montserrat-latin-500italic.c0a555a4.woff2) format("woff2"),url(/note-site/static/montserrat-latin-500italic.635de59c.woff) format("woff")}@font-face{font-family:Montserrat;font-style:normal;font-display:swap;font-weight:600;src:local("Montserrat SemiBold "),local("Montserrat-SemiBold"),url(/note-site/static/montserrat-latin-600.d5615136.woff2) format("woff2"),url(/note-site/static/montserrat-latin-600.f300da4f.woff) format("woff")}@font-face{font-family:Montserrat;font-style:italic;font-display:swap;font-weight:600;src:local("Montserrat SemiBold italic"),local("Montserrat-SemiBolditalic"),url(/note-site/static/montserrat-latin-600italic.10f29d13.woff2) format("woff2"),url(/note-site/static/montserrat-latin-600italic.2bc37d86.woff) format("woff")}@font-face{font-family:Montserrat;font-style:normal;font-display:swap;font-weight:700;src:local("Montserrat Bold "),local("Montserrat-Bold"),url(/note-site/static/montserrat-latin-700.7d77e1f0.woff2) format("woff2"),url(/note-site/static/montserrat-latin-700.81826529.woff) format("woff")}@font-face{font-family:Montserrat;font-style:italic;font-display:swap;font-weight:700;src:local("Montserrat Bold italic"),local("Montserrat-Bolditalic"),url(/note-site/static/montserrat-latin-700italic.1dd2b53f.woff2) format("woff2"),url(/note-site/static/montserrat-latin-700italic.c162d257.woff) format("woff")}@font-face{font-family:Montserrat;font-style:normal;font-display:swap;font-weight:800;src:local("Montserrat ExtraBold "),local("Montserrat-ExtraBold"),url(/note-site/static/montserrat-latin-800.d4e7bf86.woff2) format("woff2"),url(/note-site/static/montserrat-latin-800.895aadbf.woff) format("woff")}@font-face{font-family:Montserrat;font-style:italic;font-display:swap;font-weight:800;src:local("Montserrat ExtraBold italic"),local("Montserrat-ExtraBolditalic"),url(/note-site/static/montserrat-latin-800italic.fc0cbe44.woff2) format("woff2"),url(/note-site/static/montserrat-latin-800italic.b3362875.woff) format("woff")}@font-face{font-family:Montserrat;font-style:normal;font-display:swap;font-weight:900;src:local("Montserrat Black "),local("Montserrat-Black"),url(/note-site/static/montserrat-latin-900.c8bdd772.woff2) format("woff2"),url(/note-site/static/montserrat-latin-900.1b99ef78.woff) format("woff")}@font-face{font-family:Montserrat;font-style:italic;font-display:swap;font-weight:900;src:local("Montserrat Black italic"),local("Montserrat-Blackitalic"),url(/note-site/static/montserrat-latin-900italic.cb72c1f9.woff2) format("woff2"),url(/note-site/static/montserrat-latin-900italic.b78bb9f8.woff) format("woff")}@font-face{font-family:Merriweather;font-style:normal;font-display:swap;font-weight:300;src:local("Merriweather Light "),local("Merriweather-Light"),url(/note-site/static/merriweather-latin-300.a8258cd1.woff2) format("woff2"),url(/note-site/static/merriweather-latin-300.f5838312.woff) format("woff")}@font-face{font-family:Merriweather;font-style:italic;font-display:swap;font-weight:300;src:local("Merriweather Light italic"),local("Merriweather-Lightitalic"),url(/note-site/static/merriweather-latin-300italic.ff744a72.woff2) format("woff2"),url(/note-site/static/merriweather-latin-300italic.ebb3c5bd.woff) format("woff")}@font-face{font-family:Merriweather;font-style:normal;font-display:swap;font-weight:400;src:local("Merriweather Regular "),local("Merriweather-Regular"),url(/note-site/static/merriweather-latin-400.41389797.woff2) format("woff2"),url(/note-site/static/merriweather-latin-400.fc0d5525.woff) format("woff")}@font-face{font-family:Merriweather;font-style:italic;font-display:swap;font-weight:400;src:local("Merriweather Regular italic"),local("Merriweather-Regularitalic"),url(/note-site/static/merriweather-latin-400italic.e6bb2aaf.woff2) format("woff2"),url(/note-site/static/merriweather-latin-400italic.8df98251.woff) format("woff")}@font-face{font-family:Merriweather;font-style:normal;font-display:swap;font-weight:700;src:local("Merriweather Bold "),local("Merriweather-Bold"),url(/note-site/static/merriweather-latin-700.7c4720f5.woff2) format("woff2"),url(/note-site/static/merriweather-latin-700.8081d883.woff) format("woff")}@font-face{font-family:Merriweather;font-style:italic;font-display:swap;font-weight:700;src:local("Merriweather Bold italic"),local("Merriweather-Bolditalic"),url(/note-site/static/merriweather-latin-700italic.af53e7c6.woff2) format("woff2"),url(/note-site/static/merriweather-latin-700italic.c9addd1f.woff) format("woff")}@font-face{font-family:Merriweather;font-style:normal;font-display:swap;font-weight:900;src:local("Merriweather Black "),local("Merriweather-Black"),url(/note-site/static/merriweather-latin-900.b64d6d00.woff2) format("woff2"),url(/note-site/static/merriweather-latin-900.3ca953c0.woff) format("woff")}@font-face{font-family:Merriweather;font-style:italic;font-display:swap;font-weight:900;src:local("Merriweather Black italic"),local("Merriweather-Blackitalic"),url(/note-site/static/merriweather-latin-900italic.566e2de4.woff2) format("woff2"),url(/note-site/static/merriweather-latin-900italic.5156ebd3.woff) format("woff")}code[class*=language-],pre[class*=language-]{float:left;color:#f8f8f2;background:none;text-shadow:0 1px rgba(0,0,0,.3);font-family:Consolas,Monaco,Andale Mono,Ubuntu Mono,monospace;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.5;margin-bottom:0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-ms-hyphens:none;hyphens:none}:not(pre)>code[class*=language-],pre[class*=language-]{background:#272822}:not(pre)>code[class*=language-]{padding:.1em;border-radius:.3em;white-space:normal}.token.cdata,.token.comment,.token.doctype,.token.prolog{color:#708090}.token.punctuation{color:#f8f8f2}.token.constant,.token.deleted,.token.property,.token.symbol,.token.tag{color:#f92672}.token.boolean,.token.number{color:#ae81ff}.token.attr-name,.token.builtin,.token.char,.token.inserted,.token.selector,.token.string{color:#a6e22e}.language-css .token.string,.style .token.string,.token.entity,.token.operator,.token.url,.token.variable{color:#f8f8f2}.token.atrule,.token.attr-value,.token.function{color:#e6db74}.token.keyword{color:#66d9ef}.token.important,.token.regex{color:#fd971f}.token.bold,.token.important{font-weight:700}.token.important,.token.regex{color:#d88489}.language-css .token.string,.style .token.string{color:#a2466c}.token.important{font-weight:400}.token.bold{font-weight:700}.token.italic{font-style:italic}.token.entity{cursor:help}.namespace{opacity:.7}.token.cr:before,.token.lf:before,.token.tab:not(:empty):before{color:#e0d7d1}blockquote{margin:1.6rem 1.6rem 1.6rem 0;padding:0 0 0 .8rem;border-left:.4rem solid rgba(46,46,46,.1);color:rgba(46,46,46,.8);font-style:italic}.gatsby-highlight{background:#272822;border-radius:.15rem;margin-top:0;margin-bottom:1.2rem;padding:1.2rem;overflow:auto}.gatsby-highlight-code-line{background:hsla(24,20%,50%,.08);display:block;margin-left:-1.2rem;margin-right:-1.2rem;padding-right:1.2rem;padding-left:.9rem;border-left:.3rem solid #3f87a6}.gatsby-highlight::-webkit-scrollbar{width:.8rem;height:.8rem;background-color:#f5f5f5}.gatsby-highlight::-webkit-scrollbar-track{background-color:#f5f5f5}.gatsby-highlight::-webkit-scrollbar-thumb{border-radius:0 0 .25rem .25rem;background-color:#555}a{border-color:#03a9f4;color:#03a9f4}</style></head><body><div id="___gatsby"><div style="max-width:36rem;margin-left:auto;margin-right:auto;padding:2rem 1.6rem;" data-reactroot="" data-reactid="1" data-react-checksum="1367743401"><h1 style="font-size:20px;" data-reactid="2"><a style="box-shadow:none;text-decoration:none;color:inherit;" href="/note-site/" data-reactid="3">Note Site</a></h1><div data-reactid="4"><!-- react-empty: 5 --><h1 data-reactid="6">Java Thread</h1><p style="font-size:0.87055rem;line-height:1.45rem;display:block;margin-bottom:1.45rem;margin-top:-1.45rem;" data-reactid="7">November 17, 2017</p><div data-reactid="8"><h1>Thread</h1>
+<div class="gatsby-highlight">
+      <pre class="language-java"><code><span class="token comment" spellcheck="true">// java8的函数式接口</span>
+<span class="token annotation punctuation">@FunctionalInterface</span>
+<span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">Runnable</span> <span class="token punctuation">{</span>
+    <span class="token keyword">void</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">public</span>
+<span class="token keyword">class</span> <span class="token class-name">Thread</span> <span class="token keyword">implements</span> <span class="token class-name">Runnable</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// 实现了Runnable接口,又聚合了一个Runnable实例</span>
+    <span class="token keyword">private</span> Runnable target<span class="token punctuation">;</span>
+    
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>target <span class="token operator">!=</span> null<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            target<span class="token punctuation">.</span><span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+      </div>
+<p>Java中的线程在运行的生命在周期中可能处于以下6个状态之一</p>
+<ul>
+<li>new 初始状态,线程被构建,但是还没有调用start()方法</li>
+<li>runnable 运行状态,Java线程将操作系统中的<em>就绪</em>和<em>运行</em>两种状态都笼统的称作<em>运行中</em></li>
+<li>blocked 阻塞状态,表示线程阻塞于<em>锁</em></li>
+<li>waiting 等待状态,表示线程进入等待状态,进入该状态表示当前线程需要等待其他线程作出一些特定动作(<em>通知</em>或<em>中断</em>)</li>
+<li>time-waiting 超时等待状态,该状态不同于waiting,它是可以在指定时间的自行返回的(比如自己sleep一定的时间)</li>
+<li>terminated 终止状态,表示当前线程已经执行完毕</li>
+</ul>
+<p><a href="/d2d65de3a30bc6a2a17dd2aa6e8be0b4.png">thread-state</a>
+注意: 线程阻塞在进入synchronized关键字锁时的状态是<em>阻塞状态</em>,
+而阻塞在Lock接口时的状态是<em>等待状态</em>.
+</p>
+<h2>Daemon线程 (后台线程,守护线程)</h2>
+<div class="gatsby-highlight">
+      <pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Thread</span> <span class="token keyword">implements</span> <span class="token class-name">Runnable</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">/* Whether or not the thread is a daemon thread. */</span>
+    <span class="token keyword">private</span> <span class="token keyword">boolean</span> daemon <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+    
+    <span class="token keyword">public</span> <span class="token keyword">final</span> <span class="token keyword">void</span> <span class="token function">setDaemon</span><span class="token punctuation">(</span><span class="token keyword">boolean</span> on<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">checkAccess</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">isAlive</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">IllegalThreadStateException</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        daemon <span class="token operator">=</span> on<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">public</span> <span class="token keyword">final</span> <span class="token keyword">boolean</span> <span class="token function">isDaemon</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> daemon<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+      </div>
+<ul>
+<li>Daemon线程是一种支持型线程,主要用于程序中的后台调度和支持型工作</li>
+<li>不是程序中不可或缺的一部分,当所有的非Daemon线程退出的时候,JVM将会退出</li>
+<li>Daemon属性需要在启动线程之前设置</li>
+<li>Daemon线程中的finally块并不一定会执行</li>
+<li>由Daemon线程创建的任务子线程都会被自动设置成后台线程</li>
+</ul>
+<h2>init() 线程初始化</h2>
+<div class="gatsby-highlight">
+      <pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Thread</span> <span class="token keyword">implements</span> <span class="token class-name">Runnable</span> <span class="token punctuation">{</span>
+    <span class="token keyword">private</span> <span class="token keyword">void</span> <span class="token function">init</span><span class="token punctuation">(</span>ThreadGroup g<span class="token punctuation">,</span> Runnable target<span class="token punctuation">,</span> String name<span class="token punctuation">,</span>
+                      <span class="token keyword">long</span> stackSize<span class="token punctuation">,</span> AccessControlContext acc<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>name <span class="token operator">==</span> null<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">NullPointerException</span><span class="token punctuation">(</span><span class="token string">"name cannot be null"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+
+        <span class="token keyword">this</span><span class="token punctuation">.</span>name <span class="token operator">=</span> name<span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// -- 将当前线程设为新建线程的父线程</span>
+        Thread parent <span class="token operator">=</span> <span class="token function">currentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        SecurityManager security <span class="token operator">=</span> System<span class="token punctuation">.</span><span class="token function">getSecurityManager</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>g <span class="token operator">==</span> null<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token comment" spellcheck="true">/* Determine if it's an applet or not */</span>
+
+            <span class="token comment" spellcheck="true">/* If there is a security manager, ask the security manager
+               what to do. */</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>security <span class="token operator">!=</span> null<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                g <span class="token operator">=</span> security<span class="token punctuation">.</span><span class="token function">getThreadGroup</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+
+            <span class="token comment" spellcheck="true">/* If the security doesn't have a strong opinion of the matter
+               use the parent thread group. */</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>g <span class="token operator">==</span> null<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                g <span class="token operator">=</span> parent<span class="token punctuation">.</span><span class="token function">getThreadGroup</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+
+        <span class="token comment" spellcheck="true">/* checkAccess regardless of whether or not threadgroup is
+           explicitly passed in. */</span>
+        g<span class="token punctuation">.</span><span class="token function">checkAccess</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token comment" spellcheck="true">/*
+         * Do we have the required permissions?
+         */</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>security <span class="token operator">!=</span> null<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">isCCLOverridden</span><span class="token punctuation">(</span><span class="token function">getClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                security<span class="token punctuation">.</span><span class="token function">checkPermission</span><span class="token punctuation">(</span>SUBCLASS_IMPLEMENTATION_PERMISSION<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+
+        g<span class="token punctuation">.</span><span class="token function">addUnstarted</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">this</span><span class="token punctuation">.</span>group <span class="token operator">=</span> g<span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// -- 将daemon和priority属性设置为父线程对应属性</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>daemon <span class="token operator">=</span> parent<span class="token punctuation">.</span><span class="token function">isDaemon</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>priority <span class="token operator">=</span> parent<span class="token punctuation">.</span><span class="token function">getPriority</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>security <span class="token operator">==</span> null <span class="token operator">||</span> <span class="token function">isCCLOverridden</span><span class="token punctuation">(</span>parent<span class="token punctuation">.</span><span class="token function">getClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+            <span class="token keyword">this</span><span class="token punctuation">.</span>contextClassLoader <span class="token operator">=</span> parent<span class="token punctuation">.</span><span class="token function">getContextClassLoader</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">else</span>
+            <span class="token keyword">this</span><span class="token punctuation">.</span>contextClassLoader <span class="token operator">=</span> parent<span class="token punctuation">.</span>contextClassLoader<span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>inheritedAccessControlContext <span class="token operator">=</span>
+                acc <span class="token operator">!=</span> null <span class="token operator">?</span> acc <span class="token operator">:</span> AccessController<span class="token punctuation">.</span><span class="token function">getContext</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>target <span class="token operator">=</span> target<span class="token punctuation">;</span>
+        <span class="token function">setPriority</span><span class="token punctuation">(</span>priority<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// -- 将父线程的inheritableThreadLocals复制过来</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>parent<span class="token punctuation">.</span>inheritableThreadLocals <span class="token operator">!=</span> null<span class="token punctuation">)</span>
+            <span class="token keyword">this</span><span class="token punctuation">.</span>inheritableThreadLocals <span class="token operator">=</span>
+                ThreadLocal<span class="token punctuation">.</span><span class="token function">createInheritedMap</span><span class="token punctuation">(</span>parent<span class="token punctuation">.</span>inheritableThreadLocals<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">/* Stash the specified stack size in case the VM cares */</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>stackSize <span class="token operator">=</span> stackSize<span class="token punctuation">;</span>
+
+        <span class="token comment" spellcheck="true">// -- 分配线程ID</span>
+        <span class="token comment" spellcheck="true">/* Set thread ID */</span>
+        tid <span class="token operator">=</span> <span class="token function">nextThreadID</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+      </div>
+<h2>start 启动线程</h2>
+<div class="gatsby-highlight">
+      <pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">synchronized</span> <span class="token keyword">void</span> <span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">/**
+     * This method is not invoked for the main method thread or "system"
+     * group threads created/set up by the VM. Any new functionality added
+     * to this method in the future may have to also be added to the VM.
+     *
+     * A zero status value corresponds to state "NEW".
+     */</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>threadStatus <span class="token operator">!=</span> <span class="token number">0</span><span class="token punctuation">)</span>
+        <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">IllegalThreadStateException</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">/* Notify the group that this thread is about to be started
+     * so that it can be added to the group's list of threads
+     * and the group's unstarted count can be decremented. */</span>
+    group<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">boolean</span> started <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+    <span class="token keyword">try</span> <span class="token punctuation">{</span>
+        <span class="token function">start0</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        started <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">finally</span> <span class="token punctuation">{</span>
+        <span class="token keyword">try</span> <span class="token punctuation">{</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>started<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                group<span class="token punctuation">.</span><span class="token function">threadStartFailed</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Throwable</span> ignore<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token comment" spellcheck="true">/* do nothing. If start0 threw a Throwable then
+              it will be passed up the call stack */</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">private</span> <span class="token keyword">native</span> <span class="token keyword">void</span> <span class="token function">start0</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+      </div>
+<ul>
+<li>start()方法的含义: 当前线程(即parent线程)<em>同步</em>告诉虚拟机,只要线程规划器空闲,
+应立即启动调用start()方法的线程</li>
+</ul>
+<h2>中断</h2>
+<h2>等待 &#x26; 通知</h2>
+<p>问题引入: 锁(synchronized)的互斥机制同步了线程之间的行为,解决了线程之间相互干涉的问题,
+但是没有解决线程之间的协作问题(比如某些部分的工作必须在其他部分被解决之前解决).
+本质问题是如何实现:一个线程(生产者)修改了一个对象的值(完成某些工作),而让另一个线程(消费者)感知到变化.
+简单的实现方法是让消费者线程</p>
+<div class="gatsby-highlight">
+      <pre class="language-java"><code><span class="token comment" spellcheck="true">// 简单的实现: 让消费者线程不断循环检查变量是否符合预期</span>
+<span class="token keyword">synchronized</span> <span class="token punctuation">(</span>syncObject<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">while</span> <span class="token punctuation">(</span>value <span class="token operator">!=</span> desire<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        Thread<span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment" spellcheck="true">// doSomething()</span>
+<span class="token punctuation">}</span>
+</code></pre>
+      </div>
+<p>以上实现存在如下问题:</p>
+<ul>
+<li>难以确保及时性.在睡眠时,基本不消耗处理器资源,但是如果睡的太久,就不能及时对变化作出相应</li>
+<li>难以降低开销.如果降低睡眠的时间,比如休眠一毫秒,这样能迅速发现变化,但是相当于退化成空循环,
+即是<em>忙等待</em>,这通常是一种不良的CPU周期使用方式.</li>
+<li>在互斥块中,调用sleep和yield并不会释放锁,这意味着其他线程并不能获得锁并协作本线程</li>
+</ul>
+<p>以上问题能够使用Java内置的<em>等待-通知</em>机制解决,此机制的使用方法定义在基类Object上,
+相关方法如下:</p>
+<ul>
+<li>notify() 通知一个在对象上等待的线程,使其重wait()方法返回,
+而返回的前提是该线程获取到了对象的锁,调用notify不会释放锁</li>
+<li>notifyAll() 通知所有等待在该对象上的线程,调用notifyAll不会释放锁</li>
+<li>wait() 调用该方法的线程进入waiting状态,只有等待另外线程的通知或者被中断才会返回,
+需要注意的是,调用wait()方法后,会释放对象的锁</li>
+<li>wait(long) 超时等待一段时间,这里的参数时间是毫秒,也就是等待长达n毫秒,
+如果没有通知就超时返回</li>
+<li>wait(long, int) 对超时时间更细粒度的控制,可以达到纳秒</li>
+</ul>
+<p>为什么以上<em>等待-通知</em>机制的方法放在Object中?</p>
+<ul>
+<li>同步块中的锁是其所有对象的一部分,可以把wait放进任何同步控制方法里,
+而不用考虑这个类是否继承Thread或是实现了Runnable</li>
+<li>实际上,只能在同步方法或同步块中使用以上函数,而sleep可以在非同步块中使用(不用操作锁)</li>
+<li>如果在非同步块中使用以上方法,可以通过编译,但是会在运行时抛出异常</li>
+</ul>
+<p><a href="/387b6f50970ed2c9498d75ea5eb7acf9.java">例子:WaitNotify</a>
+使用细节</p>
+<ul>
+<li>使用wait,notify和notifyAll时需要先对调用对象加锁</li>
+<li>调用wait方法后,线程状态由running变为waiting,并将当前线程放到对象的等待队列</li>
+<li>notify或是notifyAll方法调用后,等待线程依旧不会从wait返回,
+需要调用notify或notifyA的线程释放了锁之后,等待线程才有机会从wait返回</li>
+<li>notify方法将等待队列的一个等待线程从等待队列移到同步队列中,
+而notifyAll方法则是将等待队列中所有线程全部移动到同步队列,
+被移动的线程状态由waiting变为blocked</li>
+<li>从wait方法返回的前提是获得了调用对象的锁</li>
+</ul>
+<p>对应的伪代码如下</p>
+<div class="gatsby-highlight">
+      <pre class="language-java"><code><span class="token comment" spellcheck="true">// waiting thread</span>
+<span class="token keyword">synchronized</span> <span class="token punctuation">(</span>syncObject<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">while</span> <span class="token punctuation">(</span>value <span class="token operator">!=</span> desire<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        syncObject<span class="token punctuation">.</span><span class="token function">wait</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment" spellcheck="true">// do something</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment" spellcheck="true">// notify thread</span>
+<span class="token keyword">synchronized</span> <span class="token punctuation">(</span>syncObject<span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// change value</span>
+    syncObject<span class="token punctuation">.</span><span class="token function">notifyAll</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+      </div>
+<h2>join</h2>
+<div class="gatsby-highlight">
+      <pre class="language-java"><code><span class="token comment" spellcheck="true">/**
+ * join方法会对线程对象本身上锁
+ * @param millis 最长等待时间
+ */</span>
+<span class="token keyword">public</span> <span class="token keyword">final</span> <span class="token keyword">synchronized</span> <span class="token keyword">void</span> <span class="token function">join</span><span class="token punctuation">(</span><span class="token keyword">long</span> millis<span class="token punctuation">)</span>
+<span class="token keyword">throws</span> InterruptedException <span class="token punctuation">{</span>
+    <span class="token keyword">long</span> base <span class="token operator">=</span> System<span class="token punctuation">.</span><span class="token function">currentTimeMillis</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">long</span> now <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>millis <span class="token operator">&lt;</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">IllegalArgumentException</span><span class="token punctuation">(</span><span class="token string">"timeout value is negative"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>millis <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token function">isAlive</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token comment" spellcheck="true">// 父类Object上的方法,参数0表示没有超时时间</span>
+            <span class="token function">wait</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+        <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token function">isAlive</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">long</span> delay <span class="token operator">=</span> millis <span class="token operator">-</span> now<span class="token punctuation">;</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>delay <span class="token operator">&lt;=</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token keyword">break</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+            <span class="token comment" spellcheck="true">// 父类Object上的方法,参数delay为超时时间</span>
+            <span class="token function">wait</span><span class="token punctuation">(</span>delay<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            now <span class="token operator">=</span> System<span class="token punctuation">.</span><span class="token function">currentTimeMillis</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-</span> base<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">public</span> <span class="token keyword">final</span> <span class="token keyword">void</span> <span class="token function">join</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> InterruptedException <span class="token punctuation">{</span>
+    <span class="token function">join</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+      </div>
+<ul>
+<li>如果一个线程a执行了b.join(),其含义是:当前线程a等待b线程终止之后才从b.join()返回</li>
+<li>join(long millis)表示:如果线程b在给定的超时时间里没有终止,那么将会从该超时方法中返回</li>
+</ul></div><hr style="margin-bottom:1.45rem;" data-reactid="9"/></div><span style="display:block;clear:both;" data-reactid="10"> </span></div></div><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'undefined', 'auto');
+  ga('send', 'pageview');
+      </script></body></html>
