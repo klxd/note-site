@@ -6,11 +6,13 @@ import get from 'lodash/get'
 import Bio from '../components/Bio'
 import { rhythm, scale } from '../utils/typography'
 
+/**
+ * this class will render all the blog MD files into html
+ */
 class BlogPostTemplate extends React.Component {
   render() {
     const post = this.props.data.markdownRemark
     const siteTitle = get(this.props, 'data.site.siteMetadata.title')
-
     return (
       <div>
         <Helmet title={`${post.frontmatter.title} | ${siteTitle}`} />
@@ -27,6 +29,9 @@ class BlogPostTemplate extends React.Component {
         >
           {post.frontmatter.date}
         </p>
+        {post.frontmatter.tags.map((tag, index) =>
+          <div key={index}>{tag}</div>
+        )}
         <div dangerouslySetInnerHTML={{ __html: post.html }} />
         <hr
           style={{
@@ -54,6 +59,7 @@ export const pageQuery = graphql`
       frontmatter {
         title
         date(formatString: "MMMM DD, YYYY")
+        tags
       }
     }
   }

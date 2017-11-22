@@ -5,6 +5,10 @@ import {Container} from 'react-responsive-grid'
 require('../css/prism.css');
 require('../css/entry.css');
 
+/**
+ * the render function of this class will run in front side,
+ * it define the header & content of each page
+ */
 class Template extends React.Component {
   render() {
     const {location, children} = this.props;
@@ -18,7 +22,7 @@ class Template extends React.Component {
       </h1>
     );
     return (
-      <Container style={{maxWidth: '36rem', padding: '2rem 1.6rem',}}>
+      <Container style={{maxWidth: '48rem', padding: '2rem 1.6rem',}}>
         {header}
         {children()}
       </Container>
