@@ -4,10 +4,8 @@ date: "2017-09-12T22:22:22.169Z"
 path:  "/java-collection-framework"
 tags:
    - java
-   - collection framework
+   - java collection framework
 ---
-
-# Java Collection Framework
 
 ## interface Queue
 ```java

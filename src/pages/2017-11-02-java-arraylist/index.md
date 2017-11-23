@@ -1,5 +1,5 @@
 ---
-title: java ArrayList
+title: Java ArrayList
 date: "2017-09-12T22:22:22.169Z"
 path:  "/java-array-list"
 tags:

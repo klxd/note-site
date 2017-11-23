@@ -4,10 +4,8 @@ date: "2017-11-10T22:22:22.169Z"
 path:  "/java-tree-map"
 tags:
    - java
-   - collection framework
+   - java collection framework
 ---
-
-# Java TreeMap
 
 * 实现了SortedMap接口,会按照key的大小对map中的元素进行排序
 * 未实现同步(不是线程安全)

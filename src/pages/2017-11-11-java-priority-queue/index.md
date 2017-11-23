@@ -4,10 +4,8 @@ date: "2017-11-11T22:22:22.169Z"
 path:  "/java-priority-queue"
 tags:
    - java
-   - collection framework
+   - java collection framework
 ---
-
-# PriorityQueue
 
 * 优先队列,能保证每次取出来的元素都是队列中权值最小的(C++中每次取最大的元素)
 * 元素大小比较可使用构造时传入的比较器或者使用元素的自然顺序(natural order)

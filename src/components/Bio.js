@@ -4,7 +4,7 @@ import React from 'react'
 import 'typeface-montserrat'
 import 'typeface-merriweather'
 
-import bookIcon from './book-icon.ico'
+import bookIcon from './../../static/book-icon.ico'
 import { rhythm } from '../utils/typography'
 
 class Bio extends React.Component {

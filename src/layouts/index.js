@@ -4,6 +4,7 @@ import {Container} from 'react-responsive-grid'
 
 require('../css/prism.css');
 require('../css/entry.css');
+require('../css/components.css');
 
 /**
  * the render function of this class will run in front side,

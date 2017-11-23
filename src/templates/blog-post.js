@@ -1,10 +1,8 @@
 import React from 'react'
 import Helmet from 'react-helmet'
-import Link from 'gatsby-link'
 import get from 'lodash/get'
-
-import Bio from '../components/Bio'
-import { rhythm, scale } from '../utils/typography'
+import Tag from '../components/Tag';
+import {rhythm, scale} from '../utils/typography'
 
 /**
  * this class will render all the blog MD files into html
@@ -15,29 +13,16 @@ class BlogPostTemplate extends React.Component {
     const siteTitle = get(this.props, 'data.site.siteMetadata.title')
     return (
       <div>
-        <Helmet title={`${post.frontmatter.title} | ${siteTitle}`} />
-        <h1>
-          {post.frontmatter.title}
-        </h1>
-        <p
-          style={{
-            ...scale(-1 / 5),
-            display: 'block',
-            marginBottom: rhythm(1),
-            marginTop: rhythm(-1),
-          }}
-        >
-          {post.frontmatter.date}
-        </p>
-        {post.frontmatter.tags.map((tag, index) =>
-          <div key={index}>{tag}</div>
-        )}
-        <div dangerouslySetInnerHTML={{ __html: post.html }} />
-        <hr
-          style={{
-            marginBottom: rhythm(1),
-          }}
-        />
+        <Helmet title={`${post.frontmatter.title} | ${siteTitle}`}/>
+        <h1>{post.frontmatter.title}</h1>
+        <div style={{marginTop: `-20px`}}>{post.frontmatter.date}</div>
+        <div style={{paddingTop: `10px`, paddingBottom: `20px`}}>
+          {post.frontmatter.tags.map((tag, index) =>
+            <Tag key={index} name={tag}/>
+          )}
+        </div>
+        <div dangerouslySetInnerHTML={{__html: post.html}}/>
+        <hr style={{marginBottom: rhythm(1),}}/>
       </div>
     )
   }

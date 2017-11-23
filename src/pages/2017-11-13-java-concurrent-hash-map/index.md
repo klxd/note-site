@@ -4,13 +4,8 @@ date: "2017-11-13T22:22:22.169Z"
 path:  "/java-concurrent-hash-map"
 tags:
    - java
-   - collection framework
+   - java collection framework
 ---
-
-# Java ConcurrentHashMap
-
-
-
 
 ## Node
 ```java
