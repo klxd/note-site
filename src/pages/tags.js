@@ -2,10 +2,12 @@ import React from "react"
 import Link from "gatsby-link"
 import kebabCase from "lodash/kebabCase"
 
+/**
+ * class for showing all the tags (with count)
+ */
 class TagsPageRoute extends React.Component {
   render() {
     const allTags = this.props.data.allMarkdownRemark.group
-
     return (
       <div>
         <h1>Tags</h1>

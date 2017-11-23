@@ -16,7 +16,10 @@ if (process.env.NODE_ENV === `production`) {
 
 
 
-
+/**
+ * this class define the root HTML element,
+ * the render function will run in back-end
+ */
 module.exports = class HTML extends React.Component {
   render() {
     let css = process.env.NODE_ENV === `production` ? (
