@@ -164,5 +164,10 @@ public class Person implements Serializable {
 * 无论是实现Serializable接口，或是Externalizable接口，当从I/O流中读取对象时，readResolve()方法都会被调用到
 
 
+Q:
+- 什么是序列化
+- 如何实现 Java 序列化及注意事项
+- Serializable与Externalizable的区别
+
 [Top 10 Java Serialization Interview Questions and Answers](http://javarevisited.blogspot.sg/2011/04/top-10-java-serialization-interview.html)
 [理解Java对象序列化](http://www.blogjava.net/jiangshachina/archive/2012/02/13/369898.html)

@@ -31,3 +31,14 @@ public interface Queue<E> extends Collection<E> {
 ```
 
 ## interface 
+
+
+## Q
+- 怎么打印数组？ 怎样打印数组中的重复元素
+- Array 和 ArrayList有什么区别？
+- 什么时候应该使用Array而不是ArrayList
+- 数组和链表数据结构描述，各自的时间复杂度
+- 数组有没有length()这个方法? String有没有length()这个方法
+- 队列和栈是什么，列出它们的区别
+- BlockingQueue是什么
+- 简述ConcurrentLinkedQueue和LinkedBlockingQueue的用处和不同之处

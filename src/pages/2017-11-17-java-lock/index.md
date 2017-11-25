@@ -199,3 +199,10 @@ public class ReentrantReadWriteLock
 - 对变量的写入操作不依赖当前变量,或者能确保只有单个线程更新变量的值
 - 该变量不会与其他状态变量一起纳入不变性条件中
 - 在访问变量时不需要加锁
+
+
+Q:
+- volatile 修饰符的有过什么实践
+- volatile 变量是什么？volatile 变量和 atomic 变量有什么不同
+- volatile 类型变量提供什么保证？能使得一个非原子操作变成原子操作吗
+- 能创建 volatile 数组吗？
