@@ -2,45 +2,48 @@ import React from "react"
 import Link from "gatsby-link"
 import get from "lodash/get"
 import Helmet from "react-helmet"
-
 import Bio from "../components/Bio"
-import { rhythm } from "../utils/typography"
+import Tag from "../components/Tag"
+import {rhythm} from "../utils/typography"
 
+/** this class combine all the blog-posts as an index page */
 class BlogIndex extends React.Component {
   render() {
     const siteTitle = get(this, "props.data.site.siteMetadata.title");
     const posts = get(this, "props.data.allMarkdownRemark.edges");
+    const allTags = get(this, "props.data.allMarkdownRemark.group");
     return (
       <div>
-        <Helmet title={siteTitle} />
-        <Bio />
+        <Helmet title={siteTitle}/>
+        <Bio/>
+        <div className="tag-panel">
+          {
+            allTags.map((tag, index) =>
+              <Tag key={index} name={tag.fieldValue} count={tag.totalCount}/>)
+          }
+        </div>
         {
           posts.map((post, index) => {
-          if (post.node.path !== "/404/") {
-            const title = get(post, "node.frontmatter.title") || post.node.path;
-            return (
-              <div key={index}>
-                <h3
-                  key={post.node.frontmatter.path}
-                  style={{
-                    marginBottom: rhythm(1 / 4),
-                  }}
-                >
-                  <Link
-                    style={{ boxShadow: "none" }}
-                    to={post.node.frontmatter.path}
-                  >
-                    {post.node.frontmatter.title}
-                  </Link>
-                </h3>
-                <small>
-                  {post.node.frontmatter.date}
-                </small>
-                <p dangerouslySetInnerHTML={{ __html: post.node.excerpt }} />
-              </div>
-            )
-          }
-        })}
+            if (post.node.path !== "/404/") {
+              const title = get(post, "node.frontmatter.title") || post.node.path;
+              return (
+                <div key={index} className="post-item">
+                  <div key={post.node.frontmatter.path} className="post-header">
+                    <Link style={{boxShadow: "none"}} to={post.node.frontmatter.path}>
+                      {post.node.frontmatter.title}
+                    </Link>
+                  </div>
+                  <div className="post-tags">
+                    {post.node.frontmatter.tags.map((tag, index) => <Tag key={index} name={tag}/>)}
+                  </div>
+                  <div className="post-date">
+                    {post.node.frontmatter.date}
+                  </div>
+                  <p className="post-excerpt" dangerouslySetInnerHTML={{__html: post.node.excerpt}}/>
+                </div>
+              )
+            }
+          })}
       </div>
     )
   }
@@ -64,13 +67,17 @@ export const pageQuery = graphql`
         node {
           excerpt
           frontmatter {
+            title
             path
             date(formatString: "DD MMMM, YYYY")
+            tags
           }
-          frontmatter {
-            title
-          }
+          
         }
+      }
+      group(field: frontmatter___tags) {
+        fieldValue
+        totalCount
       }
     }
   }

@@ -1,9 +1,39 @@
 a {
     border-color: #03a9f4;
-    color: #03a9f4;
+    color: #259;
 }
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, Helvetica Neue, PingFang SC, Microsoft YaHei, Source Han Sans SC, Noto Sans CJK SC, WenQuanYi Micro Hei, sans-serif;
     text-rendering: optimizeLegibility;
+    background: #f3f3f3;
+}
+
+.tag-panel {
+    margin-top: -50px;
+    line-height: 2;
+}
+
+.post-item {
+    padding: 16px 20px;
+    background: #fff;
+    border-radius: 2px;
+    margin-bottom: 10px;
+}
+
+.post-header {
+    font-weight: bold;
+    padding-bottom: 4px;
+}
+
+.post-tags {
+
+}
+
+.post-date {
+    font-size: 80%;
+}
+
+.post-excerpt {
+    margin-bottom: 0;
 }

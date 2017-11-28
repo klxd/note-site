@@ -9,14 +9,16 @@ const linkStyle={
 export default class Tag extends React.Component {
   render() {
     const name = this.props.name;
+    const count = this.props.count || '';
     return (
-      <Link to={`/tags/${kebabCase(name)}/`}
-            style={linkStyle}>
-        <span className="tag">{name}</span>
+      <Link to={`/tags/${kebabCase(name)}/`} className="tag">
+        <span className="tag-name">{name}</span>
+        {count && <span className="tag-count">{count}</span>}
       </Link>
     )
   }
 }
 Tag.propTypes = {
   name: React.PropTypes.string,
+  count: React.PropTypes.number
 };

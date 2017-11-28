@@ -1,4 +1,6 @@
 .tag {
+    display: inline-block;
+    transition: all .4s;
     border: 1px solid rgb(204, 204, 204);
     border-radius: 1020px;
     padding: 3px 10px;
@@ -7,10 +9,32 @@
     font-size: 12px;
     line-height: 1.5;
     color: #5a5a5a;
+    text-decoration: none;
+    white-space: nowrap;
 }
 
 .tag:hover {
     color: #333;
     background-color: #e6e6e6;
     border-color: #adadad;
+}
+
+.tag-name {
+    color: #5a5a5a;
+}
+
+.tag-count {
+    background: #17807d;
+    opacity: .85;
+    top: 0;
+    padding: 1px 5px;
+    color: #fff;
+    font-size: 10px;
+    display: inline-block;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    border-radius: 10px;
+    margin-left: 4px;
 }
