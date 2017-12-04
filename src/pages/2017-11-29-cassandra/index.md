@@ -3,8 +3,8 @@ title: Cassandra
 date: "2017-11-29T22:22:22.169Z"
 path:  "/cassandra"
 tags:
-   - java
-   - jvm
+   - middleware
+   - database
 ---
 
 ## ACID

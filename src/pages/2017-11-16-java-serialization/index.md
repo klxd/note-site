@@ -4,6 +4,7 @@ date: "2017-11-16T22:22:22.169Z"
 path:  "/java-serialization"
 tags:
    - java
+   - serialization
 ---
 
 # Java Serialization
