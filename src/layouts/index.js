@@ -1,6 +1,7 @@
 import React from 'react'
 import Link from 'gatsby-link'
 import {Container} from 'react-responsive-grid'
+import GoTop from "../components/GoTop";
 
 require('../css/prism.css');
 require('../css/entry.css');
@@ -26,6 +27,7 @@ class Template extends React.Component {
       <Container style={{maxWidth: '48rem', padding: '2rem 1.6rem',}}>
         {header}
         {children()}
+        <GoTop/>
       </Container>
     )
   }
