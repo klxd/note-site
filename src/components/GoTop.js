@@ -17,7 +17,9 @@ export default class GoTop extends React.Component {
   }
 
   getScrollTarget = () => {
-    return document.scrollingElement || document.documentElement;
+    if (typeof document !== `undefined`) {
+      return document.scrollingElement || document.documentElement
+    }
   };
 
   onScroll = () => {
