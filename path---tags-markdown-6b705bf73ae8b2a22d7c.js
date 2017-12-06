@@ -1,0 +1,2 @@
+webpackJsonp([0x299df2f1ac9d3e00],{"./node_modules/json-loader/index.js!./.cache/json/tags-markdown.json":function(t,a){t.exports={data:{allMarkdownRemark:{totalCount:2,edges:[{node:{frontmatter:{title:"Code Highlight",path:"/code-highlight"}}},{node:{frontmatter:{title:"Markdown Learning",path:"/markdown-learning"}}}]}},pathContext:{tag:"markdown"}}}});
+//# sourceMappingURL=path---tags-markdown-6b705bf73ae8b2a22d7c.js.map

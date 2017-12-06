@@ -1,0 +1,2 @@
+webpackJsonp([865303711529097e4],{"./node_modules/json-loader/index.js!./.cache/json/tags-prism-js.json":function(t,e){t.exports={data:{allMarkdownRemark:{totalCount:1,edges:[{node:{frontmatter:{title:"Code Highlight",path:"/code-highlight"}}}]}},pathContext:{tag:"prismJs"}}}});
+//# sourceMappingURL=path---tags-prism-js-94c57e5f7041a4fed8da.js.map

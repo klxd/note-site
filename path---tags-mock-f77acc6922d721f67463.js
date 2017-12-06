@@ -1,0 +1,2 @@
+webpackJsonp([0x96d48ad18c76b000],{"./node_modules/json-loader/index.js!./.cache/json/tags-mock.json":function(o,t){o.exports={data:{allMarkdownRemark:{totalCount:1,edges:[{node:{frontmatter:{title:"New Beginnings",path:"/hi-folks/"}}}]}},pathContext:{tag:"mock"}}}});
+//# sourceMappingURL=path---tags-mock-f77acc6922d721f67463.js.map

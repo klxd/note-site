@@ -1,0 +1,2 @@
+webpackJsonp([0x2a0706519d7cd400],{"./node_modules/json-loader/index.js!./.cache/json/tags-remark.json":function(t,a){t.exports={data:{allMarkdownRemark:{totalCount:2,edges:[{node:{frontmatter:{title:"Code Highlight",path:"/code-highlight"}}},{node:{frontmatter:{title:"Markdown Learning",path:"/markdown-learning"}}}]}},pathContext:{tag:"remark"}}}});
+//# sourceMappingURL=path---tags-remark-ed368dbc68a206c4f5a2.js.map
