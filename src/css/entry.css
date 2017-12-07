@@ -3,17 +3,33 @@ a {
     color: #259;
 }
 
-
-
 body {
     font-family: -apple-system, BlinkMacSystemFont, Helvetica Neue, PingFang SC, Microsoft YaHei, Source Han Sans SC, Noto Sans CJK SC, WenQuanYi Micro Hei, sans-serif;
     text-rendering: optimizeLegibility;
     background: #f3f3f3;
-    scroll-behavior: smooth;
+}
+
+.main-container {
+    display: flex;
+    width: 1000px;
+    align-items: flex-start;
+    padding: 0 16px;
+    margin: 10px auto;
+}
+
+.main-content {
+    margin-right: 10px;
+}
+
+.right-side-bar {
+    width: 296px;
+    flex: 1;
+    background: #fff;
+    border-radius: 2px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.1);
 }
 
 .tag-panel {
-    margin-top: -50px;
     line-height: 2;
 }
 
@@ -22,6 +38,11 @@ body {
     background: #fff;
     border-radius: 2px;
     margin-bottom: 10px;
+}
+
+.post-header-row {
+    display: flex;
+    justify-content: space-between;
 }
 
 .post-header {

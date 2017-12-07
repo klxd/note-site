@@ -15,35 +15,49 @@ class BlogIndex extends React.Component {
     return (
       <div>
         <Helmet title={siteTitle}/>
-        <Bio/>
-        <div className="tag-panel">
-          {
-            allTags.map((tag, index) =>
-              <Tag key={index} name={tag.fieldValue} count={tag.totalCount}/>)
-          }
+        {/*<Bio/>*/}
+        <div className="main-container">
+          <div className="main-content">
+            {
+              posts.map((post, index) => {
+                if (post.node.path !== "/404/") {
+                  const title = get(post, "node.frontmatter.title") || post.node.path;
+                  return (
+                    <div key={index} className="post-item">
+                      <div className="post-header-row">
+                        <div key={post.node.frontmatter.path} className="post-header">
+                          <Link style={{boxShadow: "none"}} to={post.node.frontmatter.path}>
+                            {post.node.frontmatter.title}
+                          </Link>
+                        </div>
+                        <div className="post-date">
+                          {post.node.frontmatter.date}
+                        </div>
+                      </div>
+                      <div className="post-tags">
+                        {post.node.frontmatter.tags.map((tag, index) => <Tag key={index} name={tag}/>)}
+                      </div>
+
+                      <p className="post-excerpt" dangerouslySetInnerHTML={{__html: post.node.excerpt}}/>
+                    </div>
+                  )
+                }
+              })}
+          </div>
+
+          <div className="right-side-bar">
+            <Link to={`games/2048`}>
+              Game 2048
+            </Link>
+            <div className="tag-panel">
+              {
+                allTags.map((tag, index) =>
+                  <Tag key={index} name={tag.fieldValue} count={tag.totalCount}/>)
+              }
+
+            </div>
+          </div>
         </div>
-        {
-          posts.map((post, index) => {
-            if (post.node.path !== "/404/") {
-              const title = get(post, "node.frontmatter.title") || post.node.path;
-              return (
-                <div key={index} className="post-item">
-                  <div key={post.node.frontmatter.path} className="post-header">
-                    <Link style={{boxShadow: "none"}} to={post.node.frontmatter.path}>
-                      {post.node.frontmatter.title}
-                    </Link>
-                  </div>
-                  <div className="post-tags">
-                    {post.node.frontmatter.tags.map((tag, index) => <Tag key={index} name={tag}/>)}
-                  </div>
-                  <div className="post-date">
-                    {post.node.frontmatter.date}
-                  </div>
-                  <p className="post-excerpt" dangerouslySetInnerHTML={{__html: post.node.excerpt}}/>
-                </div>
-              )
-            }
-          })}
       </div>
     )
   }

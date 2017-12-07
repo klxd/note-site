@@ -1,0 +1,24 @@
+.grid-container {
+    display: flex;
+    flex-flow: column;
+}
+
+.grid-row {
+    display: flex;
+    justify-content: center;
+}
+
+.grid-cell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+    width: 100px;
+    background: bisque;
+    border-radius: 15px;
+    font-size: 53px;
+    line-height: 98px;
+    color: #776e65;
+    font-family: "Clear Sans", "Helvetica Neue", Arial, sans-serif;
+}
+

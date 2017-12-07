@@ -24,7 +24,7 @@ class Template extends React.Component {
       </h1>
     );
     return (
-      <Container style={{maxWidth: '48rem', padding: '2rem 1.6rem',}}>
+      <Container style={{maxWidth: '64rem', minWidth: '60rem', padding: '2rem 1.6rem',}}>
         {header}
         {children()}
         <GoTop/>

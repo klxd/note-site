@@ -4,12 +4,13 @@ const path = require("path")
 const select = require(`unist-util-select`)
 const fs = require(`fs-extra`)
 
-exports.createPages = ({ graphql, boundActionCreators }) => {
-  const { createPage } = boundActionCreators
+exports.createPages = ({graphql, boundActionCreators}) => {
+  const {createPage} = boundActionCreators
 
   return new Promise((resolve, reject) => {
     const blogPost = path.resolve("./src/templates/blog-post.js")
     const tagPagesTemplate = path.resolve("./src/templates/tag-route.js")
+    const game2048 = path.resolve("./src/components/Game2048.js")
     resolve(
       graphql(
         `
@@ -56,12 +57,18 @@ exports.createPages = ({ graphql, boundActionCreators }) => {
           createPage({
             path: `/tags/${_.kebabCase(tag)}/`,
             component: tagPagesTemplate,
-            context:{
+            context: {
               tag
             }
           })
         })
 
+        // create games pages
+        createPage({
+          path: `/games/2048/`,
+          component: game2048,
+          context: {}
+        })
       })
     )
   })
