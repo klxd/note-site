@@ -1,11 +1,12 @@
 import React from 'react'
 import Link from 'gatsby-link'
 import {Container} from 'react-responsive-grid'
+import Shelter from "../components/Shelter";
 import GoTop from "../components/GoTop";
 
 import '../less/prism.css';
-import '../less/main.less';
 import '../less/common.less';
+
 
 /**
  * the render function of this class will run in front side,
@@ -24,9 +25,11 @@ class Template extends React.Component {
       </h1>
     );
     return (
-      <Container style={{maxWidth: '64rem', minWidth: '60rem', padding: '2rem 1.6rem',}}>
-        {header}
-        {children()}
+      <Container>
+        <Shelter/>
+        <div className='common-content'>
+          {children()}
+        </div>
         <GoTop/>
       </Container>
     )

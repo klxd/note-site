@@ -4,7 +4,11 @@ import get from "lodash/get"
 import Helmet from "react-helmet"
 import Bio from "../components/Bio"
 import Tag from "../components/Tag"
-import {rhythm} from "../utils/typography"
+import Card from "../components/Card";
+// import {rhythm} from "../utils/typography"
+
+import '../less/main-page.less';
+
 
 /** this class combine all the blog-posts as an index page */
 class BlogIndex extends React.Component {
@@ -13,7 +17,7 @@ class BlogIndex extends React.Component {
     const posts = get(this, "props.data.allMarkdownRemark.edges");
     const allTags = get(this, "props.data.allMarkdownRemark.group");
     return (
-      <div>
+      <div className="main-page">
         <Helmet title={siteTitle}/>
         {/*<Bio/>*/}
         <div className="main-container">
@@ -46,16 +50,14 @@ class BlogIndex extends React.Component {
           </div>
 
           <div className="right-side-bar">
-            <Link to={`games/2048`}>
-              Game 2048
-            </Link>
-            <div className="tag-panel">
-              {
-                allTags.map((tag, index) =>
-                  <Tag key={index} name={tag.fieldValue} count={tag.totalCount}/>)
-              }
+            <Card header={'Games'}>
+              <Tag name={'2048'} linkTo={'/games/2048'}/>
+            </Card>
 
-            </div>
+            <Card header={'Tags'}>
+              {allTags.map((tag, index) =>
+                <Tag key={index} name={tag.fieldValue} count={tag.totalCount}/>)}
+            </Card>
           </div>
         </div>
       </div>

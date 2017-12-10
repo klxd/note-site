@@ -1,0 +1,49 @@
+.shelter-component {
+  z-index: 100;
+  position: fixed;
+  min-width: 1032px;
+  width: 100vw;
+  left: 0;
+  top: 0;
+  background: #fff;
+  overflow: hidden;
+  box-shadow: 0 1px 3px 0 rgba(0,34,77,.1);
+
+  .shelter-inner {
+    display: flex;
+    align-items: center;
+    width: 1000px;
+    padding: 0 16px;
+    height: 52px;
+    margin: 0 auto;
+  }
+
+  .header-text {
+    text-decoration: none;
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+  .navigation {
+    display: flex;
+    width: 160px;
+    justify-content: space-between;
+    margin-left: 27px;
+    a {
+      text-decoration: none;
+      font-size: 16px;
+      color: #999;
+
+    }
+    :hover {
+      color: #259;
+    }
+  }
+
+  .user-info {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+}

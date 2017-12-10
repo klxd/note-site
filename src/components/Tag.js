@@ -11,8 +11,9 @@ export default class Tag extends React.Component {
   render() {
     const name = this.props.name;
     const count = this.props.count || '';
+    const linkTo = this.props.linkTo || `/tags/${kebabCase(name)}/`;
     return (
-      <Link to={`/tags/${kebabCase(name)}/`} className="tag-component">
+      <Link to={linkTo} className="tag-component">
         <span className="tag-name">{name}</span>
         {count && <span className="tag-count">{count}</span>}
       </Link>
@@ -21,5 +22,6 @@ export default class Tag extends React.Component {
 }
 Tag.propTypes = {
   name: React.PropTypes.string,
-  count: React.PropTypes.number
+  count: React.PropTypes.number,
+  linkTo: React.PropTypes.string,
 };
