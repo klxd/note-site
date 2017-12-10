@@ -1,4 +1,5 @@
 import React from 'react'
+import '../less/component/go-top.less'
 
 export default class GoTop extends React.Component {
   constructor() {

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import './Game2048.css';
+import '../less/component/Game2048.less';
 class Game2048 extends Component {
   constructor() {
     super();

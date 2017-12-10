@@ -3,9 +3,9 @@ import Link from 'gatsby-link'
 import {Container} from 'react-responsive-grid'
 import GoTop from "../components/GoTop";
 
-require('../css/prism.css');
-require('../css/entry.css');
-require('../css/components.css');
+import '../less/prism.css';
+import '../less/main.less';
+import '../less/common.less';
 
 /**
  * the render function of this class will run in front side,
