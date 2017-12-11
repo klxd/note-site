@@ -11,7 +11,7 @@ export default class Shelter extends React.Component {
           <div className="navigation">
             <Link to={'/'}>首页</Link>
             <Link to={'/tags'}>标签</Link>
-            <Link to={'/games'}>游戏</Link>
+            <Link to={'/games/2048'}>游戏</Link>
           </div>
 
           <div className="user-info">

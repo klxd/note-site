@@ -42,3 +42,15 @@ CAP理论:对于任意给定的系统,只能强化这三个特性中的两个.
    - 主要支持可用性和分区耐受性,系统可能返回不太精确的数据,但是系统将始终
      可用,即使网络发生分区的时候也是如此
    - 亚马逊Dynamo的衍生品,Cassandra
+   
+
+
+#＃ Cassandra与RDB的名词映射
+
+| RDB    | column1 |
+|-------:|:-------|
+| database     | keyspace |
+| table        | column family |
+| primary key  | row key|
+| column name  | column name/key |
+| column value | column value |

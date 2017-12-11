@@ -28,15 +28,19 @@ export default class GoTop extends React.Component {
   };
 
   onClick = () => {
-    this.scrollUp();
+    this.scrollUpBaseTime(100, 60);
   };
 
-  scrollUp = (size = 100) => {
-    this.scrollTarget.scrollTop -= size;
+  scrollUpBaseTime = (ms, refreshRate) => {
+    let stepSize = this.scrollTarget.scrollTop / refreshRate;
+    this.scrollUp(stepSize, ms / refreshRate);
+  };
+
+  scrollUp = (size, ms) => {
+    let nextScrollTop = this.scrollTarget.scrollTop - size;
+    this.scrollTarget.scrollTop = nextScrollTop > 0 ? nextScrollTop : 0;
     if (this.scrollTarget.scrollTop > 0) {
-      setTimeout(this.scrollUp, 1000/60);
-    } else {
-      this.scrollTarget.scrollTop = 0;
+      setTimeout(this.scrollUp, ms, size, ms);
     }
   };
 

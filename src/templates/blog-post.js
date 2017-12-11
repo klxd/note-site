@@ -3,6 +3,7 @@ import Helmet from 'react-helmet'
 import get from 'lodash/get'
 import Tag from '../components/Tag';
 import {rhythm, scale} from '../utils/typography'
+import '../less/template/blog-post.less'
 
 /**
  * this class will render all the blog MD files into html
@@ -10,13 +11,15 @@ import {rhythm, scale} from '../utils/typography'
 class BlogPostTemplate extends React.Component {
   render() {
     const post = this.props.data.markdownRemark
-    const siteTitle = get(this.props, 'data.site.siteMetadata.title')
+    const siteTitle = get(this.props, 'data.site.siteMetadata.title');
     return (
-      <div>
+      <div className="blog-post-template">
         <Helmet title={`${post.frontmatter.title} | ${siteTitle}`}/>
-        <h1>{post.frontmatter.title}</h1>
-        <div style={{marginTop: `-20px`}}>{post.frontmatter.date}</div>
-        <div style={{paddingTop: `10px`, paddingBottom: `20px`}}>
+        <div className="header-line">
+          <div className="header-text">{post.frontmatter.title}</div>
+          <div className="header-date">{post.frontmatter.date}</div>
+        </div>
+        <div className="post-tags">
           {post.frontmatter.tags.map((tag, index) =>
             <Tag key={index} name={tag}/>
           )}

@@ -1,14 +1,25 @@
-.grid-container {
+.game-2048 {
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .button-container {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .grid-container {
     display: flex;
     flex-flow: column;
-}
+  }
 
-.grid-row {
+  .grid-row {
     display: flex;
     justify-content: center;
-}
+  }
 
-.grid-cell {
+  .grid-cell {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -20,5 +31,5 @@
     line-height: 98px;
     color: #776e65;
     font-family: "Clear Sans", "Helvetica Neue", Arial, sans-serif;
+  }
 }
-
