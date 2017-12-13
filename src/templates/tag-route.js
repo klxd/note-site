@@ -1,24 +1,25 @@
 import React from "react"
 import Link from "gatsby-link"
+import Tag from '../components/Tag'
+import '../less/template/tag-route.less'
 
 class TagRoute extends React.Component {
   render() {
     const posts = this.props.data.allMarkdownRemark.edges
     const postLinks = posts.map((post, index) => (
-      <li key={index}>
+      <li key={index} className="tag-list-item">
         <Link to={post.node.frontmatter.path}>{post.node.frontmatter.title}</Link>
       </li>
     ))
 
     return (
-      <div>
-        <h1>
-          {this.props.data.allMarkdownRemark.totalCount}
-          {` `}posts tagged with “{this.props.pathContext.tag}”
-        </h1>
-        <ul>{postLinks}</ul>
+      <div className="tag-route-template">
+        <div className="tag-header-panel">
+          <Tag name={this.props.pathContext.tag} count={this.props.data.allMarkdownRemark.totalCount}/>
+        </div>
+        <ul className="tag-content-list">{postLinks}</ul>
         <p>
-          <Link to="/tags/">Browse all tags</Link>
+          <Link to="/tags/">查看全部标签</Link>
         </p>
       </div>
     )

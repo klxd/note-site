@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import Button from './Button';
 import '../less/component/Game2048.less';
 
 class Game2048 extends Component {
@@ -9,7 +10,7 @@ class Game2048 extends Component {
 
   componentWillMount() {
     document.addEventListener("keydown", this.onKeyDown.bind(this));
-    document.addEventListener("touchstart", function(event) {
+    document.addEventListener("touchstart", function (event) {
       this.touchStartX = event.changedTouches[0].pageX;
       this.touchStartY = event.changedTouches[0].pageY;
     }.bind(this));
@@ -157,13 +158,13 @@ class Game2048 extends Component {
   };
 
   render() {
-
     return (
       <div className="game-2048">
-        <div className="button-container">
-          <button onClick={this.onRestart}>
-            Restart
-          </button>
+        <div className="header-container">
+          <div className="header-text">2048</div>
+          <div className="button-container">
+            <Button onClick={this.onRestart} label="New Game"/>
+          </div>
         </div>
         <div className="grid-container">
           {this.arr.map((row, index) => <div key={index} className="grid-row">

@@ -7,7 +7,7 @@ import Tag from "../components/Tag"
 import Card from "../components/Card";
 // import {rhythm} from "../utils/typography"
 
-import '../less/main-page.less';
+import '../less/page/main-page.less';
 
 
 /** this class combine all the blog-posts as an index page */

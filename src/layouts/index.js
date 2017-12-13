@@ -25,13 +25,13 @@ class Template extends React.Component {
       </h1>
     );
     return (
-      <Container>
+      <div>
         <Shelter/>
-        <div className='common-content'>
+        <div className='common-container'>
           {children()}
         </div>
         <GoTop/>
-      </Container>
+      </div>
     )
   }
 }
