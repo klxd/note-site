@@ -185,7 +185,7 @@ markdown默认不支持表格
 > 多行引用
 >>嵌套引用
 
-<a name="行内html></a>
+<a name="行内html"></a>
 ## 行内HTML
 markdown中可以直接使用html的语法,被包围的区块中markdown语法无效
 

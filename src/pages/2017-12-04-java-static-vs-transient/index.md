@@ -29,6 +29,77 @@ Google的时候发现[以下文章](http://javabeginnerstutorial.com/core-java-t
 其实以上这个两个结论都是不对的
 
 [实例代码](TestSerialization.java)
+
+```java
+import java.io.*;
+
+class SuperEmployee implements Serializable {
+    public String superField;
+    public static String superStaticField;
+}
+
+class Employee extends SuperEmployee {
+    public String simpleField;
+    public static String staticField = "defaultStatic01";
+    public transient String transientField = "defaultTransientField01";
+    public static transient String staticTransientField;
+}
+
+public class TestSerialization {
+
+    private static void serialization() {
+        System.out.println("Serialization start...");
+        Employee employee = new Employee();
+        employee.superField = "superFieldValue";
+        employee.superStaticField = "superStaticFieldValue";
+        employee.simpleField = "simpleFieldValue";
+        // employee.staticField = "staticFieldValue";
+        employee.transientField = "transientFieldValue";
+        employee.staticTransientField = "staticTransientFieldValue";
+        try (
+                FileOutputStream fileOutputStream = new FileOutputStream("./employee.dat");
+                ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+        ) {
+            objectOutputStream.writeObject(employee);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Serialization finished");
+        showEmployee(employee);
+    }
+
+    private static void deserialization() {
+        System.out.println("Deserialization start...");
+        Employee employee = null;
+        try (
+                FileInputStream fileInputStream = new FileInputStream("./employee.dat");
+                ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+        ) {
+            employee = (Employee) objectInputStream.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Deserialization finished");
+        showEmployee(employee);
+    }
+
+    private static void showEmployee(Employee employee) {
+        System.out.println("Employee:");
+        System.out.println("employee.superField = " + employee.superField);
+        System.out.println("employee.superStaticField = " + employee.superStaticField);
+        System.out.println("employee.simpleField = " + employee.simpleField);
+        System.out.println("employee.staticField = " + employee.staticField);
+        System.out.println("employee.staticTransientField = " + employee.staticTransientField);
+    }
+
+
+    public static void main(String[] args) {
+        //serialization();
+        deserialization();
+    }
+}
+```
+
 代码运行方法:
 1. 调用serialization方法,生成出employee.dat文件
 2. 修改`staticField`和`staticTransientField`的初始值
@@ -43,3 +114,74 @@ Java默认的serialization机制不会序列化static的域,但是Java允许程�
 序列化的对象,以下两种方法都可以实现序列化static域(或者transient域)
 1. 重写writeObject()方法和readObject()方法[代码实例](TestCustomSerialization.java)
 2. 实现Externalizable接口
+
+```java
+import java.io.*;
+class CustomObject implements Serializable {
+    
+    public static String staticField = "defaultStaticValue";
+    public transient String transientField = "defaultTransientValue";
+    public static transient String staticTransientField = "defaultStaticTransientValue";
+
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        out.defaultWriteObject();
+        out.writeObject(staticField);
+        out.writeObject(transientField);
+        out.writeObject(staticTransientField);
+    }
+
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        staticField = (String) in.readObject();
+        transientField = (String) in.readObject();
+        staticTransientField = (String) in.readObject();
+    }
+}
+public class TestCustomSerialization {
+
+    private static void serialization() {
+        System.out.println("Serialization start...");
+        CustomObject customObject = new CustomObject();
+        customObject.staticField = "staticFieldValue";
+        customObject.transientField = "transientFieldValue";
+        customObject.staticTransientField = "staticTransientFieldValue";
+        try (
+                FileOutputStream fileOutputStream = new FileOutputStream("./customObject.dat");
+                ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+        ) {
+            objectOutputStream.writeObject(customObject);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Serialization finished");
+        showEmployee(customObject);
+    }
+
+    private static void deserialization() {
+        System.out.println("Deserialization start...");
+        CustomObject customObject = null;
+        try (
+                FileInputStream fileInputStream = new FileInputStream("./customObject.dat");
+                ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+        ) {
+            customObject = (CustomObject) objectInputStream.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Deserialization finished");
+        showEmployee(customObject);
+    }
+    
+    private static void showEmployee(CustomObject customObject) {
+        System.out.println("CustomObject:");
+        System.out.println("CustomObject.staticField = " + customObject.staticField);
+        System.out.println("CustomObject.transientField = " + customObject.transientField);
+        System.out.println("CustomObject.staticTransientField = " + customObject.staticTransientField);
+    }
+    
+    public static void main(String[] args) {
+        // serialization();
+        deserialization();
+    }
+}
+```

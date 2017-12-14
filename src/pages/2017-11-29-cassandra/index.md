@@ -1,11 +1,14 @@
 ---
-title: Cassandra
+title: Cassandra基础知识
 date: "2017-11-29T22:22:22.169Z"
 path:  "/cassandra"
 tags:
    - middleware
    - database
 ---
+
+使用Cassandra已经有一段时间了,但是平时使用的都是公司内部封装好的接口,对Cassandra的特性并不会暴露太多,
+现在在这里总结一下.
 
 ## ACID
 - 原子性(Atomic)
