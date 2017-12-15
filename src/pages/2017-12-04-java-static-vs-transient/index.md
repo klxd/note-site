@@ -1,5 +1,5 @@
 ---
-title: Java中的序列化时的static字段的处理
+title: Java中的序列化时对static字段的处理
 date: "2017-11-29T22:22:22.169Z"
 path:  "/java-static-vs-transient"
 tags:
