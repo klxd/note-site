@@ -1,0 +1,2 @@
+webpackJsonp([0x7bd4ae28f0012800],{"./node_modules/json-loader/index.js!./.cache/json/tags-architecture.json":function(e,t){e.exports={data:{allMarkdownRemark:{totalCount:1,edges:[{node:{frontmatter:{title:"什么是Micro-service",path:"/micro-service"}}}]}},pathContext:{tag:"architecture"}}}});
+//# sourceMappingURL=path---tags-architecture-6033bfd52c307baa3ab1.js.map

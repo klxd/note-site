@@ -1,2 +1,0 @@
-webpackJsonp([0x2e2d3ebd64dc1400],{"./node_modules/json-loader/index.js!./.cache/json/tags-database.json":function(a,t){a.exports={data:{allMarkdownRemark:{totalCount:1,edges:[{node:{frontmatter:{title:"Cassandra",path:"/cassandra"}}}]}},pathContext:{tag:"database"}}}});
-//# sourceMappingURL=path---tags-database-a113965daa81dca2967e.js.map

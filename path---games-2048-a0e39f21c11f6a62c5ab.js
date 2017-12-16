@@ -1,0 +1,2 @@
+webpackJsonp([0xbdeb465070d1e000],{"./node_modules/json-loader/index.js!./.cache/json/games-2048.json":function(e,o){e.exports={pathContext:{}}}});
+//# sourceMappingURL=path---games-2048-a0e39f21c11f6a62c5ab.js.map

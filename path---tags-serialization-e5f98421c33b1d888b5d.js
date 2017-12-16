@@ -1,2 +1,0 @@
-webpackJsonp([0xadb6b71233740800],{"./node_modules/json-loader/index.js!./.cache/json/tags-serialization.json":function(a,t){a.exports={data:{allMarkdownRemark:{totalCount:2,edges:[{node:{frontmatter:{title:"Java中的序列化时的static字段的处理",path:"/java-static-vs-transient"}}},{node:{frontmatter:{title:"Java Serialization",path:"/java-serialization"}}}]}},pathContext:{tag:"serialization"}}}});
-//# sourceMappingURL=path---tags-serialization-e5f98421c33b1d888b5d.js.map
