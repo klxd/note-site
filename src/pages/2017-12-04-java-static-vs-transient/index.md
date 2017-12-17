@@ -19,9 +19,9 @@ Google的时候发现[以下文章](http://javabeginnerstutorial.com/core-java-t
 ## static域会不会被序列化
 改文章中的第二部分通过一段代码得出以下*结论*:
 > 1. Static variables value can be stored 
-> while serializing if the same is provided while initialization.
-> 2.If variable is defined as Static and Transient both, 
->　than static modifier will govern the behavior of variable and not Transient.
+  while serializing if the same is provided while initialization.  
+> 2. If variable is defined as Static and Transient both, 
+  than static modifier will govern the behavior of variable and not Transient.
 
 该文作者认为: 
 1. 如果序列化时静态域的值等于初始化时候的值，那么静态域就会被序列化

@@ -9,6 +9,7 @@ tags:
 ## 值得参考的blog
 - <https://imququ.com/>
 - <http://typecho.org/>
+- <https://afoo.me/>
 
 
 ## 构建历程

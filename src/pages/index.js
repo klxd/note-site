@@ -2,10 +2,8 @@ import React from "react"
 import Link from "gatsby-link"
 import get from "lodash/get"
 import Helmet from "react-helmet"
-import Bio from "../components/Bio"
 import Tag from "../components/Tag"
 import Card from "../components/Card";
-// import {rhythm} from "../utils/typography"
 
 import '../less/page/main-page.less';
 
@@ -70,7 +68,6 @@ BlogIndex.propTypes = {
 };
 
 export default BlogIndex
-// use when building
 export const pageQuery = graphql`
   query IndexQuery {
     site {

@@ -9,12 +9,14 @@ class Game2048 extends Component {
   }
 
   componentWillMount() {
-    document.addEventListener("keydown", this.onKeyDown.bind(this));
-    document.addEventListener("touchstart", function (event) {
-      this.touchStartX = event.changedTouches[0].pageX;
-      this.touchStartY = event.changedTouches[0].pageY;
-    }.bind(this));
-    document.addEventListener("touchend", this.onTouchEnd);
+    if (typeof document !== `undefined`) {
+      document.addEventListener("keydown", this.onKeyDown.bind(this));
+      document.addEventListener("touchstart", function (event) {
+        this.touchStartX = event.changedTouches[0].pageX;
+        this.touchStartY = event.changedTouches[0].pageY;
+      }.bind(this));
+      document.addEventListener("touchend", this.onTouchEnd);
+    }
   }
 
   onTouchEnd = (event) => {

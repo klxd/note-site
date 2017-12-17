@@ -2,7 +2,6 @@ import React from 'react'
 import Helmet from 'react-helmet'
 import get from 'lodash/get'
 import Tag from '../components/Tag';
-import {rhythm, scale} from '../utils/typography'
 import '../less/template/blog-post.less'
 
 /**
@@ -25,7 +24,7 @@ class BlogPostTemplate extends React.Component {
           )}
         </div>
         <div dangerouslySetInnerHTML={{__html: post.html}}/>
-        <hr style={{marginBottom: rhythm(1),}}/>
+        <hr />
       </div>
     )
   }
