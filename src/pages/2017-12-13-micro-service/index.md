@@ -1,12 +1,12 @@
 ---
-title: 什么是Micro-service
+title: 什么是Microservices
 date: "2017-12-13T22:22:22.169Z"
 path:  "/micro-service"
 tags:
    - architecture
 ---
 
-### Micro-service起源
+### Microservices起源
 2014年,James和Martin合作发表了一篇名为[Microservices](https://martinfowler.com/articles/microservices.html)
 的文章,详细探讨了当时正流行起来的一种服务架构模式--microservice,并出以下定义:
 >In short, the microservice architectural style is an approach to
@@ -101,23 +101,23 @@ Scale Cube的3D模型,来自《The Art of Scalability》一书,
 
 ##### 基于请求/响应的同步IPC
 **REST**: REST基于HTTP协议，其核心概念是资源典型地代表单一业务对象或者一组业务对象，业务对象包括“消费者”或“产品”.
-REST使用HTTP协议来控制资源，通过URL实现,常用的框架有RAML和Swagger.使用基于HTTP的协议的有以下优点和缺点:
+REST使用HTTP协议来控制资源，通过URL实现,常用的框架有RAML和Swagger.使用基于HTTP的协议的有以下优点和缺点:  
 - 优点:
-1. HTTP 非常简单并且大家都很熟悉。
-2. 可以使用浏览器扩展（比如 Postman）或者 curl 之类的命令行来测试 API。
-3. 内置支持请求/响应模式的通信。
-4. HTTP 对防火墙友好。
-5. 不需要中间代理，简化了系统架构。
+  1. HTTP非常简单并且大家都很熟悉
+  2. 可以使用浏览器扩展(比如Postman)或者curl之类的命令行来测试API
+  3. 内置支持请求/响应模式的通信
+  4. HTTP对防火墙友好
+  5. 不需要中间代理，简化了系统架构
 - 缺点:
-1. 只支持请求/响应模式交互。尽管可以使用 HTTP 通知，但是服务端必须一直发送 HTTP 响应。
-2. 由于客户端和服务端直接通信（没有代理或者缓冲机制），在交互期间必须都保持在线。
-3. 客户端必须知道每个服务实例的 URL。如前篇文章“API 网关”所述，这也是个烦人的问题。客户端必须使用服务实例发现机制。
+  1. 只支持请求/响应模式交互。尽管可以使用 HTTP 通知，但是服务端必须一直发送 HTTP 响应。
+  2. 由于客户端和服务端直接通信（没有代理或者缓冲机制），在交互期间必须都保持在线。
+  3. 客户端必须知道每个服务实例的 URL。如前篇文章“API 网关”所述，这也是个烦人的问题。客户端必须使用服务实例发现机制。
 
 **Thrift**:
 Apache Thrift是一个REST的替代品,实现了多语言RPC客户端和服务端调用.
 Thrift提供了一个C风格的IDL(Interactive Data Language)定义API.
 通过Thrift编译器能够生成客户端存根和服务端框架.编译器可以生成多种语言的代码,
-包括 ++、Java、Python、PHP、Ruby、Erlang和Node.js。
+包括C++、Java、Python、PHP、Ruby、Erlang和Node.js。
 
 ##### 基于消息的异步IPC
 使用消息模式的时候,进程之间通过异步交换消息消息的方式通信.

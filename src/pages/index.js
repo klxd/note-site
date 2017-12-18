@@ -40,7 +40,7 @@ class BlogIndex extends React.Component {
                         {post.node.frontmatter.tags.map((tag, index) => <Tag key={index} name={tag}/>)}
                       </div>
 
-                      <p className="post-excerpt" dangerouslySetInnerHTML={{__html: post.node.excerpt}}/>
+                      <div className="post-excerpt" dangerouslySetInnerHTML={{__html: post.node.excerpt}}/>
                     </div>
                   )
                 }

@@ -170,7 +170,13 @@ class Game2048 extends Component {
         </div>
         <div className="grid-container">
           {this.arr.map((row, index) => <div key={index} className="grid-row">
-              {row.map((num, index) => <div key={index} className="grid-cell">{num === 0 ? '' : num}</div>)}
+              {row.map((num, index) => {
+                  let tileClassName = 'grid-cell tile-new tile-' + (num > 2048 ? 'super' : num);
+                  return (<div key={index} className={tileClassName}>
+                    {num === 0 ? '' : num}
+                  </div>)
+                }
+              )}
             </div>
           )}
         </div>

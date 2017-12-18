@@ -8,7 +8,8 @@
   .header-container {
     display: flex;
     justify-content: space-between;
-    width: 400px;
+    width: 477px;
+    margin-bottom: 20px;
 
     .header-text {
       color: #776e65;
@@ -20,17 +21,31 @@
     .button-container {
       display: flex;
       justify-content: space-between;
+      .button-component {
+        font-weight: bold;
+        background: #8f7a66;
+        border-color: #8f7a66;
+      }
     }
   }
 
   .grid-container {
     display: flex;
     flex-flow: column;
+    justify-content: center;
+    width: 477px;
+    height: 477px;
+    background: #bbada0;
+    border-radius: 6px;
   }
 
   .grid-row {
     display: flex;
     justify-content: center;
+    margin-bottom: 15px;
+    &:last-child {
+      margin-bottom: 0;
+    }
   }
 
   .grid-cell {
@@ -39,11 +54,107 @@
     align-items: center;
     height: 100px;
     width: 100px;
-    background: bisque;
-    border-radius: 15px;
-    font-size: 53px;
+    background-color: rgba(238, 228, 218, 0.34902);
+    border-radius: 3px;
+    font-size: 55px;
+    font-weight: bold;
     line-height: 98px;
     color: #776e65;
     font-family: "Clear Sans", "Helvetica Neue", Arial, sans-serif;
+    margin-right: 15px;
+    &:last-child {
+      margin-right: 0;
+    }
   }
+
+  .tile-2 {
+    background: #eee4da;
+    box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0), inset 0 0 0 1px rgba(255, 255, 255, 0);
+  }
+  .tile-4 {
+    background: #ede0c8;
+    box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0), inset 0 0 0 1px rgba(255, 255, 255, 0);
+  }
+  .tile-8 {
+    color: #f9f6f2;
+    background: #f2b179;
+  }
+  .tile-16 {
+    color: #f9f6f2;
+    background: #f59563;
+  }
+  .tile-32 {
+    color: #f9f6f2;
+    background: #f67c5f;
+  }
+  .tile-64 {
+    color: #f9f6f2;
+    background: #f65e3b;
+  }
+  .tile-128 {
+    color: #f9f6f2;
+    background: #edcf72;
+    box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0.2381), inset 0 0 0 1px rgba(255, 255, 255, 0.14286);
+    font-size: 45px;
+  }
+  @media screen and (max-width: 520px) {
+    .tile-128 {
+      font-size: 25px;
+    }
+  }
+  .tile-256 {
+    color: #f9f6f2;
+    background: #edcc61;
+    box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0.31746), inset 0 0 0 1px rgba(255, 255, 255, 0.19048);
+    font-size: 45px;
+  }
+  @media screen and (max-width: 520px) {
+    .tile-256 {
+      font-size: 25px;
+    }
+  }
+  .tile-512 {
+    color: #f9f6f2;
+    background: #edc850;
+    box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0.39683), inset 0 0 0 1px rgba(255, 255, 255, 0.2381);
+    font-size: 45px;
+  }
+  @media screen and (max-width: 520px) {
+    .tile-512 {
+      font-size: 25px;
+    }
+  }
+  .tile-1024 {
+    color: #f9f6f2;
+    background: #edc53f;
+    box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0.47619), inset 0 0 0 1px rgba(255, 255, 255, 0.28571);
+    font-size: 35px;
+  }
+  @media screen and (max-width: 520px) {
+    .tile-1024 {
+      font-size: 15px;
+    }
+  }
+  .tile-2048 {
+    color: #f9f6f2;
+    background: #edc22e;
+    box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0.55556), inset 0 0 0 1px rgba(255, 255, 255, 0.33333);
+    font-size: 35px;
+  }
+  @media screen and (max-width: 520px) {
+    .tile-2048 {
+      font-size: 15px;
+    }
+  }
+  .tile-super {
+    color: #f9f6f2;
+    background: #3c3a32;
+    font-size: 30px;
+  }
+  @media screen and (max-width: 520px) {
+    .tile-super {
+      font-size: 10px;
+    }
+  }
+
 }
