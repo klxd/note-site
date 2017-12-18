@@ -46,7 +46,10 @@ CAP理论:对于任意给定的系统,只能强化这三个特性中的两个.
      可用,即使网络发生分区的时候也是如此
    - 亚马逊Dynamo的衍生品,Cassandra
    
-
+## BASE模型
+- Basically Available: 基本可用,允许分区失败
+- Soft state: 软状态,接收一段时间的状态不同步
+- Eventually consistent: 最终一致,保证最终数据的状态是一致的
 
 ## Cassandra与RDB的对比
 
