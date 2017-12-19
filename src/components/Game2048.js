@@ -17,7 +17,7 @@ class Game2048 extends Component {
   componentWillMount() {
     if (typeof document !== `undefined`) {
       document.addEventListener("keydown", this.onKeyDown.bind(this));
-      document.addEventListener("touchstart", function(event) {
+      document.addEventListener("touchstart", function (event) {
         this.touchStartX = event.changedTouches[0].pageX;
         this.touchStartY = event.changedTouches[0].pageY;
       }.bind(this));
@@ -68,26 +68,30 @@ class Game2048 extends Component {
     let newArr = Game2048.copyArray(this.arr);
     [isChanged, newArr] = Game2048.tryMovePanel(newArr, direction);
     if (isChanged) {
-      Game2048.setNewNum(newArr);
+      let position = Game2048.setNewNum(newArr);
+      let isGameOver = Game2048.isGameOver(newArr);
       this.preArr = this.arr;
       this.arr = newArr;
-      this.setState({arr: this.arr});
+      this.setState({
+        arr: this.arr,
+        isGameOver: isGameOver,
+        newCellPosition: position
+      });
     }
   };
 
   onRestart = () => {
     this.init();
-    this.setState({arr: this.arr});
+    this.setState({arr: this.arr, isGameOver: false});
   };
 
   onRevert = () => {
     this.arr = this.preArr;
     this.preArr = null;
-    this.setState({arr: this.arr});
+    this.setState({arr: this.arr, isGameOver: false});
   };
 
   init = () => {
-    this.score = 0;
     this.preArr = null;
     this.arr = [];
     for (let i = 0; i < 4; i++) {
@@ -102,6 +106,7 @@ class Game2048 extends Component {
     if (position >= 0) {
       arr[Math.floor(position / 4)][position % 4] = Game2048.generateNewCellNumber();
     }
+    return position;
   };
 
   /**
@@ -141,6 +146,16 @@ class Game2048 extends Component {
     }
     return newArr;
   };
+
+  static isGameOver(arr) {
+    for (let i = 1; i <= 4; i++) {
+      let [isChanged,] = Game2048.tryMovePanel(arr, i);
+      if (isChanged) {
+        return false;
+      }
+    }
+    return true;
+  }
 
   /**
    * @param {Array} arr
@@ -199,10 +214,11 @@ class Game2048 extends Component {
   };
 
   static rotate = (arr, degree) => {
+    let newArr = Game2048.copyArray(arr);
     for (let i = 0; i < (degree % 360) / 90; i++) {
-      arr = Game2048.rotate90(arr);
+      newArr = Game2048.rotate90(newArr);
     }
-    return arr;
+    return newArr;
   };
 
   static rotate90 = (arr) => {
@@ -228,12 +244,14 @@ class Game2048 extends Component {
             <Button onClick={this.onRevert} label="Revert" disabled={this.preArr === null}/>
           </div>
         </div>
-        <div>{this.state.gameOver ? `Game Over` : ''}</div>
         <div className="grid-container">
-          {this.state.arr.map((row, index) => <div key={index} className="grid-row">
-              {row.map((num, index) => {
-                  let tileClassName = 'grid-cell tile-new tile-' + (num > 2048 ? 'super' : num);
-                  return (<div key={index} className={tileClassName}>
+          {this.state.isGameOver ? <div className="game-over-message">Game Over!</div> : null}
+          {this.state.arr.map((row, rowIndex) =>
+            <div key={rowIndex} className="grid-row">
+              {row.map((num, columnIndex) => {
+                  let newClass = (rowIndex * 4 + columnIndex) === this.state.newCellPosition ? 'tile-new ' : '';
+                  let numClass = 'tile-' + (num > 2048 ? 'super' : num);
+                  return (<div key={columnIndex} className={'grid-cell ' + newClass + numClass}>
                     {num === 0 ? '' : num}
                   </div>)
                 }
