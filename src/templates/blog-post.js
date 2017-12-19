@@ -23,8 +23,13 @@ class BlogPostTemplate extends React.Component {
             <Tag key={index} name={tag}/>
           )}
         </div>
+        <div
+          dangerouslySetInnerHTML={{__html: post.tableOfContents}}
+          className="toc"
+        />
+
         <div dangerouslySetInnerHTML={{__html: post.html}}/>
-        <hr />
+        <hr/>
       </div>
     )
   }
@@ -43,6 +48,7 @@ export const pageQuery = graphql`
     markdownRemark(frontmatter: { path: { eq: $path } }) {
       id
       html
+      tableOfContents
       frontmatter {
         title
         date(formatString: "MMMM DD, YYYY")
