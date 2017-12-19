@@ -6,12 +6,18 @@ class Game2048 extends Component {
   constructor() {
     super();
     this.init();
+    this.state = {arr: this.arr};
   }
+
+  static LEFT = 1;
+  static RIGHT = 2;
+  static UP = 3;
+  static DOWN = 4;
 
   componentWillMount() {
     if (typeof document !== `undefined`) {
       document.addEventListener("keydown", this.onKeyDown.bind(this));
-      document.addEventListener("touchstart", function (event) {
+      document.addEventListener("touchstart", function(event) {
         this.touchStartX = event.changedTouches[0].pageX;
         this.touchStartY = event.changedTouches[0].pageY;
       }.bind(this));
@@ -24,49 +30,88 @@ class Game2048 extends Component {
     this.touchEndY = event.changedTouches[0].pageY;
     let x = this.touchEndX - this.touchStartX;
     let y = this.touchEndY - this.touchStartY;
-    let direction = null;
+    let direction;
     if (Math.abs(x) > Math.abs(y)) {
-      direction = x > 0 ? 'ArrowRight' : 'ArrowLeft';
+      direction = x > 0 ? Game2048.RIGHT : Game2048.LEFT;
     } else {
-      direction = y > 0 ? 'ArrowDown' : 'ArrowUp';
+      direction = y > 0 ? Game2048.DOWN : Game2048.UP;
     }
-
     this.onMove(direction);
   };
 
   onKeyDown = (keyBoardEvent) => {
-    this.onMove(keyBoardEvent.code)
+    let direction;
+    switch (keyBoardEvent.code) {
+      case 'ArrowLeft':
+        direction = Game2048.LEFT;
+        break;
+      case 'ArrowRight':
+        direction = Game2048.RIGHT;
+        break;
+      case 'ArrowUp':
+        direction = Game2048.UP;
+        break;
+      case 'ArrowDown':
+        direction = Game2048.DOWN;
+        break;
+      default:
+        return;
+    }
+    this.onMove(direction)
   };
 
+  /**
+   * @param {number} direction
+   */
   onMove = (direction) => {
-    if (this.movePanel(direction)) {
-      this.getNewNum();
-      this.setState({});
+    let isChanged;
+    let newArr = Game2048.copyArray(this.arr);
+    [isChanged, newArr] = Game2048.tryMovePanel(newArr, direction);
+    if (isChanged) {
+      Game2048.setNewNum(newArr);
+      this.preArr = this.arr;
+      this.arr = newArr;
+      this.setState({arr: this.arr});
     }
+  };
+
+  onRestart = () => {
+    this.init();
+    this.setState({arr: this.arr});
+  };
+
+  onRevert = () => {
+    this.arr = this.preArr;
+    this.preArr = null;
+    this.setState({arr: this.arr});
   };
 
   init = () => {
     this.score = 0;
+    this.preArr = null;
     this.arr = [];
     for (let i = 0; i < 4; i++) {
       this.arr.push([0, 0, 0, 0]);
     }
-    this.getNewNum();
-    this.getNewNum();
+    Game2048.setNewNum(this.arr);
+    Game2048.setNewNum(this.arr);
   };
 
-  getNewNum = () => {
-    let position = this.getRandomEmpty();
+  static setNewNum = (arr) => {
+    let position = Game2048.randomEmptyCell(arr);
     if (position >= 0) {
-      this.arr[Math.floor(position / 4)][position % 4] = Game2048.getNextCellNumber();
+      arr[Math.floor(position / 4)][position % 4] = Game2048.generateNewCellNumber();
     }
   };
 
-  getRandomEmpty() {
+  /**
+   * @return {number} index of empty cell (0-based), return -1 when no empty cell
+   */
+  static randomEmptyCell(arr) {
     let emptyPosition = [];
     for (let i = 0; i < 4; i++) {
       for (let j = 0; j < 4; j++) {
-        if (this.arr[i][j] === 0) {
+        if (arr[i][j] === 0) {
           emptyPosition.push(i * 4 + j);
         }
       }
@@ -78,42 +123,62 @@ class Game2048 extends Component {
     }
   }
 
-  static getNextCellNumber() {
+  /**
+   * @return {number} number for new cell, 2(90%) and 4(10%)
+   */
+  static generateNewCellNumber() {
     return Math.random() > 0.1 ? 2 : 4;
   }
 
-  movePanel = (direction) => {
+  static copyArray = (arr) => {
+    let newArr = [];
+    for (let i = 0; i < arr.length; i++) {
+      let newRow = [];
+      for (let j = 0; j < arr[i].length; j++) {
+        newRow.push(arr[i][j]);
+      }
+      newArr.push(newRow);
+    }
+    return newArr;
+  };
+
+  /**
+   * @param {Array} arr
+   * @param {number} direction
+   * @return {Array} [whether the origin array is changed, the new array]
+   */
+  static tryMovePanel = (arr, direction) => {
     let degree = 0;
     let isChange = false;
     switch (direction) {
-      case 'ArrowLeft':
+      case Game2048.LEFT:
         break;
-      case 'ArrowRight':
+      case Game2048.RIGHT:
         degree = 180;
         break;
-      case 'ArrowUp':
+      case Game2048.UP:
         degree = 90;
         break;
-      case 'ArrowDown':
+      case Game2048.DOWN:
         degree = 270;
         break;
       default:
-        return isChange;
+        return [isChange];
     }
-    this.rotate(degree);
-    isChange = this.merge();
-    this.rotate(360 - degree);
-    return isChange;
+    let newArr = Game2048.rotate(arr, degree);
+    [isChange, newArr] = Game2048.merge(newArr);
+    newArr = Game2048.rotate(newArr, 360 - degree);
+    return [isChange, newArr];
   };
 
-  merge = () => {
+  static merge = (arr) => {
     let isChange = false;
     for (let i = 0; i < 4; i++) {
       let newRow = [];
       for (let j = 0; j < 4; j++) {
-        if (this.arr[i][j] !== 0) {
-          newRow.push(this.arr[i][j]);
-          if (j > 0 && this.arr[i][j - 1] === 0) {
+        if (arr[i][j] !== 0) {
+          newRow.push(arr[i][j]);
+          if (j > 0 && arr[i][j - 1] === 0) {
             isChange = true;
           }
         }
@@ -128,36 +193,30 @@ class Game2048 extends Component {
       while (newRow.length < 4) {
         newRow.push(0);
       }
-      this.arr[i] = newRow;
+      arr[i] = newRow;
     }
-    return isChange;
+    return [isChange, arr];
   };
 
-  rotate = (degree) => {
-    if (degree % 360 === 0) {
-      return;
+  static rotate = (arr, degree) => {
+    for (let i = 0; i < (degree % 360) / 90; i++) {
+      arr = Game2048.rotate90(arr);
     }
-    for (let i = 0; i < degree / 90; i++) {
-      this.rotate90();
-    }
+    return arr;
   };
 
-  rotate90 = () => {
+  static rotate90 = (arr) => {
     let newArray = [];
     for (let col = 3; col >= 0; col--) {
       let newRow = [];
       for (let row = 0; row < 4; row++) {
-        newRow.push(this.arr[row][col]);
+        newRow.push(arr[row][col]);
       }
       newArray.push(newRow);
     }
-    this.arr = newArray;
+    return newArray;
   };
 
-  onRestart = () => {
-    this.init();
-    this.setState({});
-  };
 
   render() {
     return (
@@ -166,10 +225,12 @@ class Game2048 extends Component {
           <div className="header-text">2048</div>
           <div className="button-container">
             <Button onClick={this.onRestart} label="New Game"/>
+            <Button onClick={this.onRevert} label="Revert" disabled={this.preArr === null}/>
           </div>
         </div>
+        <div>{this.state.gameOver ? `Game Over` : ''}</div>
         <div className="grid-container">
-          {this.arr.map((row, index) => <div key={index} className="grid-row">
+          {this.state.arr.map((row, index) => <div key={index} className="grid-row">
               {row.map((num, index) => {
                   let tileClassName = 'grid-cell tile-new tile-' + (num > 2048 ? 'super' : num);
                   return (<div key={index} className={tileClassName}>

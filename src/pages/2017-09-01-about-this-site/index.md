@@ -10,6 +10,7 @@ tags:
 - <https://imququ.com/>
 - <http://typecho.org/>
 - <https://afoo.me/>
+- <http://es6.ruanyifeng.com/>
 
 
 ## 构建历程
