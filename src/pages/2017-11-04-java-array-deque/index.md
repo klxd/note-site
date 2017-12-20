@@ -10,9 +10,9 @@ tags:
 # Java ArrayDeque
 
 ArrayDeque和LinkedList是Deque的两个通用实现，
-官方更推荐使用AarryDeque用作栈和队列.
+官方更推荐使用ArrayDeque用作栈和队列.
 
-* 底层通过__循环数组(circular array)__实现
+* 底层通过**循环数组**(circular array)实现
 * 不允许插入null元素
 * 没有实现同步(不是线程安全)
 
