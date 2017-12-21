@@ -7,8 +7,6 @@ tags:
    - java collection framework
 ---
 
-# Java ArrayDeque
-
 ArrayDeque和LinkedList是Deque的两个通用实现，
 官方更推荐使用ArrayDeque用作栈和队列.
 
@@ -53,7 +51,7 @@ public class ArrayDeque<E> extends AbstractCollection<E>
  }
 ```
 
-##　void addFirst(E e)
+## void addFirst(E e)
 ```java
 public void addFirst(E e) {
     if (e == null)
