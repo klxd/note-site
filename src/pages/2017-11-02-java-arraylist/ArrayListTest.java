@@ -10,7 +10,6 @@ public class ArrayListTest {
         Arrays.sort(list.toArray());
         list.sort(String::compareToIgnoreCase);
         System.out.println(list);
-        list.subList()
 
       /*  List list2 = Stream.of("sfdf", "sdfsdf").collect(Collectors.toList());
         list2.add(1);
