@@ -259,116 +259,49 @@ Semaphore(信号量)可以用来控制同时访问特定资源的线程数量
 public class Semaphore implements java.io.Serializable {
     
     /**
-     * Creates a {@code Semaphore} with the given number of
-     * permits and nonfair fairness setting.
-     *
-     * @param permits the initial number of permits available.
-     *        This value may be negative, in which case releases
-     *        must occur before any acquires will be granted.
+     * 创建一个不公平的信号量 
+     * @param permits 初始的许可证数量
      */
     public Semaphore(int permits) {
         sync = new NonfairSync(permits);
     }
 
     /**
-     * Creates a {@code Semaphore} with the given number of
-     * permits and the given fairness setting.
-     *
-     * @param permits the initial number of permits available.
-     *        This value may be negative, in which case releases
-     *        must occur before any acquires will be granted.
-     * @param fair {@code true} if this semaphore will guarantee
-     *        first-in first-out granting of permits under contention,
-     *        else {@code false}
+     * @param permits 初始的许可证数量
+     *        可为负值,表示在发放许可证之前方法{@link #realse}需要被调用的次数
+     * @param fair 授权机制是否公平,公平->先到先得, 不公平->抢占式
      */
     public Semaphore(int permits, boolean fair) {
         sync = fair ? new FairSync(permits) : new NonfairSync(permits);
     }
 
     /**
-     * Acquires a permit from this semaphore, blocking until one is
-     * available, or the thread is {@linkplain Thread#interrupt interrupted}.
-     *
-     * <p>Acquires a permit, if one is available and returns immediately,
-     * reducing the number of available permits by one.
-     *
-     * <p>If no permit is available then the current thread becomes
-     * disabled for thread scheduling purposes and lies dormant until
-     * one of two things happens:
-     * <ul>
-     * <li>Some other thread invokes the {@link #release} method for this
-     * semaphore and the current thread is next to be assigned a permit; or
-     * <li>Some other thread {@linkplain Thread#interrupt interrupts}
-     * the current thread.
-     * </ul>
-     *
-     * <p>If the current thread:
-     * <ul>
-     * <li>has its interrupted status set on entry to this method; or
-     * <li>is {@linkplain Thread#interrupt interrupted} while waiting
-     * for a permit,
-     * </ul>
-     * then {@link InterruptedException} is thrown and the current thread's
-     * interrupted status is cleared.
-     *
-     * @throws InterruptedException if the current thread is interrupted
+     * 从信号量中请求一个许可证,当前线程会被阻塞,直到获得许可证或者被中断 
      */
     public void acquire() throws InterruptedException {
         sync.acquireSharedInterruptibly(1);
     }
 
     /**
-     * Acquires a permit from this semaphore, blocking until one is
-     * available.
-     *
-     * <p>Acquires a permit, if one is available and returns immediately,
-     * reducing the number of available permits by one.
-     *
-     * <p>If no permit is available then the current thread becomes
-     * disabled for thread scheduling purposes and lies dormant until
-     * some other thread invokes the {@link #release} method for this
-     * semaphore and the current thread is next to be assigned a permit.
-     *
-     * <p>If the current thread is {@linkplain Thread#interrupt interrupted}
-     * while waiting for a permit then it will continue to wait, but the
-     * time at which the thread is assigned a permit may change compared to
-     * the time it would have received the permit had no interruption
-     * occurred.  When the thread does return from this method its interrupt
-     * status will be set.
+     * 请求一个许可证,等待期间不接受中断
      */
     public void acquireUninterruptibly() {
         sync.acquireShared(1);
     }
 
     /**
-     * Acquires a permit from this semaphore, only if one is available at the
-     * time of invocation.
-     *
-     * <p>Acquires a permit, if one is available and returns immediately,
-     * with the value {@code true},
-     * reducing the number of available permits by one.
-     *
-     * <p>If no permit is available then this method will return
-     * immediately with the value {@code false}.
-     *
-     * <p>Even when this semaphore has been set to use a
-     * fair ordering policy, a call to {@code tryAcquire()} <em>will</em>
-     * immediately acquire a permit if one is available, whether or not
-     * other threads are currently waiting.
-     * This &quot;barging&quot; behavior can be useful in certain
-     * circumstances, even though it breaks fairness. If you want to honor
-     * the fairness setting, then use
-     * {@link #tryAcquire(long, TimeUnit) tryAcquire(0, TimeUnit.SECONDS) }
-     * which is almost equivalent (it also detects interruption).
-     *
-     * @return {@code true} if a permit was acquired and {@code false}
-     *         otherwise
+     * 尝试获得一个许可证,无论成功与否此方法都会立刻返回.
+     * 无论此信号量的授权机制是否公平,此方法都会使用不公平的抢占式机制,
+     * 即无论当前是否有线程在等待许可证,只要调用此方法时有可用的许可证,它都会立刻抢占.
+     *  此抢占式机制同样适用于{@link #tryAcquire(long, TimeUnit)}
+     * @return 是否成功获得许可证
      */
     public boolean tryAcquire() {
         return sync.nonfairTryAcquireShared(1) >= 0;
     }
 
     /**
+     * 尝试获得一个许可证, 
      * Acquires a permit from this semaphore, if one becomes available
      * within the given waiting time and the current thread has not
      * been {@linkplain Thread#interrupt interrupted}.
@@ -615,11 +548,7 @@ public class Semaphore implements java.io.Serializable {
     }
 
     /**
-     * Returns the current number of permits available in this semaphore.
-     *
-     * <p>This method is typically used for debugging and testing purposes.
-     *
-     * @return the number of permits available in this semaphore
+     * 返回此信号量中当前可用的许可证数 
      */
     public int availablePermits() {
         return sync.getPermits();
@@ -650,50 +579,28 @@ public class Semaphore implements java.io.Serializable {
     }
 
     /**
-     * Returns {@code true} if this semaphore has fairness set true.
-     *
-     * @return {@code true} if this semaphore has fairness set true
+     * 当前的授权机制是否公平
      */
     public boolean isFair() {
         return sync instanceof FairSync;
     }
 
     /**
-     * Queries whether any threads are waiting to acquire. Note that
-     * because cancellations may occur at any time, a {@code true}
-     * return does not guarantee that any other thread will ever
-     * acquire.  This method is designed primarily for use in
-     * monitoring of the system state.
-     *
-     * @return {@code true} if there may be other threads waiting to
-     *         acquire the lock
+     * 返回现在是否有正在等待的线程
      */
     public final boolean hasQueuedThreads() {
         return sync.hasQueuedThreads();
     }
 
     /**
-     * Returns an estimate of the number of threads waiting to acquire.
-     * The value is only an estimate because the number of threads may
-     * change dynamically while this method traverses internal data
-     * structures.  This method is designed for use in monitoring of the
-     * system state, not for synchronization control.
-     *
-     * @return the estimated number of threads waiting for this lock
+     * 返回正在等待获取许可证的线程数
      */
     public final int getQueueLength() {
         return sync.getQueueLength();
     }
 
     /**
-     * Returns a collection containing threads that may be waiting to acquire.
-     * Because the actual set of threads may change dynamically while
-     * constructing this result, the returned collection is only a best-effort
-     * estimate.  The elements of the returned collection are in no particular
-     * order.  This method is designed to facilitate construction of
-     * subclasses that provide more extensive monitoring facilities.
-     *
-     * @return the collection of threads
+     * 返回所有正在等待的线程,protected方法
      */
     protected Collection<Thread> getQueuedThreads() {
         return sync.getQueuedThreads();
