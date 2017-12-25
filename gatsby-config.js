@@ -32,7 +32,12 @@ module.exports = {
           "gatsby-remark-prismjs",
           "gatsby-remark-copy-linked-files",
           "gatsby-remark-smartypants",
-          "gatsby-remark-autolink-headers",
+          {
+            resolve: `gatsby-remark-autolink-headers`,
+            options: {
+              offsetY: `62`,
+            },
+          },
         ],
       },
     },

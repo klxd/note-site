@@ -4,25 +4,6 @@ import '../less/component/shelter.less'
 
 export default class Shelter extends React.Component {
 
-  static offsetY = 62;
-
-  componentWillMount() {
-    if (typeof window !== `undefined`) {
-      window.addEventListener("hashchange", function() {
-        setTimeout(function() {
-          const hash = window.decodeURI(window.location.hash.replace(`#`, ``));
-          if (hash !== ``) {
-            const element = document.getElementById(hash);
-            if (element) {
-              const offset = element.offsetTop;
-              window.scrollTo(0, offset - Shelter.offsetY);
-            }
-          }
-        }, 11);
-      }.bind(this));
-    }
-  }
-
   render() {
     return (
       <div className="shelter-component">
