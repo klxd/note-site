@@ -1,5 +1,8 @@
 # back to language cpp to try to bypass osx node failure
-language: cpp
+language: node_js
+node_js:
+  - "6"
+  - "8"
 sudo: false
 env:
   - export NODE_VERSION="0.10"
@@ -8,7 +11,6 @@ env:
   - export NODE_VERSION="5"
 os:
   - linux
-  - osx
 # pre-install to bring in the correct version of node via nvm
 before_install:
   - git submodule update --init --recursive
