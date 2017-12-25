@@ -1,11 +1,8 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import Link from 'gatsby-link'
 import kebabCase from "lodash/kebabCase"
 import '../less/component/tag.less'
-
-const linkStyle={
-  textDecoration: 'none',
-};
 
 export default class Tag extends React.Component {
   render() {
@@ -21,7 +18,7 @@ export default class Tag extends React.Component {
   }
 }
 Tag.propTypes = {
-  name: React.PropTypes.string,
-  count: React.PropTypes.number,
-  linkTo: React.PropTypes.string,
+  name: PropTypes.string,
+  count: PropTypes.number,
+  linkTo: PropTypes.string,
 };

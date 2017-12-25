@@ -1,8 +1,8 @@
 const _ = require("lodash")
 const Promise = require("bluebird")
 const path = require("path")
-const select = require(`unist-util-select`)
-const fs = require(`fs-extra`)
+// const select = require(`unist-util-select`)
+// const fs = require(`fs-extra`)
 
 exports.createPages = ({graphql, boundActionCreators}) => {
   const {createPage} = boundActionCreators
@@ -29,7 +29,7 @@ exports.createPages = ({graphql, boundActionCreators}) => {
     `
       ).then(result => {
         if (result.errors) {
-          console.log(result.errors)
+          // console.log(result.errors)
           reject(result.errors)
         }
 

@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types';
 import '../less/component/card.less'
 
 export default class Card extends React.Component {
@@ -13,7 +14,6 @@ export default class Card extends React.Component {
   }
 }
 Card.propTypes = {
-  header: React.PropTypes.string,
-  count: React.PropTypes.number,
-  // children: React.PropTypes.object,
+  header: PropTypes.string,
+  count: PropTypes.number,
 };

@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import Link from 'gatsby-link'
 import '../less/component/shelter.less'
 
@@ -35,6 +36,6 @@ export default class Shelter extends React.Component {
   }
 }
 Shelter.propTypes = {
-  name: React.PropTypes.string,
-  count: React.PropTypes.number
+  name: PropTypes.string,
+  count: PropTypes.number
 };

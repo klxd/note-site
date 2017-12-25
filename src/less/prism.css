@@ -53,6 +53,8 @@ pre[class*="language-"] {
 
 :not(pre) > code {
     color: #2d84cc;
+    border-radius: .3em;
+    padding: .1em;
     background-color: #e4ebf3;
 }
 

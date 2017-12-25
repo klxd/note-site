@@ -1,4 +1,5 @@
 import React from "react"
+import PropTypes from 'prop-types'
 import Link from "gatsby-link"
 import Tag from '../components/Tag'
 import '../less/template/tag-route.less'
@@ -24,6 +25,11 @@ class TagRoute extends React.Component {
       </div>
     )
   }
+}
+
+TagRoute.propTypes = {
+  data: PropTypes.object,
+  pathContext: PropTypes.object
 }
 
 export default TagRoute

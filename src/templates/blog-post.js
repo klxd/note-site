@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import Helmet from 'react-helmet'
 import get from 'lodash/get'
 import Tag from '../components/Tag';
@@ -32,6 +33,10 @@ class BlogPostTemplate extends React.Component {
       </div>
     )
   }
+}
+
+BlogPostTemplate.propTypes = {
+  data: PropTypes.object,
 }
 
 export default BlogPostTemplate

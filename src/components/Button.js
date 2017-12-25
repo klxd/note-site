@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types';
 import '../less/component/button.less'
 
 export default class Button extends React.Component {
@@ -13,7 +14,7 @@ export default class Button extends React.Component {
   }
 }
 Button.propTypes = {
-  label: React.PropTypes.string,
-  onClick: React.PropTypes.func,
-  disabled: React.PropTypes.bool,
+  label: PropTypes.string,
+  onClick: PropTypes.func,
+  disabled: PropTypes.bool,
 };

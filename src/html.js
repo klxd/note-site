@@ -1,7 +1,7 @@
 import React from "react"
-
-const packageJosn = require('../package.json');
-const homePageUrl = packageJosn.homepage;
+import PropTypes from 'prop-types'
+const packageJson = require('../package.json');
+const homePageUrl = packageJson.homepage;
 
 let faviconUrl = '/';
 let stylesStr
@@ -10,7 +10,7 @@ if (process.env.NODE_ENV === `production`) {
     stylesStr = require(`!raw-loader!../public/styles.css`)
     faviconUrl = homePageUrl + faviconUrl;
   } catch (e) {
-    console.log(e)
+    // console.log(e)
   }
 }
 
@@ -21,6 +21,13 @@ if (process.env.NODE_ENV === `production`) {
  * the render function will run in back-end
  */
 module.exports = class HTML extends React.Component {
+  static propTypes = {
+    headComponents: PropTypes.object,
+    preBodyComponents: PropTypes.object,
+    body: PropTypes.object,
+    postBodyComponents: PropTypes.object
+  };
+
   render() {
     let css = process.env.NODE_ENV === `production` ? (
         <style

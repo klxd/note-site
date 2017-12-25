@@ -162,6 +162,7 @@ ESLint支持许多的检查规则,每种规则都有三种报错等级:
   - 派生配置 `Derived config: "quotes": ["error", "single"]`
   - 结果 `"quotes": ["error", "single"]`
 
+### 忽略文件和目录
 
 
 ## 参考资料

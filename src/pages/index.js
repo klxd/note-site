@@ -1,11 +1,12 @@
 import React from "react"
+import PropTypes from 'prop-types'
 import Link from "gatsby-link"
 import get from "lodash/get"
 import Helmet from "react-helmet"
 import Tag from "../components/Tag"
-import Card from "../components/Card";
+import Card from "../components/Card"
 
-import '../less/page/main-page.less';
+import '../less/page/main-page.less'
 
 
 /** this class combine all the blog-posts as an index page */
@@ -23,7 +24,6 @@ class BlogIndex extends React.Component {
             {
               posts.map((post, index) => {
                 if (post.node.path !== "/404/") {
-                  const title = get(post, "node.frontmatter.title") || post.node.path;
                   return (
                     <div key={index} className="post-item">
                       <div className="post-header-row">
@@ -64,7 +64,7 @@ class BlogIndex extends React.Component {
 }
 
 BlogIndex.propTypes = {
-  route: React.PropTypes.object,
+  route: PropTypes.object,
 };
 
 export default BlogIndex
