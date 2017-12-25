@@ -51,6 +51,11 @@ pre[class*="language-"] {
     white-space: normal;
 }
 
+:not(pre) > code {
+    color: #2d84cc;
+    background-color: #e4ebf3;
+}
+
 .token.comment,
 .token.prolog,
 .token.doctype,

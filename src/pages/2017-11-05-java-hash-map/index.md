@@ -1,7 +1,7 @@
 ---
 title: Java HashMap
 date: "2017-11-04T22:22:22.169Z"
-path:  "/java-array-deque"
+path:  "/java-hash-map"
 tags:
    - java
    - java collection framework

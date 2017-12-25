@@ -13,7 +13,7 @@ tags:
 - 封装不够强大,public修饰符允许任何人访问
 - 不同版本的类库交叉依赖,无法确定是否共同依赖了相同的JAR
 
-#### Java SE 9: Jigsaw Project
+### Java SE 9: Jigsaw Project
 Java 9的模块化是通过工程Jigsaw引入的  
 参考链接 <http://openjdk.java.net/projects/jigsaw/>
 >The primary goals of this Project were to:

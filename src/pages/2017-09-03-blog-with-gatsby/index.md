@@ -91,7 +91,7 @@ module.exports = {
 Markdown是一种轻量级的文本标记语言,它的特点是可以通过简单的标记语法让文本内容具有一定的格式.
 在Gatsby中使用Markdown生成页面需要一下几个步骤:
 
-##### 1.从文件系统从读取Markdown文件
+#### 1.从文件系统从读取Markdown文件
 这是通过`gatsby-source-filesystem`插件完成的  
 1. 安装`npm i --save gatsby-source-filesystem`
 2. 配置`gatsby-config.js`
@@ -107,7 +107,7 @@ plugins: [
   },
 ];
 ```
-##### 2. 转换Markdown文件
+#### 2. 转换Markdown文件
 这是通过`gatsby-transformer-remark`插件完成的,这个插件会读取Markdown文件,
 将其中元数据部分(metadata)转化为`frontmatter`,将内容部分转化为HTML.  
 1. 安装`npm i --save gatsby-transformer-remark`
@@ -119,7 +119,7 @@ plugins: [
 ];
 ```
 
-##### 3. 为Markdown数据创建模板组件
+#### 3. 为Markdown数据创建模板组件
 在`src/templates/`目录下为转换后的Markdown数据创建模板文件,定义生成的html页面的
 具体内容和样式.
 
@@ -162,7 +162,7 @@ export const pageQuery = graphql`
 1. pageQuery用于获取Markdown数据,Gatsby会自动地运行这个语句并返回其查询结果
 2. 查询结果会被注入到Template组件中,可以在React组件的render函数中使用
 
-##### 4. 利用Gatsby提供的Node API创建页面
+#### 4. 利用Gatsby提供的Node API创建页面
 Gatsby提供了强大的[Node.js API](https://www.gatsbyjs.org/docs/node-apis/),
 它们可以在`gatsby-node.js`文件中使用.下面将会示范如何使用`createPages`API来创建页面.
 

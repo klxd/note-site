@@ -25,9 +25,8 @@ class BlogPostTemplate extends React.Component {
         </div>
         <div
           dangerouslySetInnerHTML={{__html: post.tableOfContents}}
-          className="toc"
+          className="content-link-table"
         />
-
         <div dangerouslySetInnerHTML={{__html: post.html}}/>
         <hr/>
       </div>
