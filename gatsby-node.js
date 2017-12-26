@@ -14,19 +14,19 @@ exports.createPages = ({graphql, boundActionCreators}) => {
     resolve(
       graphql(
         `
-      {
-        allMarkdownRemark(limit: 1000) {
-          edges {
-            node {
-              frontmatter {
-                path
-                tags
+          {
+            allMarkdownRemark(limit: 1000) {
+              edges {
+                node {
+                  frontmatter {
+                    path
+                    tags
+                  }
+                }
               }
             }
           }
-        }
-      }
-    `
+        `
       ).then(result => {
         if (result.errors) {
           // console.log(result.errors)
@@ -45,21 +45,20 @@ exports.createPages = ({graphql, boundActionCreators}) => {
         })
 
         // create tag pages
-        let tags = [];
+        let tags = []
         result.data.allMarkdownRemark.edges.forEach(edge => {
-            if (edge.node.frontmatter.tags) {
-              tags = tags.concat(edge.node.frontmatter.tags)
-            }
+          if (edge.node.frontmatter.tags) {
+            tags = tags.concat(edge.node.frontmatter.tags)
           }
-        );
-        tags = _.uniq(tags);
+        })
+        tags = _.uniq(tags)
         tags.forEach(tag => {
           createPage({
             path: `/tags/${_.kebabCase(tag)}/`,
             component: tagPagesTemplate,
             context: {
-              tag
-            }
+              tag,
+            },
           })
         })
 
@@ -67,7 +66,7 @@ exports.createPages = ({graphql, boundActionCreators}) => {
         createPage({
           path: `/games/2048/`,
           component: game2048,
-          context: {}
+          context: {},
         })
       })
     )

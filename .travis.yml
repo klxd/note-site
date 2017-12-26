@@ -1,4 +1,3 @@
-# back to language cpp to try to bypass osx node failure
 language: node_js
 node_js:
   - "6"

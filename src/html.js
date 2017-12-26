@@ -1,20 +1,18 @@
 import React from "react"
-import PropTypes from 'prop-types'
-const packageJson = require('../package.json');
-const homePageUrl = packageJson.homepage;
+import PropTypes from "prop-types"
+const packageJson = require("../package.json")
+const homePageUrl = packageJson.homepage
 
-let faviconUrl = '/';
+let faviconUrl = "/"
 let stylesStr
 if (process.env.NODE_ENV === `production`) {
   try {
     stylesStr = require(`!raw-loader!../public/styles.css`)
-    faviconUrl = homePageUrl + faviconUrl;
+    faviconUrl = homePageUrl + faviconUrl
   } catch (e) {
     // console.log(e)
   }
 }
-
-
 
 /**
  * this class define the root HTML element,
@@ -26,20 +24,21 @@ module.exports = class HTML extends React.Component {
     preBodyComponents: PropTypes.array,
     body: PropTypes.string,
     postBodyComponents: PropTypes.array,
-  };
+  }
 
   render() {
-    let css = process.env.NODE_ENV === `production` ? (
+    let css =
+      process.env.NODE_ENV === `production` ? (
         <style
           id="gatsby-inlined-css"
           dangerouslySetInnerHTML={{__html: stylesStr}}
         />
-      ) : null;
+      ) : null
 
     return (
       <html>
         <head>
-          <link rel="shortcut icon" href={faviconUrl + 'favicon.ico'}/>
+          <link rel="shortcut icon" href={faviconUrl + "favicon.ico"} />
           <meta charSet="utf-8" />
           <meta httpEquiv="x-ua-compatible" content="ie=edge" />
           <meta
@@ -54,11 +53,11 @@ module.exports = class HTML extends React.Component {
           <div
             key={`body`}
             id="___gatsby"
-            dangerouslySetInnerHTML={{ __html: this.props.body }}
+            dangerouslySetInnerHTML={{__html: this.props.body}}
           />
           {this.props.postBodyComponents}
         </body>
       </html>
     )
   }
-};
+}

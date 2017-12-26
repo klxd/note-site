@@ -1,5 +1,5 @@
 import React from "react"
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types"
 import Link from "gatsby-link"
 import kebabCase from "lodash/kebabCase"
 import "../less/page/tags-page.less"
@@ -34,7 +34,7 @@ class TagsPageRoute extends React.Component {
 
 TagsPageRoute.propTypes = {
   data: PropTypes.object,
-};
+}
 
 export default TagsPageRoute
 
@@ -45,9 +45,7 @@ export const pageQuery = graphql`
         title
       }
     }
-    allMarkdownRemark(
-      limit: 2000
-    ) {
+    allMarkdownRemark(limit: 2000) {
       group(field: frontmatter___tags) {
         fieldValue
         totalCount

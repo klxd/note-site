@@ -1,60 +1,70 @@
 import React from "react"
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types"
 import Link from "gatsby-link"
 import get from "lodash/get"
 import Helmet from "react-helmet"
 import Tag from "../components/Tag"
 import Card from "../components/Card"
 
-import '../less/page/main-page.less'
-
+import "../less/page/main-page.less"
 
 /** this class combine all the blog-posts as an index page */
 class BlogIndex extends React.Component {
   render() {
-    const siteTitle = get(this, "props.data.site.siteMetadata.title");
-    const posts = get(this, "props.data.allMarkdownRemark.edges");
-    const allTags = get(this, "props.data.allMarkdownRemark.group");
+    const siteTitle = get(this, "props.data.site.siteMetadata.title")
+    const posts = get(this, "props.data.allMarkdownRemark.edges")
+    const allTags = get(this, "props.data.allMarkdownRemark.group")
     return (
       <div className="main-page">
-        <Helmet title={siteTitle}/>
+        <Helmet title={siteTitle} />
         {/*<Bio/>*/}
         <div className="main-container">
           <div className="main-content">
-            {
-              posts.map((post, index) => {
-                if (post.node.path !== "/404/") {
-                  return (
-                    <div key={index} className="post-item">
-                      <div className="post-header-row">
-                        <div key={post.node.frontmatter.path} className="post-header">
-                          <Link style={{boxShadow: "none"}} to={post.node.frontmatter.path}>
-                            {post.node.frontmatter.title}
-                          </Link>
-                        </div>
-                        <div className="post-date">
-                          {post.node.frontmatter.date}
-                        </div>
+            {posts.map((post, index) => {
+              if (post.node.path !== "/404/") {
+                return (
+                  <div key={index} className="post-item">
+                    <div className="post-header-row">
+                      <div
+                        key={post.node.frontmatter.path}
+                        className="post-header"
+                      >
+                        <Link
+                          style={{boxShadow: "none"}}
+                          to={post.node.frontmatter.path}
+                        >
+                          {post.node.frontmatter.title}
+                        </Link>
                       </div>
-                      <div className="post-tags">
-                        {post.node.frontmatter.tags.map((tag, index) => <Tag key={index} name={tag}/>)}
+                      <div className="post-date">
+                        {post.node.frontmatter.date}
                       </div>
-
-                      <div className="post-excerpt" dangerouslySetInnerHTML={{__html: post.node.excerpt}}/>
                     </div>
-                  )
-                }
-              })}
+                    <div className="post-tags">
+                      {post.node.frontmatter.tags.map((tag, index) => (
+                        <Tag key={index} name={tag} />
+                      ))}
+                    </div>
+
+                    <div
+                      className="post-excerpt"
+                      dangerouslySetInnerHTML={{__html: post.node.excerpt}}
+                    />
+                  </div>
+                )
+              }
+            })}
           </div>
 
           <div className="right-side-bar">
-            <Card header={'Games'}>
-              <Tag name={'2048'} linkTo={'/games/2048'}/>
+            <Card header={"Games"}>
+              <Tag name={"2048"} linkTo={"/games/2048"} />
             </Card>
 
-            <Card header={'Tags'}>
-              {allTags.map((tag, index) =>
-                <Tag key={index} name={tag.fieldValue} count={tag.totalCount}/>)}
+            <Card header={"Tags"}>
+              {allTags.map((tag, index) => (
+                <Tag key={index} name={tag.fieldValue} count={tag.totalCount} />
+              ))}
             </Card>
           </div>
         </div>
@@ -65,7 +75,7 @@ class BlogIndex extends React.Component {
 
 BlogIndex.propTypes = {
   route: PropTypes.object,
-};
+}
 
 export default BlogIndex
 export const pageQuery = graphql`
@@ -75,7 +85,7 @@ export const pageQuery = graphql`
         title
       }
     }
-    allMarkdownRemark(sort: { fields: [frontmatter___date], order: DESC }) {
+    allMarkdownRemark(sort: {fields: [frontmatter___date], order: DESC}) {
       edges {
         node {
           excerpt
@@ -85,7 +95,6 @@ export const pageQuery = graphql`
             date(formatString: "DD MMMM, YYYY")
             tags
           }
-          
         }
       }
       group(field: frontmatter___tags) {
