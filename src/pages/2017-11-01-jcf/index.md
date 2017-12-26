@@ -8,6 +8,7 @@ tags:
 ---
 
 ## interface Queue
+
 ```java
 public interface Queue<E> extends Collection<E> {
     /** 向队尾插入元素,失败则抛出异常 */
@@ -30,9 +31,10 @@ public interface Queue<E> extends Collection<E> {
 }
 ```
 
-## interface 
+## interface
 
-## 工具类Arrays
+## 工具类 Arrays
+
 ```java
 public class Arrays {
 
@@ -43,8 +45,9 @@ public class Arrays {
      */
 }
 ```
-- 静态工具类,无法实例化
-- 内嵌一个ArrayList类,
+
+* 静态工具类,无法实例化
+* 内嵌一个 ArrayList 类,
 
 ### Arrays.asList(T...a)
 
@@ -55,7 +58,7 @@ public class Arrays {
     public static <T> List<T> asList(T... a) {
         return new ArrayList<>(a);
     }
-    
+
     private static class ArrayList<E> extends AbstractList<E>
         implements RandomAccess, java.io.Serializable
     {
@@ -151,17 +154,18 @@ public class Arrays {
     }
 }
 ```
-- 返回Arrays的内部类ArrayList的实例
-- Arrays.ArrayList直接将传入的数组作为底层容器
-- Arrays.ArrayList没有实现`add`和`remove`等函数,若调用会直接抛出异常
 
+* 返回 Arrays 的内部类 ArrayList 的实例
+* Arrays.ArrayList 直接将传入的数组作为底层容器
+* Arrays.ArrayList 没有实现`add`和`remove`等函数,若调用会直接抛出异常
 
 ## Q
-- 怎么打印数组？ 怎样打印数组中的重复元素
-- Array 和 ArrayList有什么区别？
-- 什么时候应该使用Array而不是ArrayList
-- 数组和链表数据结构描述，各自的时间复杂度
-- 数组有没有length()这个方法? String有没有length()这个方法
-- 队列和栈是什么，列出它们的区别
-- BlockingQueue是什么
-- 简述ConcurrentLinkedQueue和LinkedBlockingQueue的用处和不同之处
+
+* 怎么打印数组？ 怎样打印数组中的重复元素
+* Array 和 ArrayList 有什么区别？
+* 什么时候应该使用 Array 而不是 ArrayList
+* 数组和链表数据结构描述，各自的时间复杂度
+* 数组有没有 length()这个方法? String 有没有 length()这个方法
+* 队列和栈是什么，列出它们的区别
+* BlockingQueue 是什么
+* 简述 ConcurrentLinkedQueue 和 LinkedBlockingQueue 的用处和不同之处

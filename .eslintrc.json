@@ -2,7 +2,9 @@
   "parser": "babel-eslint",
   "extends": [
     "eslint:recommended",
-    "plugin:react/recommended"
+    "plugin:react/recommended",
+    "prettier",
+    "prettier/react"
   ],
   "parserOptions": {
     "ecmaVersion": 2016,
@@ -17,7 +19,8 @@
     "browser": true
   },
   "plugins": [
-    "react"
+    "react",
+    "prettier"
   ],
   "rules": {
     "react/prop-types": [
@@ -27,7 +30,9 @@
           "children"
         ]
       }
-    ]
+    ],
+    "prettier/prettier": "error",
+    "semi": ["error", "never"]
   },
   "globals": {
     "graphql": true

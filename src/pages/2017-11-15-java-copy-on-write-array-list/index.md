@@ -20,7 +20,7 @@ public class CopyOnWriteArrayList<E>
     /** The array, accessed only via getArray/setArray. */
     // -- 底层的数组,只通过getArray/setArray来访问
     private transient volatile Object[] array;
-    
+
     /**
      * Gets the array.  Non-private so as to also be accessible
      * from CopyOnWriteArraySet class.
@@ -39,8 +39,8 @@ public class CopyOnWriteArrayList<E>
 }
 ```
 
-
 ## add
+
 ```java
 /**
  * Appends the specified element to the end of this list.
@@ -105,8 +105,8 @@ public void add(int index, E element) {
 }
 ```
 
-
 ## E set(int index, E element)
+
 ```java
 /**
  * Replaces the element at the specified position in this list with the
@@ -141,6 +141,7 @@ public E set(int index, E element) {
 ```
 
 ## remove
+
 ```java
 /**
  * Removes the element at the specified position in this list.
@@ -233,8 +234,8 @@ private boolean remove(Object o, Object[] snapshot, int index) {
 }
 ```
 
-
 ## get
+
 ```java
 @SuppressWarnings("unchecked")
 private E get(Object[] a, int index) {
@@ -251,4 +252,3 @@ public E get(int index) {
     return get(getArray(), index);
 }
 ```
-

@@ -9,15 +9,15 @@ tags:
 
 # Java HashMap
 
-* Map的最常用实现
-* 允许放入空元素 (key允许为空,value也允许为空)
+* Map 的最常用实现
+* 允许放入空元素 (key 允许为空,value 也允许为空)
 * 不保证元素的顺序
 * 未实现同步（不是线程安全）
 
 ```java
 public class HashMap<K,V> extends AbstractMap<K,V>
     implements Map<K,V>, Cloneable, Serializable {
-    
+
     /**
      * Basic hash bin node, used for most entries.  (See below for
      * TreeNode subclass, and in LinkedHashMap for its Entry subclass.)
@@ -62,8 +62,8 @@ public class HashMap<K,V> extends AbstractMap<K,V>
             return false;
         }
     }
-    
-    
+
+
     /* ---------------- Fields -------------- */
 
     /**
@@ -148,15 +148,15 @@ static final int hash(Object key) {
 }
 ```
 
-* hash()函数: 取原对象的hashCode,左移16位,返回与其自身的亦或结果
-  原因: 因为HashMap的bucket数量永远为2的幂,
-  对hashCode的取余操作等同于抹掉二进制的高位,
-  这样hashCode的二进制高位没有被利用,增大的碰撞的概率.(低位相同的hashCode会发生碰撞)
-  在对速度和效用进行权衡之后,对hashCode这样的处理.
-  
-* getNode()函数:根据hashCode得到bucket的下标,然后遍历冲突链表或树,得到相应的entry
+* hash()函数: 取原对象的 hashCode,左移 16 位,返回与其自身的亦或结果原因: 因为 HashMap 的 bucket 数量永远为 2 的幂,
+  对 hashCode 的取余操作等同于抹掉二进制的高位,
+  这样 hashCode 的二进制高位没有被利用,增大的碰撞的概率.(低位相同的 hashCode 会发生碰撞)
+  在对速度和效用进行权衡之后,对 hashCode 这样的处理.
+
+* getNode()函数:根据 hashCode 得到 bucket 的下标,然后遍历冲突链表或树,得到相应的 entry
 
 ## put()
+
 ```java
 public V put(K key, V value) {
     return putVal(hash(key), key, value, false, true);
@@ -216,13 +216,14 @@ final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
 ```
 
 ## Q
-- HashMap的工作原理是什么
-- 内部的数据结构是什么
-- HashMap 的 table的容量如何确定？loadFactor 是什么？ 该容量如何变化？这种变化会带来什么问题？
-- HashMap 实现的数据结构是什么？如何实现
-- HashMap 和 HashTable、ConcurrentHashMap 的区别
-- HashMap的遍历方式及效率
-- HashMap、LinkedMap、TreeMap的区别
-- 如何决定选用HashMap还是TreeMap
-- 如果HashMap的大小超过了负载因子(load factor)定义的容量，怎么办
-- HashMap 是线程安全的吗？并发下使用的 Map 是什么，它们内部原理分别是什么，比如存储方式、 hashcode、扩容、 默认容量等
+
+* HashMap 的工作原理是什么
+* 内部的数据结构是什么
+* HashMap 的 table 的容量如何确定？loadFactor 是什么？ 该容量如何变化？这种变化会带来什么问题？
+* HashMap 实现的数据结构是什么？如何实现
+* HashMap 和 HashTable、ConcurrentHashMap 的区别
+* HashMap 的遍历方式及效率
+* HashMap、LinkedMap、TreeMap 的区别
+* 如何决定选用 HashMap 还是 TreeMap
+* 如果 HashMap 的大小超过了负载因子(load factor)定义的容量，怎么办
+* HashMap 是线程安全的吗？并发下使用的 Map 是什么，它们内部原理分别是什么，比如存储方式、 hashcode、扩容、 默认容量等

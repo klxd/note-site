@@ -22,10 +22,10 @@ if (process.env.NODE_ENV === `production`) {
  */
 module.exports = class HTML extends React.Component {
   static propTypes = {
-    headComponents: PropTypes.object,
-    preBodyComponents: PropTypes.object,
-    body: PropTypes.object,
-    postBodyComponents: PropTypes.object
+    headComponents: PropTypes.array,
+    preBodyComponents: PropTypes.array,
+    body: PropTypes.string,
+    postBodyComponents: PropTypes.array,
   };
 
   render() {

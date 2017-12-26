@@ -6,5 +6,4 @@ tags:
    - sql
 ---
 
-
 # SQL Table Join

@@ -7,15 +7,18 @@ tags:
 ---
 
 # 1.two sum
+
 给出一个无序数组,从中找出和为某一固定值的两个数字,返回其数组下标
 
 hint
-- 不能直接排序,否则下标关系消失
+
+* 不能直接排序,否则下标关系消失
 
 solution 1: time O(n) space O(n)
-1. 新建一个HashMap,存放value->index
-2. 遍历数组,从HashMap中查看是否存在值等于`target-arr[n]`
-3. 若存在则返回,否则将value->index放入HashMap中
+
+1. 新建一个 HashMap,存放 value->index
+2. 遍历数组,从 HashMap 中查看是否存在值等于`target-arr[n]`
+3. 若存在则返回,否则将 value->index 放入 HashMap 中
 
 ```java
 class Solution {
@@ -36,9 +39,11 @@ class Solution {
 ```
 
 # 167. Two Sum II - Input array is sorted
+
 给出一个有序数组,从中找出和为某一固定值的两个数字,返回其数组下标(not zero-based)
 
 solution: time O(n), space O(1)
+
 ```java
 class Solution {
     public int[] twoSum(int[] numbers, int target) {
@@ -58,12 +63,12 @@ class Solution {
 }
 ```
 
-
 # 653. Two Sum IV - Input is a BST
+
 给出一棵二叉查找树,确定其中是否**存在**和为某一固定值的两个数字
 
 solution 1: time O(n), space O(n)  
-遍历树,利用HashMap记录访问过的节点的值
+遍历树,利用 HashMap 记录访问过的节点的值
 
 solution 2: time O(n), space O(n)  
 把树转化为有序数组,然后采用头尾遍历
@@ -83,8 +88,8 @@ class Solution {
         Set<Integer> set = new HashSet<>();
         return search(set, root, k);
     }
-    
-    
+
+
     private boolean search(Set<Integer> set, TreeNode root, int k) {
         if (root == null) {
             return false;
@@ -99,16 +104,18 @@ class Solution {
 ```
 
 # 15. 3Sum
-给出一个无序数组,从中找出所有满足a+b+c=target的三元组(不可重复)
 
-solution: 时间复杂度O(n^2)
+给出一个无序数组,从中找出所有满足 a+b+c=target 的三元组(不可重复)
+
+solution: 时间复杂度 O(n^2)
+
 1. 数组排序
 2. 遍历数组,对`arr[a]`找出所有满足`arr[b]+arr[c]=target-arr[a]`的元组
 
 ```java
 public List<List<Integer>> threeSum(int[] num) {
     Arrays.sort(num);
-    List<List<Integer>> res = new LinkedList<>(); 
+    List<List<Integer>> res = new LinkedList<>();
     for (int i = 0; i < num.length-2; i++) {
         if (i == 0 || (i > 0 && num[i] != num[i-1])) {
             int lo = i+1, hi = num.length-1, sum = 0 - num[i];
@@ -128,13 +135,15 @@ public List<List<Integer>> threeSum(int[] num) {
 ```
 
 # 16. 3Sum Closest
-给出一个无序数组,找出一个**和**最接近给定target的三元组
+
+给出一个无序数组,找出一个**和**最接近给定 target 的三元组
 
 solution: O(n^2)
+
 1. 数组排序
 2. 遍历数组,对于`arr[i]`,计算`sum=num[i]+num[start]+num[end]`
-3. 根据sum与target的大小关系决定是start++还是end--(确保O(n)遍历)
-4. 对于每个sum,记录下其中最接近target的一个
+3. 根据 sum 与 target 的大小关系决定是 start++还是 end--(确保 O(n)遍历)
+4. 对于每个 sum,记录下其中最接近 target 的一个
 
 ```java
 public class Solution {
@@ -159,4 +168,3 @@ public class Solution {
     }
 }
 ```
-

@@ -8,6 +8,7 @@ tags:
 ---
 
 ## Node
+
 ```java
 /**
 * -- key和value都不允许为空,特例:tab中的哑元(负的hash值且key和value均为null,不会被暴露)
@@ -116,6 +117,7 @@ static final class ReservationNode<K,V> extends Node<K,V> {
 ```
 
 ## fields
+
 ```java
 public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
     implements ConcurrentMap<K,V>, Serializable {
@@ -136,7 +138,7 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
      * Base counter value, used mainly when there is no contention,
      * but also as a fallback during table initialization
      * races. Updated via CAS.
-     * 
+     *
      */
     private transient volatile long baseCount;
 
@@ -214,6 +216,7 @@ public int size() {
 ```
 
 ## public V put(K key, V value)
+
 ```java
 /**
  * Maps the specified key to the specified value in this table.
@@ -346,14 +349,14 @@ final Node<K,V>[] helpTransfer(Node<K,V>[] tab, Node<K,V> f) {
     }
     return table;
 }
-
 ```
 
 ## transfer
+
 扩容方法
-* 基本思想和HashMap很像
-* 支持并发扩容
-在扩容的时候,总会涉及到一个数组到另一个数组的拷贝操作,基本思路是把这个拷贝操作并发进行.
+
+* 基本思想和 HashMap 很像
+* 支持并发扩容在扩容的时候,总会涉及到一个数组到另一个数组的拷贝操作,基本思路是把这个拷贝操作并发进行.
 
 ```java
 /**
@@ -505,8 +508,9 @@ private final void transfer(Node<K,V>[] tab, Node<K,V>[] nextTab) {
 ```
 
 ## CAS
+
 CAS(compare and swap)非阻塞的无锁算法之一.
-语义:我认为V的值是A,如果是,那么将V的值更新为B,否则不修改并告诉V的实际值是多少
+语义:我认为 V 的值是 A,如果是,那么将 V 的值更新为 B,否则不修改并告诉 V 的实际值是多少
 
 ```java
 //Unsafe mechanics
@@ -547,8 +551,9 @@ static {
 ```
 
 ### 三个核心方法
+
 * 原子操作
-* 对table中指定位置节点进行操作
+* 对 table 中指定位置节点进行操作
 
 ```java
 // -- 获得tab中i位置上的node节点
@@ -569,7 +574,7 @@ static final <K,V> void setTabAt(Node<K,V>[] tab, int i, Node<K,V> v) {
 ```
 
 [Concurrent HashMap in Java7 & Java8](http://www.jasongj.com/java/concurrenthashmap/)
-[什么是cas](http://www.cnblogs.com/Mainz/p/3546347.html)
+[什么是 cas](http://www.cnblogs.com/Mainz/p/3546347.html)
 [cas in java](http://cmsblogs.com/?p=2235)
 [Concurrent HashMap in Java7 & Java8](http://blog.csdn.net/u010723709/article/details/48007881)
 [Concurrent HashMap in Java7 & Java8](http://www.jianshu.com/p/cf5e024d9432)

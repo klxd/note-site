@@ -9,9 +9,9 @@ tags:
 
 # Java Hashtable
 
-* 抽象父类为Dictionary (一个过时的类)
+* 抽象父类为 Dictionary (一个过时的类)
 * 实现同步（线程安全）
-* key和value都不允许为空
+* key 和 value 都不允许为空
 
 ```java
 public class Hashtable<K,V>
@@ -54,6 +54,7 @@ public class Hashtable<K,V>
     private transient int modCount = 0;
 }
 ```
+
 ## put()
 
 ```java
@@ -80,14 +81,16 @@ public synchronized V put(K key, V value) {
     return null;
 }
 ```
-* put方法用`synchronized`关键字实现同步
-* 判断value是否为空,为空则抛出异常
-* 直接计算key对象的hashCode(没有做非空检查,即不允许key为空)
-* 将hashCode模table数组的长度得到index
-* 若`table[index]`元素不为空,则迭代遍历,若得到相同的key则直接替换,并返回旧value
-* 若key不存在于table中,调用addEntry将其加入table
+
+* put 方法用`synchronized`关键字实现同步
+* 判断 value 是否为空,为空则抛出异常
+* 直接计算 key 对象的 hashCode(没有做非空检查,即不允许 key 为空)
+* 将 hashCode 模 table 数组的长度得到 index
+* 若`table[index]`元素不为空,则迭代遍历,若得到相同的 key 则直接替换,并返回旧 value
+* 若 key 不存在于 table 中,调用 addEntry 将其加入 table
 
 ## addEntry
+
 ```java
 private void addEntry(int hash, K key, V value, int index) {
     modCount++;
@@ -109,12 +112,14 @@ private void addEntry(int hash, K key, V value, int index) {
     count++;
 }
 ```
-* 判断count是否等于threshold,是则调用rehash增大table的大小
+
+* 判断 count 是否等于 threshold,是则调用 rehash 增大 table 的大小
 * 拿到`table[index]`位置上的引用(可能为空)
-* 新建一个Entry并插入到`table[index]`的位置,其next指向其旧的引用
+* 新建一个 Entry 并插入到`table[index]`的位置,其 next 指向其旧的引用
 
 ## rehash()
-当count的大小达到threshold时调用此函数
+
+当 count 的大小达到 threshold 时调用此函数
 
 ```java
 protected void rehash() {
@@ -147,10 +152,12 @@ protected void rehash() {
     }
 }
 ```
+
 * 数组大小增大为(2n+1)
-* 遍历旧的table,遍历每个index上的链表,根据其hashCode放入新的table
+* 遍历旧的 table,遍历每个 index 上的链表,根据其 hashCode 放入新的 table
 
 ## get()
+
 ```java
 public synchronized V get(Object key) {
     Entry<?,?> tab[] = table;
@@ -164,5 +171,6 @@ public synchronized V get(Object key) {
     return null;
 }
 ```
-* get方法用`synchronized`关键字实现同步
-* 寻找value的方法与put相同,不再赘述
+
+* get 方法用`synchronized`关键字实现同步
+* 寻找 value 的方法与 put 相同,不再赘述

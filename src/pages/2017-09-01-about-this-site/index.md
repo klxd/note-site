@@ -6,19 +6,19 @@ tags:
     - web
 ---
 
-## 值得参考的blog
-- <https://imququ.com/>
-- <http://typecho.org/>
-- <https://afoo.me/>
-- <http://es6.ruanyifeng.com/>
+## 值得参考的 blog
 
+* <https://imququ.com/>
+* <http://typecho.org/>
+* <https://afoo.me/>
+* <http://es6.ruanyifeng.com/>
 
 ## 构建历程
-* [X] 自定义代码高亮样式
-* [X] 增加标签功能
-* [X] 置顶按钮
-* [X] 新增2048游戏页面
-* [X] 使用LESS代替原生CSS
-* [X] 自动生成章节跳转链接
-* [x] 自定义图片大小
 
+* [x] 自定义代码高亮样式
+* [x] 增加标签功能
+* [x] 置顶按钮
+* [x] 新增 2048 游戏页面
+* [x] 使用 LESS 代替原生 CSS
+* [x] 自动生成章节跳转链接
+* [x] 自定义图片大小

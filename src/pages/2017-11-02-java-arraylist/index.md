@@ -7,15 +7,15 @@ tags:
    - java collection framework
 ---
 
+Java 中最常用的数据结构之一
 
-Java中最常用的数据结构之一
 * 元素的存放顺序与`add`的顺序相同
 * 允许放入`null`元素
 * 未实现同步（不是线程安全）
-* 底层实现是一个array数组
+* 底层实现是一个 array 数组
 
+## add
 
-## add 
 ```java
 public boolean add(E e) {
     ensureCapacityInternal(size + 1);  // Increments modCount!!
@@ -35,10 +35,12 @@ public void add(int index, E element) {
     size++;
 }
 ```
-- ArrayList是在add之前扩容
-- 允许放入空元素
+
+* ArrayList 是在 add 之前扩容
+* 允许放入空元素
 
 ## remove
+
 ```java
 public E remove(int index) {
     rangeCheck(index);
@@ -86,11 +88,13 @@ private void fastRemove(int index) {
     elementData[--size] = null; // clear to let GC do its work
 }
 ```
-- 仅会删除object第一次出现的位置
-- 可以传入null,表示删除第一个null的位置
-- 返回`true/false`表示是否有执行删除
+
+* 仅会删除 object 第一次出现的位置
+* 可以传入 null,表示删除第一个 null 的位置
+* 返回`true/false`表示是否有执行删除
 
 ## void grow(int minCapacity)
+
 ```java
 private void grow(int minCapacity) {
     int oldCapacity = elementData.length;
@@ -103,11 +107,12 @@ private void grow(int minCapacity) {
     elementData = Arrays.copyOf(elementData, newCapacity);//扩展空间并复制
 }
 ```
-- 由于java中的数组无法自动扩容，所以当ArrayList中的容量`capacity`不足时，
-  会调用`grow`函数进行扩容。
-- 数组默认扩容为原容量的1.5倍
+
+* 由于 java 中的数组无法自动扩容，所以当 ArrayList 中的容量`capacity`不足时，会调用`grow`函数进行扩容。
+* 数组默认扩容为原容量的 1.5 倍
 
 ## public void trimToSize()
+
 ```java
 public void trimToSize() {
     modCount++;
@@ -119,11 +124,11 @@ public void trimToSize() {
     }
 }
 ```
-- ArrayList扩容之后,调用remove函数并不会使容量自动缩小,通过调用此函数可以
-  将容量缩小,使得底层容器没有空闲空间
 
+* ArrayList 扩容之后,调用 remove 函数并不会使容量自动缩小,通过调用此函数可以将容量缩小,使得底层容器没有空闲空间
 
 ## Object clone()
+
 ```java
 /**
  * Returns a shallow copy of this <tt>ArrayList</tt> instance.  (The
@@ -143,9 +148,11 @@ public Object clone() {
     }
 }
 ```
-- 返回当前ArrayList的一个浅拷贝
+
+* 返回当前 ArrayList 的一个浅拷贝
 
 ## SubList
+
 ```java
 public List<E> subList(int fromIndex, int toIndex) {
     subListRangeCheck(fromIndex, toIndex, size);
@@ -205,5 +212,6 @@ private class SubList extends AbstractList<E> implements RandomAccess {
     ...
 }
 ```
-- 返回的SubList仅仅是原来ArrayList的一个视图,并没有做任何数据拷贝
-- 对SubList的各种修改会被映射到原来的ArrayList上面
+
+* 返回的 SubList 仅仅是原来 ArrayList 的一个视图,并没有做任何数据拷贝
+* 对 SubList 的各种修改会被映射到原来的 ArrayList 上面

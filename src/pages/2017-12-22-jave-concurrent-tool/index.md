@@ -6,18 +6,20 @@ tags:
    - java
 ---
 
-## 等待多线程完成的CountDownLatch
-CountDownLatch允许一个或者多个线程等待其他线程完成操作,
+## 等待多线程完成的 CountDownLatch
+
+CountDownLatch 允许一个或者多个线程等待其他线程完成操作,
 `Latch`有门闩的意思,`CountDownLatch`能阻塞住线程,直到其他线程的工作完成,
 才继续接下来的工作.
 
 ### 接口解析
+
 ```java
 public class CountDownLatch {
 
     /**
      * 构造函数,count代表在{@link #await}能停止阻塞之前,方法{@link #countDown}必须
-     * 被调用的次数,count不能小于0 
+     * 被调用的次数,count不能小于0
      */
     public CountDownLatch(int count) {
         if (count < 0) throw new IllegalArgumentException("count < 0");
@@ -42,7 +44,7 @@ public class CountDownLatch {
     }
 
     /**
-     * 将计数器减一,若计数值已经为零,则不做任何事情 
+     * 将计数器减一,若计数值已经为零,则不做任何事情
      */
     public void countDown() {
         sync.releaseShared(1);
@@ -56,7 +58,9 @@ public class CountDownLatch {
     }
 }
 ```
+
 ### 使用样例
+
 ```java
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -83,7 +87,9 @@ public class CountDownLatchTest {
     }
 }
 ```
+
 运行输出为:
+
 ```
 start
 waiting
@@ -92,13 +98,14 @@ count is [0]
 0
 end
 ```
-## 同步屏障CyclicBarrier
 
-CyclicBarrier让一组线程在到达一个屏障(同步点)时被阻塞,知道满足数量的线程到达
-屏障时,屏障才会撤销,让所有被屏障阻塞的线程继续运行.Cyclic意思为循环使用的,表示了
-CyclicBarrier可以被复用.具体的体现是当
+## 同步屏障 CyclicBarrier
+
+CyclicBarrier 让一组线程在到达一个屏障(同步点)时被阻塞,知道满足数量的线程到达屏障时,屏障才会撤销,让所有被屏障阻塞的线程继续运行.Cyclic 意思为循环使用的,表示了
+CyclicBarrier 可以被复用.具体的体现是当
 
 ### 接口解析
+
 ```java
 public class CyclicBarrier {
     /**
@@ -197,7 +204,9 @@ public class CyclicBarrier {
     }
 }
 ```
+
 ### 使用样例
+
 ```java
 import java.util.concurrent.CyclicBarrier;
 
@@ -233,7 +242,9 @@ public class CyclicBarrierTest {
     }
 }
 ```
+
 运行结果:
+
 ```
 Thread 2 is running
 Thread 1 is running
@@ -246,20 +257,23 @@ Thread 4 is finish
 Thread 1 is finish
 Thread 2 is finish
 ```
-- 线程并发执行,输出顺序无法保证
-- 若线程数为偶数,程序顺利完成,否则会由于没有设置超时时间而陷入无限等待
-- 体现了CyclicBarrier的可复用性,不用显式调用`reset`函数,
+
+* 线程并发执行,输出顺序无法保证
+* 若线程数为偶数,程序顺利完成,否则会由于没有设置超时时间而陷入无限等待
+* 体现了 CyclicBarrier 的可复用性,不用显式调用`reset`函数,
   每当最后一个线程到达屏障时,屏障会自动重置为初始状态
-  
-## 控制并发线程数的Semaphore
+
+## 控制并发线程数的 Semaphore
+
 Semaphore(信号量)可以用来控制同时访问特定资源的线程数量
 
 ### 接口解析
+
 ```java
 public class Semaphore implements java.io.Serializable {
-    
+
     /**
-     * 创建一个不公平的信号量 
+     * 创建一个不公平的信号量
      * @param permits 初始的许可证数量
      */
     public Semaphore(int permits) {
@@ -276,7 +290,7 @@ public class Semaphore implements java.io.Serializable {
     }
 
     /**
-     * 从信号量中请求一个许可证,当前线程会被阻塞,直到获得许可证或者被中断 
+     * 从信号量中请求一个许可证,当前线程会被阻塞,直到获得许可证或者被中断
      */
     public void acquire() throws InterruptedException {
         sync.acquireSharedInterruptibly(1);
@@ -301,7 +315,7 @@ public class Semaphore implements java.io.Serializable {
     }
 
     /**
-     * 尝试获得一个许可证, 
+     * 尝试获得一个许可证,
      * Acquires a permit from this semaphore, if one becomes available
      * within the given waiting time and the current thread has not
      * been {@linkplain Thread#interrupt interrupted}.
@@ -548,7 +562,7 @@ public class Semaphore implements java.io.Serializable {
     }
 
     /**
-     * 返回此信号量中当前可用的许可证数 
+     * 返回此信号量中当前可用的许可证数
      */
     public int availablePermits() {
         return sync.getPermits();
@@ -607,12 +621,9 @@ public class Semaphore implements java.io.Serializable {
     }
 }
 ```
+
 ### 程序示例
 
-
-
-
-
-
 ## 参考资料
-- [Java并发编程的艺术](https://www.gitbook.com/book/ysysdzz/theartofjavaconcurrencyprogramming/details)
+
+* [Java 并发编程的艺术](https://www.gitbook.com/book/ysysdzz/theartofjavaconcurrencyprogramming/details)

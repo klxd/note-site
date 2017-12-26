@@ -9,9 +9,8 @@ tags:
 
 * 优先队列,能保证每次取出来的元素都是队列中权值最小的(C++中每次取最大的元素)
 * 元素大小比较可使用构造时传入的比较器或者使用元素的自然顺序(natural order)
-* 不允许放入null元素
+* 不允许放入 null 元素
 * 通过完全二叉树实现的最小堆,底层通过数组实现
-
 
 ```java
 public class PriorityQueue<E> extends AbstractQueue<E>
@@ -47,6 +46,7 @@ public class PriorityQueue<E> extends AbstractQueue<E>
 ```
 
 ## add() & offer()
+
 ```java
 public boolean add(E e) {
     return offer(e);
@@ -82,6 +82,7 @@ private void grow(int minCapacity) {
 ```
 
 ## siftUp(int k, E x)
+
 ```java
 // -- k: 准备插入的位置, x: 插入的元素
 private void siftUp(int k, E x) {
@@ -118,10 +119,11 @@ private void siftUpUsingComparator(int k, E x) {
     queue[k] = x;
 }
 ```
+
 * 根据是否有比较器,调用`siftUpUsingComparator`或`siftUpComparable`,这两个函数内部逻辑基本相同
-* 根据插入位置k计算出其父亲节点的位置(`(k-1)/2`)parent, 比较父亲节点`parent`和准备插入点`x`的权值
-* 若`parent小于x`,则当前k为合适的插入位置,退出循环
-* 否则将父亲节点往下挪动(放到k所在的位置),并将k赋值为parent,重复迭代
+* 根据插入位置 k 计算出其父亲节点的位置(`(k-1)/2`)parent, 比较父亲节点`parent`和准备插入点`x`的权值
+* 若`parent小于x`,则当前 k 为合适的插入位置,退出循环
+* 否则将父亲节点往下挪动(放到 k 所在的位置),并将 k 赋值为 parent,重复迭代
 
 ## element() & peek
 
@@ -130,10 +132,12 @@ public E peek() {
     return (size == 0) ? null : (E) queue[0];
 }
 ```
+
 * 获取但不删除队首元素
 * 由最小堆的性质,数组的第一个位置就是队首
 
 ## poll
+
 ```java
 public E poll() {
     if (size == 0)
@@ -148,12 +152,13 @@ public E poll() {
     return result;
 }
 ```
+
 * 删除队首元素
-* 将队尾元素插入到队首,调用siftDown调整堆结构
+* 将队尾元素插入到队首,调用 siftDown 调整堆结构
 
 ## siftDown(int k, E x)
 
-从k指定的位置开始，将x逐层向下与当前点的左右孩子中较小的那个交换，直到x小于或等于左右孩子中的任何一个为止
+从 k 指定的位置开始，将 x 逐层向下与当前点的左右孩子中较小的那个交换，直到 x 小于或等于左右孩子中的任何一个为止
 
 ```java
 private void siftDown(int k, E x) {
@@ -200,15 +205,15 @@ private void siftDownUsingComparator(int k, E x) {
     queue[k] = x;
 }
 ```
+
 * 根据是否有比较器,调用`siftDownComparable`或`siftDownUsingComparator`,这两个函数内部逻辑基本相同
 * 若待插入位置小于队列元素数量的一半,则待插入位置为叶子节点,直接插入即可
 * 拿到左右两个子节点中较小的那个,与待插入元素比较
 * 若待插入元素小于左右两个子节点,退出循环
 * 若待插入元素大于较小的子节点,将较小的子节点上提,插入位置修改为较小子节点的位子,继续循环
 
+## remove(Object o)
 
-
-## remove(Object o) 
 ```java
 public boolean remove(Object o) {
     int i = indexOf(o);
@@ -239,7 +244,8 @@ private E removeAt(int i) {
     return null;
 }
 ```
-* 删除队列中跟o相等的某一个元素
+
+* 删除队列中跟 o 相等的某一个元素
 * 将最后一个元素填充到被删除的位置
-* 试着做siftDown
-* 若该元素没有被siftDown,则试着做siftUp (因为被删除的元素不一定是在堆顶,可能需要做siftUp)
+* 试着做 siftDown
+* 若该元素没有被 siftDown,则试着做 siftUp (因为被删除的元素不一定是在堆顶,可能需要做 siftUp)

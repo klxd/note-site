@@ -7,11 +7,10 @@ tags:
    - java collection framework
 ---
 
-ArrayDeque和LinkedList是Deque的两个通用实现，
-官方更推荐使用ArrayDeque用作栈和队列.
+ArrayDeque 和 LinkedList 是 Deque 的两个通用实现，官方更推荐使用 ArrayDeque 用作栈和队列.
 
 * 底层通过**循环数组**(circular array)实现
-* 不允许插入null元素
+* 不允许插入 null 元素
 * 没有实现同步(不是线程安全)
 
 ```java
@@ -52,6 +51,7 @@ public class ArrayDeque<E> extends AbstractCollection<E>
 ```
 
 ## void addFirst(E e)
+
 ```java
 public void addFirst(E e) {
     if (e == null)
@@ -63,15 +63,17 @@ public void addFirst(E e) {
 ```
 
 * 不允许插入空值
-* 插入位置需要考虑下标越界的问题　　
+* 插入位置需要考虑下标越界的问题
   `(head - 1) & (elements.length - 1)`
   这段代码相当于利用取余解决了`head-1`为`-1`的情况  
-  因为elements.length永远为2的幂,减一之后二进制低位全为1,
-  与-1取与之后等于其本身,即element数组的最后一个位置
-* 空间问题是在插入之后解决的，即tail总是指向下一个可插入的空位
+  因为 elements.length 永远为 2 的幂,减一之后二进制低位全为 1,
+  与-1 取与之后等于其本身,即 element 数组的最后一个位置
+* 空间问题是在插入之后解决的，即 tail 总是指向下一个可插入的空位
 
 ## void addLast(E e)
-基本思路和addFirst一样
+
+基本思路和 addFirst 一样
+
 ```java
 public void addLast(E e) {
     if (e == null)
@@ -99,9 +101,10 @@ private void doubleCapacity() {
     tail = n;
 }
 ```
-* 扩容为原数组的两倍(保持capacity大小的2的幂)
-* 复制分两次进行,先复制head右边的元素,再复制head左边的
-* 扩容之后head为0,tail为元素的个数
+
+* 扩容为原数组的两倍(保持 capacity 大小的 2 的幂)
+* 复制分两次进行,先复制 head 右边的元素,再复制 head 左边的
+* 扩容之后 head 为 0,tail 为元素的个数
 
 ## poll
 
@@ -129,8 +132,9 @@ public E pollLast() {
     return result;
 }
 ```
-* 若poll取出的元素为空,代表此deque为空
-* 取出元素后要将数组中相应的位置赋值为null,防止内存泄露
+
+* 若 poll 取出的元素为空,代表此 deque 为空
+* 取出元素后要将数组中相应的位置赋值为 null,防止内存泄露
 
 ## peek
 
@@ -146,4 +150,3 @@ public E peekLast() {
     return (E) elements[(tail - 1) & (elements.length - 1)];
 }
 ```
-

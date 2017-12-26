@@ -9,8 +9,8 @@ tags:
 
 # Java LinkedHashMap
 
-* HashMap的直接子类
-* 在HashMap的基础上，采用双向链表将所有的entry链接起来
+* HashMap 的直接子类
+* 在 HashMap 的基础上，采用双向链表将所有的 entry 链接起来
 * 能保证迭代顺序与插入顺序相同
 * 未实现同步（不是线程安全）
 *
@@ -39,7 +39,7 @@ public class LinkedHashMap<K,V>
      * @serial
      */
     final boolean accessOrder;
-    
+
     // -- HashMap.Node的直接子类，新增了两个域用于实现双向链表
     static class Entry<K,V> extends HashMap.Node<K,V> {ii
         Entry<K,V> before, after;

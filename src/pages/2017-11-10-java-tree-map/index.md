@@ -7,11 +7,10 @@ tags:
    - java collection framework
 ---
 
-* 实现了SortedMap接口,会按照key的大小对map中的元素进行排序
+* 实现了 SortedMap 接口,会按照 key 的大小对 map 中的元素进行排序
 * 未实现同步(不是线程安全)
-* key不允许为空
+* key 不允许为空
 * 底层使用红黑树实现
-
 
 ```java
 public class TreeMap<K,V>
@@ -42,15 +41,16 @@ public class TreeMap<K,V>
 ```
 
 ## 红黑树
-＞红黑树是一种近似平衡的二叉查找树，它能够确保任何一个节点的左右子树的高度差不会超过二者中较低那个的一陪。
-＞具体来说，红黑树是满足如下条件的二叉查找树（binary search tree）：
-  
+
+＞红黑树是一种近似平衡的二叉查找树，它能够确保任何一个节点的左右子树的高度差不会超过二者中较低那个的一陪。＞具体来说，红黑树是满足如下条件的二叉查找树（binary search tree）：
+
 * 每个节点要么是红色，要么是黑色。
 * 根节点必须是黑色
 * 红色节点不能连续（也即是，红色节点的孩子和父亲都不能是红色）。
-* 对于每个节点，从该点至null（树尾端）的任何路径，都含有相同个数的黑色节点
+* 对于每个节点，从该点至 null（树尾端）的任何路径，都含有相同个数的黑色节点
 
 ## Entry
+
 ```java
 static final class Entry<K,V> implements Map.Entry<K,V> {
     K key;
@@ -63,6 +63,7 @@ static final class Entry<K,V> implements Map.Entry<K,V> {
 ```
 
 ## get()
+
 ```java
 public V get(Object key) {
     Entry<K,V> p = getEntry(key);
@@ -108,13 +109,13 @@ final Entry<K,V> getEntryUsingComparator(Object key) {
     }
     return null;
 }
-
 ```
-* 根据比较器顺序或者元素的自然顺序,对二叉树进行查找
-* 直到满足`cmp = k.compareTo(p.key) == 0`的entry
 
+* 根据比较器顺序或者元素的自然顺序,对二叉树进行查找
+* 直到满足`cmp = k.compareTo(p.key) == 0`的 entry
 
 ## put()
+
 ```java
 public V put(K key, V value) {
     Entry<K,V> t = root;
@@ -169,11 +170,13 @@ public V put(K key, V value) {
     return null;
 }
 ```
-* 对map做一次查找,若找到对应的key(`k.compareTo(t.key) == 0`),则将其value赋为新值,返回旧值
-* 若找不到,新建一个entry将其插入到合适的位置(使用查找时记录的`parent`)
+
+* 对 map 做一次查找,若找到对应的 key(`k.compareTo(t.key) == 0`),则将其 value 赋为新值,返回旧值
+* 若找不到,新建一个 entry 将其插入到合适的位置(使用查找时记录的`parent`)
 * 调用`fixAfterInsertion(newEntry)`调整树的结构
 
 ## remove
+
 ```java
 public V remove(Object key) {
     Entry<K,V> p = getEntry(key);
@@ -185,5 +188,6 @@ public V remove(Object key) {
     return oldValue;
 }
 ```
-* 调用`getEntry()`找到key相应的entry
-* 调用`deleteEntry()`删除对应的entry (根据需要调整树的结构)
+
+* 调用`getEntry()`找到 key 相应的 entry
+* 调用`deleteEntry()`删除对应的 entry (根据需要调整树的结构)
