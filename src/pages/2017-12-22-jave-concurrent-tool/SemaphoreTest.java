@@ -1,44 +1,22 @@
 import java.util.concurrent.Semaphore;
 
 public class SemaphoreTest {
-    private static final int MAX_AVAILABLE = 100;
-    private final Semaphore available = new Semaphore(MAX_AVAILABLE, true);
 
-    public Object getItem() throws InterruptedException {
-        available.acquire();
-        return getNextAvailableItem();
-    }
+    private static final Semaphore semaphore = new Semaphore(10, true);
 
-    public void putItem(Object x) {
-        if (markAsUnused(x))
-            available.release();
-    }
-
-    // Not a particularly efficient data structure; just for demo
-
-    protected Object[] items = null;
-    protected boolean[] used = new boolean[MAX_AVAILABLE];
-
-    protected synchronized Object getNextAvailableItem() {
-        for (int i = 0; i < MAX_AVAILABLE; ++i) {
-            if (!used[i]) {
-                used[i] = true;
-                return items[i];
-            }
+    public static void main(String[] args) throws InterruptedException {
+        System.out.println(semaphore.availablePermits());
+        for (int i = 0; i < 3; i++) {
+            semaphore.acquire();
         }
-        return null; // not reached
+        System.out.println(semaphore.availablePermits());
+
+        System.out.println(semaphore.drainPermits());
+
+        semaphore.release(11);
+        System.out.println(semaphore.availablePermits());
+
+        System.out.println("End");
     }
 
-    protected synchronized boolean markAsUnused(Object item) {
-        for (int i = 0; i < MAX_AVAILABLE; ++i) {
-            if (item == items[i]) {
-                if (used[i]) {
-                    used[i] = false;
-                    return true;
-                } else
-                    return false;
-            }
-        }
-        return false;
-    }
 }

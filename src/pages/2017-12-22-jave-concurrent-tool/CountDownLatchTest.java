@@ -9,10 +9,11 @@ public class CountDownLatchTest {
         System.out.println("start");
 
         new Thread(() -> {
-            c.countDown();
             System.out.println(String.format("count is %d", c.getCount()));
             c.countDown();
             System.out.println(String.format("count is %d", c.getCount()));
+            c.countDown();
+
         }
         ).start();
         System.out.println("waiting");
