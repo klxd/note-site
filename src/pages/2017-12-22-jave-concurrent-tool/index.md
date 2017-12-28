@@ -367,7 +367,7 @@ public class Semaphore implements java.io.Serializable {
     }
 
     /**
-     * 释放一定数量的许可证,此数量可以是任意的非负数 
+     * 释放一定数量的许可证,此数量可以是任意的非负数
      */
     public void release(int permits) {
         if (permits < 0) throw new IllegalArgumentException();
@@ -431,7 +431,7 @@ public class Semaphore implements java.io.Serializable {
 
 ### 程序示例
 
-## 线程间交换数据的Exchanger
+## 线程间交换数据的 Exchanger
 
 ```java
 public class Exchanger<V> {
@@ -449,7 +449,7 @@ public class Exchanger<V> {
     public V exchange(V x) throws InterruptedException {
         // ...
     }
-    
+
     /**
      * 等待另一个线程也调用此函数,然后互相交换数据
      * 等待期间可能被打断,抛出InterruptedException
@@ -459,7 +459,7 @@ public class Exchanger<V> {
     public V exchange(V x, long timeout, TimeUnit unit) {
         // ...
     }
-    
+
 }
 ```
 
