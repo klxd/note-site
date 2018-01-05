@@ -1,6 +1,6 @@
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class AtomicTest {
+public class AtomicIntegerTest {
     private static Integer a = 0;
     private static AtomicInteger atomicInteger = new AtomicInteger(0);
     public static void main(String[] args) {
@@ -23,7 +23,7 @@ public class AtomicTest {
         new Thread(() -> {
             for (int i = 0; i < 100; i++) {
                 a++;
-                atomicInteger.addAndGet(1);
+                atomicInteger.getAndAccumulate(2, (a, b) -> a + b);
             }
             System.out.println("2: a " + a);
             System.out.println("2: atomicInteger " + atomicInteger.get());
@@ -32,12 +32,17 @@ public class AtomicTest {
         new Thread(() -> {
             for (int i = 0; i < 100; i++) {
                 a++;
-                atomicInteger.addAndGet(1);
+                atomicInteger.getAndUpdate((a) -> a + 1);
             }
             System.out.println("3: a " + a);
             System.out.println("3: atomicInteger " + atomicInteger.get());
+
         }).start();
 
 
+        float f  = 1.1f;
+        int i = Float.floatToIntBits(f);
+        System.out.println(i);
+        System.out.println(Float.intBitsToFloat(i));
     }
 }

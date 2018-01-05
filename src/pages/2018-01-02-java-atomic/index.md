@@ -1,12 +1,12 @@
 ---
 title: Java中的原子操作类
-date: "2018-01-02-T22:22:22.169Z"
+date: "2017-12-25T22:22:22.169Z"
 path:  "/java-atomic"
 tags:
    - java
 ---
 
-原子更新基本类型类
+## 原子更新基本类型
 
 AtomicInteger
 ```java
@@ -16,8 +16,7 @@ public class AtomicInteger extends Number implements java.io.Serializable {
         value = initialValue;
     }
 
-    public AtomicInteger() {
-    }
+    public AtomicInteger() {}
 
     public final int get() {
         return value;
@@ -28,119 +27,80 @@ public class AtomicInteger extends Number implements java.io.Serializable {
     }
 
     /**
-     * Eventually sets to the given value.
-     *
-     * @param newValue the new value
-     * @since 1.6
+     * 最终设置成新值,使用lazySet设置值之后,
+     * 可能导致其他线程在之后的一小段时间内还是读取旧的值 
      */
     public final void lazySet(int newValue) {
         unsafe.putOrderedInt(this, valueOffset, newValue);
     }
 
     /**
-     * Atomically sets to the given value and returns the old value.
-     *
-     * @param newValue the new value
-     * @return the previous value
+     * 设置新值并返回旧值
      */
     public final int getAndSet(int newValue) {
         return unsafe.getAndSetInt(this, valueOffset, newValue);
     }
 
     /**
-     * Atomically sets the value to the given updated value
-     * if the current value {@code ==} the expected value.
-     *
-     * @param expect the expected value
-     * @param update the new value
-     * @return {@code true} if successful. False return indicates that
-     * the actual value was not equal to the expected value.
+     * 若当前值等于期望值,则设置为新值
+     * @return 是否更新成功,即当前值是否等于期望值
      */
     public final boolean compareAndSet(int expect, int update) {
         return unsafe.compareAndSwapInt(this, valueOffset, expect, update);
     }
 
     /**
-     * Atomically sets the value to the given updated value
-     * if the current value {@code ==} the expected value.
-     *
-     * <p><a href="package-summary.html#weakCompareAndSet">May fail
-     * spuriously and does not provide ordering guarantees</a>, so is
-     * only rarely an appropriate alternative to {@code compareAndSet}.
-     *
-     * @param expect the expected value
-     * @param update the new value
-     * @return {@code true} if successful
+     * 过期的方法,实现与compareAndSet相同
      */
     public final boolean weakCompareAndSet(int expect, int update) {
         return unsafe.compareAndSwapInt(this, valueOffset, expect, update);
     }
 
     /**
-     * Atomically increments by one the current value.
-     *
-     * @return the previous value
+     * i++
      */
     public final int getAndIncrement() {
         return unsafe.getAndAddInt(this, valueOffset, 1);
     }
 
     /**
-     * Atomically decrements by one the current value.
-     *
-     * @return the previous value
+     * i--
      */
     public final int getAndDecrement() {
         return unsafe.getAndAddInt(this, valueOffset, -1);
     }
 
     /**
-     * Atomically adds the given value to the current value.
-     *
-     * @param delta the value to add
-     * @return the previous value
+     * i += n, return old i
      */
     public final int getAndAdd(int delta) {
         return unsafe.getAndAddInt(this, valueOffset, delta);
     }
 
     /**
-     * Atomically increments by one the current value.
-     *
-     * @return the updated value
+     * ++i
      */
     public final int incrementAndGet() {
         return unsafe.getAndAddInt(this, valueOffset, 1) + 1;
     }
 
     /**
-     * Atomically decrements by one the current value.
-     *
-     * @return the updated value
+     * --i
      */
     public final int decrementAndGet() {
         return unsafe.getAndAddInt(this, valueOffset, -1) - 1;
     }
 
     /**
-     * Atomically adds the given value to the current value.
-     *
-     * @param delta the value to add
-     * @return the updated value
+     * i += n, return updated i
      */
     public final int addAndGet(int delta) {
         return unsafe.getAndAddInt(this, valueOffset, delta) + delta;
     }
 
     /**
-     * Atomically updates the current value with the results of
-     * applying the given function, returning the previous value. The
-     * function should be side-effect-free, since it may be re-applied
-     * when attempted updates fail due to contention among threads.
-     *
-     * @param updateFunction a side-effect-free function
-     * @return the previous value
-     * @since 1.8
+     * 传入一个函数来更新数值,此函数应该是无副作用的,因为它可能被调用多次
+     * @return 旧值
      */
     public final int getAndUpdate(IntUnaryOperator updateFunction) {
         int prev, next;
@@ -152,14 +112,8 @@ public class AtomicInteger extends Number implements java.io.Serializable {
     }
 
     /**
-     * Atomically updates the current value with the results of
-     * applying the given function, returning the updated value. The
-     * function should be side-effect-free, since it may be re-applied
-     * when attempted updates fail due to contention among threads.
-     *
-     * @param updateFunction a side-effect-free function
-     * @return the updated value
-     * @since 1.8
+     * 传入一个函数来更新数值,此函数应该是无副作用的,因为它可能被调用多次
+     * @return 新值
      */
     public final int updateAndGet(IntUnaryOperator updateFunction) {
         int prev, next;
@@ -171,18 +125,8 @@ public class AtomicInteger extends Number implements java.io.Serializable {
     }
 
     /**
-     * Atomically updates the current value with the results of
-     * applying the given function to the current and given values,
-     * returning the previous value. The function should be
-     * side-effect-free, since it may be re-applied when attempted
-     * updates fail due to contention among threads.  The function
-     * is applied with the current value as its first argument,
-     * and the given update as the second argument.
-     *
-     * @param x the update value
-     * @param accumulatorFunction a side-effect-free function of two arguments
-     * @return the previous value
-     * @since 1.8
+     * 传入一个无副作用的,需要两个参数的函数
+     * @return 旧值
      */
     public final int getAndAccumulate(int x,
                                       IntBinaryOperator accumulatorFunction) {
@@ -195,18 +139,8 @@ public class AtomicInteger extends Number implements java.io.Serializable {
     }
 
     /**
-     * Atomically updates the current value with the results of
-     * applying the given function to the current and given values,
-     * returning the updated value. The function should be
-     * side-effect-free, since it may be re-applied when attempted
-     * updates fail due to contention among threads.  The function
-     * is applied with the current value as its first argument,
-     * and the given update as the second argument.
-     *
-     * @param x the update value
-     * @param accumulatorFunction a side-effect-free function of two arguments
-     * @return the updated value
-     * @since 1.8
+     * 传入一个无副作用的,需要两个参数的函数
+     * @return 新值
      */
     public final int accumulateAndGet(int x,
                                       IntBinaryOperator accumulatorFunction) {
@@ -217,4 +151,434 @@ public class AtomicInteger extends Number implements java.io.Serializable {
         } while (!compareAndSet(prev, next));
         return next;
     }
+}
+```
+
+## 原子更新数组
+* AtomicIntegerArray: 原子更新整形数组中的元素
+* AtomicLongArray: 原子更新长整型数组里的元素
+* AtomicReferenceArray: 原子更新引用类型数组里的元素
+
+## 原子更新引用类型
+
+* AtomicReference
+```java
+public class AtomicReference<V> implements java.io.Serializable {
+  
+    /**
+     * 构造函数,附带初始值
+     */
+    public AtomicReference(V initialValue) {
+        value = initialValue;
+    }
+
+    /**
+     * 构造函数,初始值为null
+     */
+    public AtomicReference() {
+    }
+
+    /**
+     * 返回当前值 
+     */
+    public final V get() {
+        return value;
+    }
+
+    /**
+     * 设置新值
+     */
+    public final void set(V newValue) {
+        value = newValue;
+    }
+
+    /**
+     * 最终设置为新值,之前有一段时间可能为旧值
+     */
+    public final void lazySet(V newValue) {
+        unsafe.putOrderedObject(this, valueOffset, newValue);
+    }
+
+    /**
+     * CAS,注意期望值必须{@code ==}当前值,若只是{@code equals}将会判定为不等
+     * @return 是否成功
+     */
+    public final boolean compareAndSet(V expect, V update) {
+        return unsafe.compareAndSwapObject(this, valueOffset, expect, update);
+    }
+
+    /**
+     * 过期函数,实现与CAS相同
+     */
+    public final boolean weakCompareAndSet(V expect, V update) {
+        return unsafe.compareAndSwapObject(this, valueOffset, expect, update);
+    }
+
+    /**
+     * 设置新值,返回旧值
+     */
+    @SuppressWarnings("unchecked")
+    public final V getAndSet(V newValue) {
+        return (V)unsafe.getAndSetObject(this, valueOffset, newValue);
+    }
+
+    /**
+     * 传入一个无副作用的函数,修改当前值为新值
+     * @return 旧值
+     */
+    public final V getAndUpdate(UnaryOperator<V> updateFunction) {
+        V prev, next;
+        do {
+            prev = get();
+            next = updateFunction.apply(prev);
+        } while (!compareAndSet(prev, next));
+        return prev;
+    }
+
+    /**
+     * 传入一个无副作用的函数,修改当前值为新值
+     * @return 新值
+     */
+    public final V updateAndGet(UnaryOperator<V> updateFunction) {
+        V prev, next;
+        do {
+            prev = get();
+            next = updateFunction.apply(prev);
+        } while (!compareAndSet(prev, next));
+        return next;
+    }
+
+    /**
+     * 传入一个操作值和一个二元操作函数,计算得到新值
+     * @return 旧值
+     */
+    public final V getAndAccumulate(V x,
+                                    BinaryOperator<V> accumulatorFunction) {
+        V prev, next;
+        do {
+            prev = get();
+            next = accumulatorFunction.apply(prev, x);
+        } while (!compareAndSet(prev, next));
+        return prev;
+    }
+
+    /**
+     * 传入一个操作值和一个二元操作函数,计算得到新值
+     * @return 新值
+     */
+    public final V accumulateAndGet(V x,
+                                    BinaryOperator<V> accumulatorFunction) {
+        V prev, next;
+        do {
+            prev = get();
+            next = accumulatorFunction.apply(prev, x);
+        } while (!compareAndSet(prev, next));
+        return next;
+    }
+}
+
+```
+
+### 代码示例
+```java
+import java.util.concurrent.atomic.AtomicReference;
+
+public class AtomicReferenceTest {
+
+    private static AtomicReference<User> userAtomicReference = new AtomicReference<>();
+
+    static class User {
+        private String name;
+        private int id;
+        public User(String name, int id) {
+            this.name = name;
+            this.id = id;
+        }
+
+        @Override
+        public String toString() {
+            return String.format("User[name: %s, id: %s]", name, id);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (!(obj instanceof User)) {
+                return false;
+            }
+            User o = (User) obj;
+            return o.hashCode() == hashCode() && o.name.equals(name) && o.id == id;
+        }
+
+        @Override
+        public int hashCode() {
+            return name.hashCode() * 53 + id;
+        }
+    }
+
+    public static void main(String[] args) {
+        User user1 = new User("u1", 10);
+        User user2 = new User("u2", 12);
+        User user3 = new User("u1", 10);
+
+        userAtomicReference.set(user1);
+
+        System.out.println(userAtomicReference.get() == user1); // true
+        System.out.println(userAtomicReference.get() == user3); // false
+        System.out.println(userAtomicReference.get().equals(user3)); // true
+
+        // 使用user3做CAS,更新失败
+        userAtomicReference.compareAndSet(user3, user2);
+        System.out.println(userAtomicReference.get());
+
+        // 使用user1做CAS,更新成功
+        userAtomicReference.compareAndSet(user1, user2);
+        System.out.println(userAtomicReference.get());
+    }
+}
+```
+输出为
+```
+true
+false
+true
+User[name: u1, id: 10]
+User[name: u2, id: 12]
+```
+
+## 原子更新字段
+
+* AtomicIntegerFieldUpdater:原子更新整型的字段的更新器
+* AtomicLongFieldUpdater:原子更新长整型字段的更新器
+* AtomicStampedReference:原子更新带有版本号的引用类型.该类将整数值与引用关联起
+  来,可用于原子的更新数据和数据的版本号,可以解决使用CAS进行原子更新时可能出现的ABA问题
+  
+```java
+public abstract class AtomicIntegerFieldUpdater<T> {
+    /**
+     * 静态方法,用于构建一个更新器对象
+     * @param tclass 需要被更新的类
+     * @param fieldName 需要被更新的字段
+     */
+    @CallerSensitive
+    public static <U> AtomicIntegerFieldUpdater<U> newUpdater(Class<U> tclass,
+                                                              String fieldName) {
+        return new AtomicIntegerFieldUpdaterImpl<U>
+            (tclass, fieldName, Reflection.getCallerClass());
+    }
+
+    /**
+     * CAS
+     * @param obj An object whose field to conditionally set
+     * @param expect the expected value
+     * @param update the new value
+     * @return 是否更新成功
+     */
+    public abstract boolean compareAndSet(T obj, int expect, int update);
+
+    /**
+     * 过期方法,作用同CAS
+     */
+    public abstract boolean weakCompareAndSet(T obj, int expect, int update);
+
+    /**
+     * 设置新值
+     */
+    public abstract void set(T obj, int newValue);
+
+    /**
+     * 最终设置为新值
+     */
+    public abstract void lazySet(T obj, int newValue);
+
+    /**
+     * 获得值
+     */
+    public abstract int get(T obj);
+
+    /**
+     * 设置新值,返回旧值
+     */
+    public int getAndSet(T obj, int newValue) {
+        int prev;
+        do {
+            prev = get(obj);
+        } while (!compareAndSet(obj, prev, newValue));
+        return prev;
+    }
+
+    /**
+     * i++
+     */
+    public int getAndIncrement(T obj) {
+        int prev, next;
+        do {
+            prev = get(obj);
+            next = prev + 1;
+        } while (!compareAndSet(obj, prev, next));
+        return prev;
+    }
+
+    /**
+     * i--
+     */
+    public int getAndDecrement(T obj) {
+        int prev, next;
+        do {
+            prev = get(obj);
+            next = prev - 1;
+        } while (!compareAndSet(obj, prev, next));
+        return prev;
+    }
+
+    /**
+     * i += n, 返回旧值
+     */
+    public int getAndAdd(T obj, int delta) {
+        int prev, next;
+        do {
+            prev = get(obj);
+            next = prev + delta;
+        } while (!compareAndSet(obj, prev, next));
+        return prev;
+    }
+
+    /**
+     * ++i
+     */
+    public int incrementAndGet(T obj) {
+        int prev, next;
+        do {
+            prev = get(obj);
+            next = prev + 1;
+        } while (!compareAndSet(obj, prev, next));
+        return next;
+    }
+
+    /**
+     * --i
+     */
+    public int decrementAndGet(T obj) {
+        int prev, next;
+        do {
+            prev = get(obj);
+            next = prev - 1;
+        } while (!compareAndSet(obj, prev, next));
+        return next;
+    }
+
+    /**
+     * i += n, 返回新值 
+     */
+    public int addAndGet(T obj, int delta) {
+        int prev, next;
+        do {
+            prev = get(obj);
+            next = prev + delta;
+        } while (!compareAndSet(obj, prev, next));
+        return next;
+    }
+
+    /**
+     * 传入一个无副作用的函数用于更新值 
+     * @return 旧值
+     */
+    public final int getAndUpdate(T obj, IntUnaryOperator updateFunction) {
+        int prev, next;
+        do {
+            prev = get(obj);
+            next = updateFunction.applyAsInt(prev);
+        } while (!compareAndSet(obj, prev, next));
+        return prev;
+    }
+
+    /**
+     * 传入一个无副作用的函数用于更新值 
+     * @return 新值
+     */
+    public final int updateAndGet(T obj, IntUnaryOperator updateFunction) {
+        int prev, next;
+        do {
+            prev = get(obj);
+            next = updateFunction.applyAsInt(prev);
+        } while (!compareAndSet(obj, prev, next));
+        return next;
+    }
+
+    /**
+     * 传入一个操作数和二元操作函数用于计算新值
+     * @return 旧值
+     */
+    public final int getAndAccumulate(T obj, int x,
+                                      IntBinaryOperator accumulatorFunction) {
+        int prev, next;
+        do {
+            prev = get(obj);
+            next = accumulatorFunction.applyAsInt(prev, x);
+        } while (!compareAndSet(obj, prev, next));
+        return prev;
+    }
+
+    /**
+     * 传入一个操作数和二元操作函数用于计算新值
+     * @return 新值
+     */
+    public final int accumulateAndGet(T obj, int x,
+                                      IntBinaryOperator accumulatorFunction) {
+        int prev, next;
+        do {
+            prev = get(obj);
+            next = accumulatorFunction.applyAsInt(prev, x);
+        } while (!compareAndSet(obj, prev, next));
+        return next;
+    }
+}
+```
+### 代码示例
+
+```java
+import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
+
+public class AtomicIntegerFieldUpdaterTest {
+    private static AtomicIntegerFieldUpdater<User> a = AtomicIntegerFieldUpdater.newUpdater(User.class, "id");
+    static class User {
+        private String name;
+        volatile int id;
+        public User(String name, int id) {
+            this.name = name;
+            this.id = id;
+        }
+
+        @Override
+        public String toString() {
+            return String.format("User[name: %s, id: %s]", name, id);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (!(obj instanceof User)) {
+                return false;
+            }
+            User o = (User) obj;
+            return o.hashCode() == hashCode() && o.name.equals(name) && o.id == id;
+        }
+
+        @Override
+        public int hashCode() {
+            return name.hashCode() * 53 + id;
+        }
+    }
+
+    public static void main(String[] args) {
+        User user1 = new User("u1", 10);
+        System.out.println(a.getAndIncrement(user1));
+        System.out.println(a.get(user1));
+    }
+}
+```
+
+代码输出:
+
+```
+10
+11
 ```
