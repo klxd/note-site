@@ -8,7 +8,15 @@ tags:
 
 ## 原子更新基本类型
 
+* AtomicInteger 原子更新整形
+* AtomicBoolean 原子更新布尔类型
+* AtomicLong 原子更新长整形
+* 对于其他基本类型`double`,`float`,`byte`,`char`没有相应的原子更新类,因为其相应的更新类均可以使用以上三个类进行包装得到,如`byte`和`char`可简单包装为整形,
+  `float`可以使用`Float.floatToIntBits`转化为整形,
+  `double`可以使用`Double.doubleToLongBits`转化为长整形
+
 AtomicInteger
+
 ```java
 public class AtomicInteger extends Number implements java.io.Serializable {
 
@@ -28,7 +36,7 @@ public class AtomicInteger extends Number implements java.io.Serializable {
 
     /**
      * 最终设置成新值,使用lazySet设置值之后,
-     * 可能导致其他线程在之后的一小段时间内还是读取旧的值 
+     * 可能导致其他线程在之后的一小段时间内还是读取旧的值
      */
     public final void lazySet(int newValue) {
         unsafe.putOrderedInt(this, valueOffset, newValue);
@@ -155,6 +163,7 @@ public class AtomicInteger extends Number implements java.io.Serializable {
 ```
 
 ## 原子更新数组
+
 * AtomicIntegerArray: 原子更新整形数组中的元素
 * AtomicLongArray: 原子更新长整型数组里的元素
 * AtomicReferenceArray: 原子更新引用类型数组里的元素
@@ -162,9 +171,10 @@ public class AtomicInteger extends Number implements java.io.Serializable {
 ## 原子更新引用类型
 
 * AtomicReference
+
 ```java
 public class AtomicReference<V> implements java.io.Serializable {
-  
+
     /**
      * 构造函数,附带初始值
      */
@@ -179,7 +189,7 @@ public class AtomicReference<V> implements java.io.Serializable {
     }
 
     /**
-     * 返回当前值 
+     * 返回当前值
      */
     public final V get() {
         return value;
@@ -276,10 +286,10 @@ public class AtomicReference<V> implements java.io.Serializable {
         return next;
     }
 }
-
 ```
 
 ### 代码示例
+
 ```java
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -336,7 +346,9 @@ public class AtomicReferenceTest {
     }
 }
 ```
+
 输出为
+
 ```
 true
 false
@@ -347,11 +359,10 @@ User[name: u2, id: 12]
 
 ## 原子更新字段
 
-* AtomicIntegerFieldUpdater:原子更新整型的字段的更新器
-* AtomicLongFieldUpdater:原子更新长整型字段的更新器
-* AtomicStampedReference:原子更新带有版本号的引用类型.该类将整数值与引用关联起
-  来,可用于原子的更新数据和数据的版本号,可以解决使用CAS进行原子更新时可能出现的ABA问题
-  
+* AtomicIntegerFieldUpdater: 原子更新整型的字段的更新器
+* AtomicLongFieldUpdater: 原子更新长整型字段的更新器
+* AtomicStampedReference: 原子更新带有版本号的引用类型.该类将整数值与引用关联起来,可用于原子的更新数据和数据的版本号,可以解决使用 CAS 进行原子更新时可能出现的 ABA 问题
+
 ```java
 public abstract class AtomicIntegerFieldUpdater<T> {
     /**
@@ -467,7 +478,7 @@ public abstract class AtomicIntegerFieldUpdater<T> {
     }
 
     /**
-     * i += n, 返回新值 
+     * i += n, 返回新值
      */
     public int addAndGet(T obj, int delta) {
         int prev, next;
@@ -479,7 +490,7 @@ public abstract class AtomicIntegerFieldUpdater<T> {
     }
 
     /**
-     * 传入一个无副作用的函数用于更新值 
+     * 传入一个无副作用的函数用于更新值
      * @return 旧值
      */
     public final int getAndUpdate(T obj, IntUnaryOperator updateFunction) {
@@ -492,7 +503,7 @@ public abstract class AtomicIntegerFieldUpdater<T> {
     }
 
     /**
-     * 传入一个无副作用的函数用于更新值 
+     * 传入一个无副作用的函数用于更新值
      * @return 新值
      */
     public final int updateAndGet(T obj, IntUnaryOperator updateFunction) {
@@ -533,6 +544,7 @@ public abstract class AtomicIntegerFieldUpdater<T> {
     }
 }
 ```
+
 ### 代码示例
 
 ```java
