@@ -11,6 +11,10 @@ tags:
 CountDownLatch 允许一个或者多个线程等待其他线程完成操作,
 `Latch`有门闩的意思,`CountDownLatch`能阻塞住线程,直到其他线程的工作完成,
 才继续接下来的工作.
+* 经典用法: 向`CountDownLatch`对象设置一个初始计数值,任何在这个对象上调用`await()`的方法
+  线程都将被阻塞,直到这个计数值到达0.
+* `CountDownLatch`被设计为只触发一次,计数值不能被重置(只能减少不能重置).
+  如果需要可重置计数值的版本,可以考虑使用`CyclicBarrier`.
 
 ### 接口解析
 
@@ -101,8 +105,9 @@ end
 
 ## 同步屏障 CyclicBarrier
 
-CyclicBarrier 让一组线程在到达一个屏障(同步点)时被阻塞,知道满足数量的线程到达屏障时,屏障才会撤销,让所有被屏障阻塞的线程继续运行.Cyclic 意思为循环使用的,表示了
-CyclicBarrier 可以被复用.具体的体现是当
+CyclicBarrier (栅栏)让一组线程在到达一个屏障(同步点)时被阻塞,直到满足数量的线程到达屏障时,屏障才会撤销,让所有被屏障阻塞的线程继续运行.
+
+Cyclic 意思为循环使用的,表示了 CyclicBarrier 可以被复用.具体的体现是每次当最后一个线程到达屏障时,屏障会自动重置为初始状态
 
 ### 接口解析
 
@@ -232,7 +237,6 @@ class MockRunnable implements Runnable {
 public class CyclicBarrierTest {
     static CyclicBarrier cb = new CyclicBarrier(2, () -> {
         System.out.println("Barrier Action");
-
     });
 
     public static void main(String[] args) throws InterruptedException {
@@ -430,8 +434,77 @@ public class Semaphore implements java.io.Serializable {
 ```
 
 ### 程序示例
+```java
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Semaphore;
+
+public class SemaphoreTest {
+    static class MockRunnable implements Runnable {
+        private final int id;
+        MockRunnable(int id) {
+            this.id = id;
+        }
+        @Override
+        public void run() {
+            try {
+                semaphore.acquire();
+                System.out.println(String.format("Thread %d is working", id));
+                Thread.sleep(1000);
+                semaphore.release();
+                System.out.println(String.format("Thread %d is finished", id));
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private static final Semaphore semaphore = new Semaphore(3);
+
+    public static void main(String[] args) throws InterruptedException {
+        final int THREAD_COUNT = 10;
+        ExecutorService threadPool = Executors.newFixedThreadPool(THREAD_COUNT);
+        for (int i = 0; i < THREAD_COUNT; i++) {
+            threadPool.execute(new MockRunnable(i + 1));
+        }
+        threadPool.shutdown();
+    }
+}
+```
+程序输出
+```
+Thread 1 is working
+Thread 2 is working
+Thread 3 is working
+Thread 2 is finished
+Thread 4 is working
+Thread 3 is finished
+Thread 5 is working
+Thread 1 is finished
+Thread 6 is working
+Thread 7 is working
+Thread 5 is finished
+Thread 9 is working
+Thread 4 is finished
+Thread 6 is finished
+Thread 8 is working
+Thread 7 is finished
+Thread 9 is finished
+Thread 10 is working
+Thread 8 is finished
+Thread 10 is finished
+```
+* 声明了10个线程用于执行任务,但是只有3个可用信号量
+* 同一时间,只有3个线程能获得许可证并执行工作,其他线程都在等待状态
 
 ## 线程间交换数据的 Exchanger
+Exchanger 是另一种形式的栅栏,两方(Two-Party)栅栏.双方在栅栏位置上交换数据.
+
+经典应用场景: 有两个线程执行不对称的操作并且需要在某个点上汇合. 如一个线程向缓冲区
+写数据,而另一个线程从缓冲区中读取数据,这两个线程可以使用Exchanger来汇合,并把满的
+缓冲区和空的缓冲区进行交换.
+
+### 接口解析
 
 ```java
 public class Exchanger<V> {
@@ -462,7 +535,49 @@ public class Exchanger<V> {
 
 }
 ```
+### 程序示例
+```java
+import java.util.concurrent.Exchanger;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+public class ExchangerTest {
+    private static final Exchanger<String> exchanger = new Exchanger<>();
+
+    public static void main(String[] args) throws InterruptedException {
+        new Thread(() -> {
+            try {
+                String before = "1111";
+                System.out.println("Thread 1 before change: " + before);
+                String after = exchanger.exchange(before, 2, TimeUnit.SECONDS);
+                System.out.println("Thread 1 after change: " + after);
+            } catch (InterruptedException | TimeoutException e) {
+                e.printStackTrace();
+            }
+        }).start();
+        new Thread(() -> {
+            try {
+                String before = "2222";
+                System.out.println("Thread 2 before change: " + before);
+                Thread.sleep(1000);
+                System.out.println("Waiting for 1 second");
+                String after = exchanger.exchange(before);
+                System.out.println("Thread 2 after change: " + after);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
+}
+```
+输出结果
+```
+Thread 1 before change: 1111
+Thread 2 before change: 2222
+Waiting for 1 second
+Thread 2 after change: 1111
+Thread 1 after change: 2222
+```
 
 ## 参考资料
-
 * [Java 并发编程的艺术](https://www.gitbook.com/book/ysysdzz/theartofjavaconcurrencyprogramming/details)

@@ -1,22 +1,35 @@
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 
 public class SemaphoreTest {
-
-    private static final Semaphore semaphore = new Semaphore(10, true);
-
-    public static void main(String[] args) throws InterruptedException {
-        System.out.println(semaphore.availablePermits());
-        for (int i = 0; i < 3; i++) {
-            semaphore.acquire();
+    static class MockRunnable implements Runnable {
+        private final int id;
+        MockRunnable(int id) {
+            this.id = id;
         }
-        System.out.println(semaphore.availablePermits());
-
-        System.out.println(semaphore.drainPermits());
-
-        semaphore.release(11);
-        System.out.println(semaphore.availablePermits());
-
-        System.out.println("End");
+        @Override
+        public void run() {
+            try {
+                semaphore.acquire();
+                System.out.println(String.format("Thread %d is working", id));
+                Thread.sleep(1000);
+                semaphore.release();
+                System.out.println(String.format("Thread %d is finished", id));
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
+    private static final Semaphore semaphore = new Semaphore(3);
+
+    public static void main(String[] args) throws InterruptedException {
+        final int THREAD_COUNT = 10;
+        ExecutorService threadPool = Executors.newFixedThreadPool(THREAD_COUNT);
+        for (int i = 0; i < THREAD_COUNT; i++) {
+            threadPool.execute(new MockRunnable(i + 1));
+        }
+        threadPool.shutdown();
+    }
 }

@@ -8,29 +8,25 @@ public class ExchangerTest {
     public static void main(String[] args) throws InterruptedException {
         new Thread(() -> {
             try {
-                String value = "1111";
-                System.out.println("before 1");
-                String after = exchanger.exchange(value, 1, TimeUnit.SECONDS);
-                System.out.println("after1 " + after);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (TimeoutException e) {
+                String before = "1111";
+                System.out.println("Thread 1 before change: " + before);
+                String after = exchanger.exchange(before, 2, TimeUnit.SECONDS);
+                System.out.println("Thread 1 after change: " + after);
+            } catch (InterruptedException | TimeoutException e) {
                 e.printStackTrace();
             }
         }).start();
         new Thread(() -> {
             try {
-                String value = "2222";
-                System.out.println("before 2");
-                Thread.sleep(2000);
-                String after = exchanger.exchange(value);
-                System.out.println("after2 " + after);
+                String before = "2222";
+                System.out.println("Thread 2 before change: " + before);
+                Thread.sleep(1000);
+                System.out.println("Waiting for 1 second");
+                String after = exchanger.exchange(before);
+                System.out.println("Thread 2 after change: " + after);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }).start();
-
-        System.out.println("End");
     }
-
 }
