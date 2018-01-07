@@ -6,7 +6,7 @@ tags:
    - java
 ---
 
-# Thread
+## 线程基础
 
 ```java
 // java8的函数式接口
