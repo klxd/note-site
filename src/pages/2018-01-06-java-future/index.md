@@ -52,3 +52,32 @@ public interface Future<V> {
             throws InterruptedException, ExecutionException, TimeoutException;
 } 
 ```
+
+* Future只是一个接口,并无法直接用来创建对象
+
+## FutureTask类
+
+```java
+public interface RunnableFuture<V> extends Runnable, Future<V> {
+    /**
+     * 将运行得到的结果作为Future的返回值
+     */
+    void run();
+}
+public class FutureTask<V> implements RunnableFuture<V> {
+    /**
+     * 使用Callable构造
+     */
+    public FutureTask(Callable<V> callable) {
+       // ...
+    }
+
+    /**
+     * 使用Runnable和预定的result构造 
+     * 当任务成功执行完成时,result会作为Future的返回值,可为null
+     */
+    public FutureTask(Runnable runnable, V result) {
+        // ...
+    }
+}
+```
