@@ -81,3 +81,10 @@ public class FutureTask<V> implements RunnableFuture<V> {
     }
 }
 ```
+
+## CompletableFuture类
+
+```java
+public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
+}
+```
