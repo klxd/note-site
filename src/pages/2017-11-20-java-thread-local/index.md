@@ -36,12 +36,8 @@ public class ThreadLocal<T> {
     }
 
     /**
-     * Returns the value in the current thread's copy of this
-     * thread-local variable.  If the variable has no value for the
-     * current thread, it is first initialized to the value returned
-     * by an invocation of the {@link #initialValue} method.
-     *
-     * @return the current thread's value of this thread-local
+     * 返回此ThreadLocal在当前线程中的值,若还没有设置则会调用
+     * {@link #initialValue}来设置初始值
      */
     public T get() {
         // ...
@@ -52,23 +48,16 @@ public class ThreadLocal<T> {
      * to the specified value.  Most subclasses will have no need to
      * override this method, relying solely on the {@link #initialValue}
      * method to set the values of thread-locals.
-     *
-     * @param value the value to be stored in the current thread's copy of
-     *        this thread-local.
+     * 设置此ThreadLocal在当前线程中的值,一般来说可以依靠{@link #initialValue}
+     * 设置初始值,而不是通过调用此方法
      */
     public void set(T value) {
         // ...
     }
 
     /**
-     * Removes the current thread's value for this thread-local
-     * variable.  If this thread-local variable is subsequently
-     * {@linkplain #get read} by the current thread, its value will be
-     * reinitialized by invoking its {@link #initialValue} method,
-     * unless its value is {@linkplain #set set} by the current thread
-     * in the interim.  This may result in multiple invocations of the
-     * {@code initialValue} method in the current thread.
-     *
+     * 删除此ThreadLocal在当前线程中的值,如果接下来本线程继续调用get方法(且没调用set方法),
+     * 将会触发{@link #initialValue}的调用
      * @since 1.5
      */
      public void remove() {
