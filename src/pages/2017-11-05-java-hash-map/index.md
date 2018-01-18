@@ -7,8 +7,6 @@ tags:
    - java collection framework
 ---
 
-# Java HashMap
-
 * Map 的最常用实现
 * 允许放入空元素 (key 允许为空,value 也允许为空)
 * 不保证元素的顺序
@@ -21,7 +19,6 @@ public class HashMap<K,V> extends AbstractMap<K,V>
     /**
      * Basic hash bin node, used for most entries.  (See below for
      * TreeNode subclass, and in LinkedHashMap for its Entry subclass.)
-     * -- HashMap的
      */
     static class Node<K,V> implements Map.Entry<K,V> {
         final int hash;
@@ -227,3 +224,7 @@ final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
 * 如何决定选用 HashMap 还是 TreeMap
 * 如果 HashMap 的大小超过了负载因子(load factor)定义的容量，怎么办
 * HashMap 是线程安全的吗？并发下使用的 Map 是什么，它们内部原理分别是什么，比如存储方式、 hashcode、扩容、 默认容量等
+
+
+## 参考
+[阿里巴巴Java开发规约](https://zhuanlan.zhihu.com/p/30360734)
