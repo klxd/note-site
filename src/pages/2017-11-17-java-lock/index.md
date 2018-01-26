@@ -103,7 +103,7 @@ boolean tryLock();
 boolean tryLock(long time, TimeUnit unit) throws InterruptedException;
 ```
 
-* 超时地获取锁,当前线程在一下三种情况下返回
+* 超时地获取锁,当前线程在以下三种情况下返回:
   1. 当前线程在超时时间内获得了锁
   2. 当前线程在超时时间内被中断
   3. 超时时间结束,返回 false
