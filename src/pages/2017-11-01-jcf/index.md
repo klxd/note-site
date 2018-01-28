@@ -159,6 +159,12 @@ public class Arrays {
 * Arrays.ArrayList 直接将传入的数组作为底层容器
 * Arrays.ArrayList 没有实现`add`和`remove`等函数,若调用会直接抛出异常
 
+
+## 值得探索的集合类
+
+* BitSet
+* BlockingQueue
+
 ## Q
 
 * 怎么打印数组？ 怎样打印数组中的重复元素
