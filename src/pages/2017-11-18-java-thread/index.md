@@ -205,32 +205,97 @@ synchronized (syncObject) {
   即是*忙等待*,这通常是一种不良的 CPU 周期使用方式.
 * 在互斥块中,调用 sleep 和 yield 并不会释放锁,这意味着其他线程并不能获得锁并协作本线程
 
-以上问题能够使用 Java 内置的*等待-通知*机制解决,此机制的使用方法定义在基类 Object 上,
+以上问题能够使用 Java 内置的**等待-通知**机制解决,此机制的使用方法定义在基类 Object 上,
 相关方法如下:
 
-* notify() 通知一个在对象上等待的线程,使其重 wait()方法返回,
+* notify() 通知一个在对象上等待的线程,使其从 wait()方法返回,
   而返回的前提是该线程获取到了对象的锁,调用 notify 不会释放锁
 * notifyAll() 通知所有等待在该对象上的线程,调用 notifyAll 不会释放锁
 * wait() 调用该方法的线程进入 waiting 状态,只有等待另外线程的通知或者被中断才会返回,
-  需要注意的是,调用 wait()方法后,会释放对象的锁
+  需要注意的是,调用 wait()方法后, **会释放对象的锁**
 * wait(long) 超时等待一段时间,这里的参数时间是毫秒,也就是等待长达 n 毫秒,
   如果没有通知就超时返回
 * wait(long, int) 对超时时间更细粒度的控制,可以达到纳秒
 
-为什么以上*等待-通知*机制的方法放在 Object 中?
+为什么以上**等待-通知**机制的方法放在 Object 中?
 
-* 同步块中的锁是其所有对象的一部分,可以把 wait 放进任何同步控制方法里,
-  而不用考虑这个类是否继承 Thread 或是实现了 Runnable
-* 实际上,只能在同步方法或同步块中使用以上函数,而 sleep 可以在非同步块中使用(不用操作锁)
-* 如果在非同步块中使用以上方法,可以通过编译,但是会在运行时抛出异常
+* 等待-通知机制与同步锁紧密关联, 而同步块中的锁是其所有**对象**的一部分, 等待通知的相关方法放在 
+  Object中, 可以让这个机制在任何同步控制方法里被使用, 而不用考虑这个类是否继承 Thread 或是实现了 Runnable
+* 实际上,只能在同步方法或同步块中使用以上函数,而 sleep 可以在非同步块中使用(不用操作锁); 
+  如果在非同步块中使用以上方法,可以通过编译,但是会在运行时抛出异常
 
 [例子:WaitNotify](WaitNotify.java)
+
+```java
+public class WaitNotify {
+    static boolean flag = true;
+    static final Object lock = new Object();
+
+    public static void main(String[] args) throws Exception {
+        Thread waitThread = new Thread(new Wait(), "WaitThread");
+        waitThread.start();
+        TimeUnit.SECONDS.sleep(1);
+        Thread notifyThread = new Thread(new Notify(), "NotifyThread");
+        notifyThread.start();
+    }
+
+    static class Wait implements Runnable {
+        public void run() {
+            // 加锁,拥有lock的Monitor
+            synchronized (lock) {
+                // 当条件不满足时,继续wait,同时释放了lock的锁
+                while (flag) {
+                    try {
+                        System.out.println(Thread.currentThread() + " flag is true. wait " +
+                                new SimpleDateFormat(" HH: mm: ss ").format(new Date()));
+                        lock.wait();
+                    } catch (InterruptedException e) {
+                    }
+                }
+                // 条件满足时,完成工作
+                System.out.println(Thread.currentThread() + " flag is false. running @ "
+                        + new SimpleDateFormat(" HH: mm: ss ").format(new Date()));
+            }
+        }
+    }
+
+    static class Notify implements Runnable {
+        public void run() {
+            // 加锁,拥有lock的Monitor
+            synchronized (lock) {
+                // 获取lock的锁,然后进行通知,通知时不会立马释放lock的锁,
+                // 直到当前线程释放了lock后,WaitThread才能从wait方法中返回
+                System.out.println(Thread.currentThread() + " hold lock. notify @ " +
+                        new SimpleDateFormat("HH:mm:ss").format(new Date()));
+                lock.notifyAll();
+                flag = false;
+                sleepSecond(5);
+            }
+            // 再次加锁
+            synchronized (lock) {
+                System.out.println(Thread.currentThread() + " hold lock again. sleep @ "
+                        + new SimpleDateFormat(" HH:mm:ss ").format(new Date()));
+                sleepSecond(5);
+            }
+        }
+    }
+
+    private static void sleepSecond(int second) {
+        try {
+            TimeUnit.SECONDS.sleep(second);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
 使用细节
 
 * 使用 wait,notify 和 notifyAll 时需要先对调用对象加锁
 * 调用 wait 方法后,线程状态由 running 变为 waiting,并将当前线程放到对象的等待队列
 * notify 或是 notifyAll 方法调用后,等待线程依旧不会从 wait 返回,
-  需要调用 notify 或 notifyA 的线程释放了锁之后,等待线程才有机会从 wait 返回
+  需要调用 notify 或 notifyAll 的线程释放了锁之后,等待线程才有机会从 wait 返回
 * notify 方法将等待队列的一个等待线程从等待队列移到同步队列中,
   而 notifyAll 方法则是将等待队列中所有线程全部移动到同步队列,
   被移动的线程状态由 waiting 变为 blocked
@@ -254,7 +319,15 @@ synchronized (syncObject){
 }
 ```
 
-## join
+## Thread#join()
+
+线程的调度一般是由系统完成的,它们之间的执行顺序是不可预料的.
+然而有时候我们需要线程处理任务时有**先后顺序**, 这个时候可以使用
+Thread对象上的join方法,或者线程工具类CountDownLatch和CyclicBarrier.
+
+* 如果一个线程 a 执行了 b.join(),其含义是:当前线程 a 等待 b 线程终止之后才从 b.join()返回
+* join(long millis)表示:如果线程 b 在给定的超时时间里没有终止,那么 a 将会从该超时方法中返回,
+  然后 a 和 b 并行
 
 ```java
 /**
@@ -281,7 +354,7 @@ throws InterruptedException {
             if (delay <= 0) {
                 break;
             }
-            // 父类Object上的方法,参数delay为超时时间
+            // 使用Object上的wait-notify机制,参数delay为超时时间
             wait(delay);
             now = System.currentTimeMillis() - base;
         }
@@ -290,7 +363,18 @@ throws InterruptedException {
 public final void join() throws InterruptedException {
     join(0);
 }
+public final synchronized void join(long millis, int nanos)
+throws InterruptedException {
+    // 根据nanos的值决定是否增加millis
+    join(millis);
+}
 ```
 
-* 如果一个线程 a 执行了 b.join(),其含义是:当前线程 a 等待 b 线程终止之后才从 b.join()返回
-* join(long millis)表示:如果线程 b 在给定的超时时间里没有终止,那么将会从该超时方法中返回
+* join方法一共有三种形式,它们最终都是调用`join(long millis)`方法,
+  当millis为0时,a线程会一直等待b执行完成;
+  当millis大于零时,a最多等待millis毫秒,然后a和b并行
+* join是一个synchronized方法,调用时必须获得线程的同步锁,
+  如果外部占用了该线程的同步锁,可能导致这里等待大于millis的时间
+* join方法的实现使用了**等待-通知**机制, 以线程的isAlive()作为循环判断条件
+
+  
