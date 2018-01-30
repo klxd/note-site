@@ -507,49 +507,6 @@ private final void transfer(Node<K,V>[] tab, Node<K,V>[] nextTab) {
 }
 ```
 
-## CAS
-
-CAS(compare and swap)非阻塞的无锁算法之一.
-语义:我认为 V 的值是 A,如果是,那么将 V 的值更新为 B,否则不修改并告诉 V 的实际值是多少
-
-```java
-//Unsafe mechanics
-private static final sun.misc.Unsafe U;
-private static final long SIZECTL;
-private static final long TRANSFERINDEX;
-private static final long BASECOUNT;
-private static final long CELLSBUSY;
-private static final long CELLVALUE;
-private static final long ABASE;
-private static final int ASHIFT;
-
-static {
-    try {
-        U = sun.misc.Unsafe.getUnsafe();
-        Class<?> k = ConcurrentHashMap.class;
-        SIZECTL = U.objectFieldOffset
-            (k.getDeclaredField("sizeCtl"));
-        TRANSFERINDEX = U.objectFieldOffset
-            (k.getDeclaredField("transferIndex"));
-        BASECOUNT = U.objectFieldOffset
-            (k.getDeclaredField("baseCount"));
-        CELLSBUSY = U.objectFieldOffset
-            (k.getDeclaredField("cellsBusy"));
-        Class<?> ck = CounterCell.class;
-        CELLVALUE = U.objectFieldOffset
-            (ck.getDeclaredField("value"));
-        Class<?> ak = Node[].class;
-        ABASE = U.arrayBaseOffset(ak);
-        int scale = U.arrayIndexScale(ak);
-        if ((scale & (scale - 1)) != 0)
-            throw new Error("data type scale not a power of two");
-        ASHIFT = 31 - Integer.numberOfLeadingZeros(scale);
-    } catch (Exception e) {
-        throw new Error(e);
-    }
-}
-```
-
 ### 三个核心方法
 
 * 原子操作

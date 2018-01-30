@@ -80,6 +80,10 @@ update这个API似乎	允许你修改文档的局部,但事实上Elasticsearch
 
 ## 分布式搜索
 
+
+## Question
+* Lucene底层实现原理，它的索引结构
+
 ## 参考
 [Elasticsearch官方文档](https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html)
 [ElasticSearch 内部机制浅析](http://leonlibraries.github.io/tags/%E5%85%A8%E6%96%87%E6%90%9C%E7%B4%A2/)
