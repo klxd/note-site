@@ -98,6 +98,10 @@ MySQL 和常见数据库中的锁都分为两种，共享锁（Shared）和互�
 ## 页锁、乐观锁、悲观锁
 
 ## B+树
+为什么不用 B树 或者 B-树
+
+## 多字段索引时, 索引能正确使用么
+
 
 ## 参考
 [浅入深出MySQL中事务的实现](https://draveness.me/mysql-transaction)

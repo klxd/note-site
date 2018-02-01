@@ -6,7 +6,8 @@ tags:
    - java
 ---
 
-Java 中的线程池是运用场景最多的并发框架,几乎所有需要异步或并发执行任务的程序都可以使用线程池。在开发过程中,合理地使用线程池能够带来 3 个好处。
+Java 中的线程池是运用场景最多的并发框架,几乎所有需要异步或并发执行任务的程序都可以使用线程池。
+在开发过程中,合理地使用线程池能够带来 3 个好处。
 
 * 降低资源消耗。通过重复利用已创建的线程降低线程创建和销毁造成的消耗。
 * 提高响应速度。当任务到达时,任务可以不需要等到线程创建就能立即执行。
@@ -180,3 +181,40 @@ public class Executors {
 ```
 
 * CachedThreadPool 是大小无界的线程池,适用于执行很多的短期异步任务的小程序,或者是负载较轻的服务器
+
+## ScheduledThreadPoolExecutor
+
+```java
+public class Executors {
+    public static ScheduledExecutorService newScheduledThreadPool(
+            int corePoolSize, ThreadFactory threadFactory) {
+        return new ScheduledThreadPoolExecutor(corePoolSize, threadFactory);
+    }
+}
+```
+* ScheduledThreadPoolExecutor继承自ThreadPoolExecutor, 实现了ScheduledExecutorService接口
+* ScheduledThreadPoolExecutor的功能与Timer类似, Timer对应的是单个后台线程,
+  而ScheduledThreadPoolExecutor可以在构造函数中指定多个对应的后台线程数
+* ScheduledThreadPoolExecutor使用了DelayQueue, 这是一个无界队列, 所以maxPoolSize这个参数不起作用
+
+* 内部调度任务使用了内部类ScheduledFutureTask
+```java
+private class ScheduledFutureTask<V>
+        extends FutureTask<V> implements RunnableScheduledFuture<V> {
+
+    /** 这个任务被添加到队列的序号 */
+    private final long sequenceNumber;
+
+    /** 这个任务将要被执行的具体时间(nanoTime units) */
+    private long time;
+
+    /**
+     * 若 period > 0, 表示任务的执行周期
+     * 若 period < 0, 表示这是一个固定延迟的任务(上一个任务完成之后再执行下一个)
+     * 若 period = 0, 表示这是一个不用重复执行的任务
+     */
+    private final long period;
+}
+```
+* DelayQueue封装了一个PriorityQueue, 这个队列会使用time对FutureTask进行排序,
+  保证任务time小的排在前面, 若time相等则sequenceNumber小的排前面
