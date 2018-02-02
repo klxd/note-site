@@ -102,6 +102,12 @@ MySQL 和常见数据库中的锁都分为两种，共享锁（Shared）和互�
 
 ## 多字段索引时, 索引能正确使用么
 
+## 数据库的锁机制
+
+## 数据库的优化 最好不要设置null值 避免sql语句中进行计算 避免in ，导致全表扫描
+
+## 对MySQL的了解，和oracle的区别
+
 
 ## 参考
 [浅入深出MySQL中事务的实现](https://draveness.me/mysql-transaction)

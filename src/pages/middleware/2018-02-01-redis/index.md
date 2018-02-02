@@ -8,3 +8,4 @@ tags:
 
 ## Question
 * redis的操作是不是原子操作
+* 如何实现分布式缓存
