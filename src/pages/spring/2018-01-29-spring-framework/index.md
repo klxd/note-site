@@ -20,5 +20,8 @@ tags:
 * 10. Tomcat reloadable实现原理（这个没答出来，后来看是直接替换了ClassLoader，当时猜得是替换classLoader里面的已加载类
 
  Tomcat接收用户数据的IO原理（就是NIO，我就提了一下NIO三个字，面试官就说可以了。本来还想讲讲Reactor模式和Proactor模式来着）
+ 
+* 过滤器和拦截器的区别 
+ 
 
 ## 参考
