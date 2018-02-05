@@ -81,7 +81,9 @@ update这个API似乎	允许你修改文档的局部,但事实上Elasticsearch
 ## 分布式搜索
 
 
+
 ## Question
+* es搜索时的记分算法
 * Lucene底层实现原理，它的索引结构
 
 ## 参考
