@@ -99,6 +99,10 @@ Redis虽然是一种内存型数据库，一旦服务器进程退出，数据库
 
 * 如何实现分布式缓存
 
+* 缓存击穿如何处理
+
+* 缓存预热
+
 ## 参考
 * [Redis 菜鸟教程](http://www.runoob.com/redis/redis-data-types.html)
 * [使用Redis实现分布式锁及其优化](http://mzorro.me/2017/10/25/redis-distributed-lock/)

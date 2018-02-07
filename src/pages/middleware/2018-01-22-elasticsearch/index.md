@@ -17,8 +17,8 @@ Lucene只是一个库,想要使用它,你必须使用Java来作为开发语言�
 同一个局域网中,cluster.name相同的节点会自动组成一个集群
 
 ## 概念映射
-Relational DB -> Databases -> Tables -> Rows -> Columns
-Elasticsearch -> Indices   -> Types  -> Documents -> Fields
+* Relational DB -> Databases -> Tables -> Rows      -> Columns
+* Elasticsearch -> Indices   -> Types  -> Documents -> Fields
 
 ## Java API
 
@@ -81,10 +81,25 @@ update这个API似乎	允许你修改文档的局部,但事实上Elasticsearch
 ## 分布式搜索
 
 
+## Lucene 相关性算分公式 TF-IDF
+
+TF:词频, IDF：逆向文档频率，TF-IDF是一种统计方法，或者被称为向量空间模型,名字听起来很复杂，但是它其实只包含了两个简单规则
+
+* 某个词或短语在一个文档（doc）中出现的次数越多，越相关
+* 整个文档集合（docs）中包含某个词的文档数量越少，这个词越重要
+所以一个term的TF-IDF相关性等于 TF * IDF
+
+这两个规则非常简单，这就是TF-IDF的核心规则，第二个的规则其实有缺陷的，他单纯地认为文本频率小的单词就越重要，
+文本频率大的单词就越无用，显然这并不是完全正确的。并不能有效地反映单词的重要程度和特征词的分布情况，
+比如说搜索web文档的时候，处于HTML不同结构的特征词中对文章内容的反映程度不同，应该有不同的权重
+
+TF-IDF的优点是算法简单，运算速度很快
+
+* Lucene底层实现原理，它的索引结构
 
 ## Question
 * es搜索时的记分算法
-* Lucene底层实现原理，它的索引结构
+
 
 ## 参考
 [Elasticsearch官方文档](https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html)
