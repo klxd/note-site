@@ -52,6 +52,14 @@ public class Resource {
 }
 ```
 
+* **可能重复创建** 无法保证线程A对resource的赋值操作是在线程B的读取操作之前
+* **构造完成前的提前暴露** Resource的构造函数把新实例中的各个域由默认值修改为初始值,
+  由于没有同步操作, 线程B**看到**的线程A中的操作顺序, 可能与线程A执行这些操作的顺序并不相同.
+  因此, 即使线程A初始化Resource实例之后再将resource设置为指向它, 线程B仍然可能看到对resource
+  的写入操作在对Resource的各个域的写入操作之前发生. 因此,线程B可能看到一个**被部分构造的Resource实例**.
+* 除了不可变对象之外,使用被另一个线程初始化的对象通常都是不安全的,
+  除非对象的发布操作是在使用该对象的线程开始使用之前执行的.
+
 # Safe lazy initialization
 
 ```java
@@ -67,6 +75,8 @@ public class Resource {
     }
 }
 ```
+
+* 每次调用getInstance都需要加锁, 存在性能问题
 
 # double checked lock
 
@@ -88,6 +98,12 @@ public class Resource {
 }
 ```
 
+* 理解了**独占性**的含义,却没有理解**可见性**的含义
+* 获取一个resource的引用时(first check), 没用使用同步, 还是可能导致**构造完成前的提前暴露**,
+  线程可能看到一个仅被部分构造的Resource.
+* 在Java 5.0以后, 如果把resource声明为volatile类型, 则DCL是线程安全的, 
+  然而已经没有理由再使用DCL, 使用延迟初始化占位类模式能带来同样的优势, 并且更好理解
+
 # placeholder
 
 ```java
@@ -96,15 +112,14 @@ public class Resource {
 
     private static class ResourceHolder {
         private static Resource resource = new Resource();
-        public static Resource getResource() {
-            return resource;
-        }
     }
 
     public static getInstance() {
-        return ResourceHolder.getResource();
+        return ResourceHolder.resource;
     }
 }
 ```
+* 不需要额外的同步, 由JVM的类加载机制保证实例创建的唯一性.
+
 
 [极客学院 内存模型](http://wiki.jikexueyuan.com/project/java-concurrent/java-memory-model.html)
