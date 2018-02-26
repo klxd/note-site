@@ -7,14 +7,35 @@ tags:
 ---
 
 ## du命令
+du: Disk usage
 可以查看文件及文件夹的大小
 * -h 表示使用「Human-readable」的输出，也就是在档案系统大小使用 GB、MB 等易读的格式
+
+```bash
+du -h ~/Applications 
+4.0K	/Users/peng/Applications/Chrome Apps.localized/.localized
+368K	/Users/peng/Applications/Chrome Apps.localized
+368K	/Users/peng/Applications
+```
 
 查找最占据磁盘空间的目录
 
 ## df命令
+df: disk free 其功能是显示磁盘可用空间数目信息及空间结点信息。
+换句话说，就是报告在任何安装的设备或目录中，还剩多少自由的空间
 
 可以查看一级文件夹大小、使用比例、档案系统及其挂入点，但对文件却无能为力
+
+```
+Filesystem    512-blocks     Used Available Capacity iused               ifree %iused  Mounted on
+/dev/disk1s1   394532824 93385904 297726624    24% 1129328 9223372036853646479    0%   /
+devfs                375      375         0   100%     649                   0  100%   /dev
+/dev/disk1s4   394532824  2097192 297726624     1%       1 9223372036854775806    0%   /private/var/vm
+/dev/disk0s3    95291384 75771232  19520152    80%  162180             9767880    2%   /Volumes/BOOTCAMP
+map -hosts             0        0         0   100%       0                   0  100%   /net
+map auto_home          0        0         0   100%       0                   0  100%   /home
+/dev/disk1s3   394532824  1019704 297726624     1%      14 9223372036854775793    0%   /Volumes/Recovery
+```
 
 ## Top命令
 
