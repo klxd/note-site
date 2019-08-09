@@ -42,7 +42,7 @@ public class TreeMap<K,V>
 
 ## 红黑树
 
-＞红黑树是一种近似平衡的二叉查找树，它能够确保任何一个节点的左右子树的高度差不会超过二者中较低那个的一陪。＞具体来说，红黑树是满足如下条件的二叉查找树（binary search tree）：
+>红黑树是一种近似平衡的二叉查找树，它能够确保任何一个节点的左右子树的高度差不会超过二者中较低那个的一陪。＞具体来说，红黑树是满足如下条件的二叉查找树（binary search tree）：
 
 * 每个节点要么是红色，要么是黑色。
 * 根节点必须是黑色
@@ -188,6 +188,30 @@ public V remove(Object key) {
     return oldValue;
 }
 ```
-
 * 调用`getEntry()`找到 key 相应的 entry
 * 调用`deleteEntry()`删除对应的 entry (根据需要调整树的结构)
+
+## NavigableMap接口
+
+* NavigableMap接口已知实现类ConcurrentSkipListMap, TreeMap
+* SortedMap 是继承于Map的接口。SortedMap中的内容是排序的键值对，排序的方法是通过比较器(Comparator)。
+* NavigableMap 是继承于SortedMap的接口。相比于SortedMap，NavigableMap有一系列的导航方法；如"获取大于/等于某对象的键值对"、“获取小于/等于某对象的键值对”等等。 
+* TreeMap 继承于AbstractMap，且实现了NavigableMap接口；因此，TreeMap中的内容是“有序的键值对”
+
+NavigableMap提供的功能可以分为4类
+
+第1类，提供操作键-值对的方法
+lowerEntry、floorEntry、ceilingEntry 和 higherEntry 方法
+它们分别返回与小于、小于等于、大于等于、大于给定键的键关联的 Map.Entry<K, V>对象, 若不存在则返回null
+firstEntry、pollFirstEntry、lastEntry 和 pollLastEntry 方法，
+它们返回和/或移除最小和最大的映射关系（如果存在），否则返回 null。
+
+第2类，提供操作键的方法。这个和第1类比较类似
+lowerKey、floorKey、ceilingKey 和 higherKey 方法，它们分别返回与小于、小于等于、大于等于、大于给定键的键, 若不存在则返回null。
+
+第3类，获取键集。
+navigableKeySet、descendingKeySet分别获取正序/反序的键集(NavigableSet<K>)。
+
+第4类，获取键-值对的子集。
+NavigableMap<K,V> descendingMap();
+subMap、headMap、tailMap返回大于或小于某个key的一个SortedMap<K,V>
