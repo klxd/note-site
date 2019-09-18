@@ -97,3 +97,25 @@ Java的Selector对于Linux系统来说，有一个致命限制：同一个channe
 * channel关闭，取消注册。
 * 优先级更高的事件触发（如定时器事件），希望及时处理。
 
+
+## Buffer
+与Java基本类型相对应，NIO提供了多种 Buffer 类型，如ByteBuffer、CharBuffer、IntBuffer等，
+区别就是读写缓冲区时的单位长度不一样（以对应类型的变量为单位进行读写）。
+
+Buffer中有3个很重要的变量，它们是理解Buffer工作机制的关键，分别是
+
+* capacity （总容量）
+* position （指针当前位置）
+* limit （读/写边界位置）
+
+Buffer的工作方式跟C语言里的字符数组非常的像，类比一下，capacity就是数组的总长度，position就是我们读/写字符的下标变量，limit就是结束符的位置
+
+在对Buffer进行读/写的过程中，position会往后移动，而 limit 就是 position 移动的边界。由此不难想象，在对Buffer进行写入操作时，limit应当设置为capacity的大小，而对Buffer进行读取操作时，limit应当设置为数据的实际结束位置。（注意：将Buffer数据 写入 通道是Buffer 读取 操作，从通道 读取 数据到Buffer是Buffer 写入 操作）
+
+在对Buffer进行读/写操作前，我们可以调用Buffer类提供的一些辅助方法来正确设置 position 和 limit 的值，主要有如下几个
+
+* flip(): 设置 limit 为 position 的值，然后 position 置为0。对Buffer进行读取操作前调用。
+* rewind(): 仅仅将 position置0。一般是在重新读取Buffer数据前调用，比如要读取同一个Buffer的数据写入多个通道时会用到。
+* clear(): 回到初始状态，即 limit 等于 capacity，position 置0。重新对Buffer进行写入操作前调用。
+* compact(): 将未读取完的数据（position 与 limit 之间的数据）移动到缓冲区开头，并将 position设置为这段数据末尾的下一个位置。
+  其实就等价于重新向缓冲区中写入了这么一段数据。
