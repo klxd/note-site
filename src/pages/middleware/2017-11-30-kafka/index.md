@@ -75,7 +75,7 @@ rabbitMQ在吞吐量方面稍逊于kafka，他们的出发点不一样，rabbitM
 
 3. 可用性
 
-rabbitMQ支持miror的queue，主queue失效，miror queue接管。
+rabbitMQ支持mirror的queue，主queue失效，mirror queue接管。
 
 kafka的broker支持主从模式。
 
