@@ -135,6 +135,14 @@ Redis虽然是一种内存型数据库，一旦服务器进程退出，数据库
   
 
 
+##　Raft算法
+
+* <https://www.cnblogs.com/xybaby/p/10124083.html>
+* <https://www.cnblogs.com/mindwind/p/5231986.html>
+
+## 一致性哈希
+
+* <https://blog.csdn.net/u013851082/article/details/68063446>
 
 
 
@@ -158,3 +166,5 @@ Redis虽然是一种内存型数据库，一旦服务器进程退出，数据库
 * [使用Redis实现分布式锁及其优化](http://mzorro.me/2017/10/25/redis-distributed-lock/)
 * [Redis主从复制总结整理](http://alinuxer.sinaapp.com/?p=340)
 * [Redis 集群规范](http://redisdoc.com/topic/cluster-spec.html)
+
+* [Redis系列文章](https://www.cnblogs.com/kismetv/p/9609938.html)
