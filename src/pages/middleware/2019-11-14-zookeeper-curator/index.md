@@ -29,6 +29,16 @@ Curator是Netflix公司开源的一套zookeeper客户端框架，解决了很多
 
 缺点: 羊群效应, 非公平?
 
+### 改进实现 (Curator中InterProcessMutex的实现思路)
+1. 定义锁, 使用zk上的数据节点来表示一个锁, 如/exclusive_lock
+2. 获取锁
+  2.1 客户端尝试在/exclusive_lock节点下创建**临时顺序**子节点/exclusive_lock/lock-0001,
+  2.2 获取/exclusive_lock下所有的子节点, 并进行判断
+    * 若新创建的子节点的序号为子节点中最小的, 则获取成功
+    * 若还有更小的子节点, 则监听比自己序号小的最后一个子节点, 然后等待watcher通知重复步骤2.2
+3. 释放锁, 同简单实现一样, 即子节点删除
+
+特点: 公平, 按照请求锁的顺序依次获得锁, 没有羊群效应
  
 ## 共享锁 (Shared Lock, S锁)
 
@@ -56,7 +66,247 @@ Curator是Netflix公司开源的一套zookeeper客户端框架，解决了很多
 4. 等待Watcher通知, 然后进入步骤2
 
 
+## Curator分布式锁源码解析
+Curator中的一些分布式工具位于recipes模块, maven依赖如下
+```xml
+<dependency>
+    <groupId>org.apache.curator</groupId>
+    <artifactId>curator-recipes</artifactId>
+    <version>4.0.1</version>
+</dependency>
+```
+### 分布式可重入锁 InterProcessMutex
+Curator分布式锁接口
+
+```java
+public interface InterProcessLock
+{
+    /**
+     * 获取锁,调用时会阻塞直到获取成功, 同一线程多次获取则必须多次调用释放#release
+     * @throws Exception ZK errors, connection interruptions
+     */
+    public void acquire() throws Exception;
+
+    /**
+     * 尝试获取锁, 最多阻塞时间自定, 超时则返回false 
+     * @throws Exception ZK errors, connection interruptions
+     */
+    public boolean acquire(long time, TimeUnit unit) throws Exception;
+
+    /**
+     * 释放锁一次
+     * @throws Exception ZK errors, interruptions, current thread does not own the lock
+     */
+    public void release() throws Exception;
+
+    /**
+     * 锁是否被当前的JVM持有 (注意不是当前线程)
+     * @return true/false
+     */
+    boolean isAcquiredInThisProcess();
+}
+```
+
+可重入独占锁实现InterProcessMutex, 总体实现逻辑为上文排他锁的改进实现
+
+```java
+public class InterProcessMutex implements InterProcessLock, Revocable<InterProcessMutex> {
+    
+    @Override
+    public void acquire() throws Exception {
+        // 过期时间为-1, 即永久阻塞等待锁
+        if ( !internalLock(-1, null) )
+        {
+            throw new IOException("Lost connection while trying to acquire lock: " + basePath);
+        }
+    }
+    
+    private boolean internalLock(long time, TimeUnit unit) throws Exception {
+        Thread currentThread = Thread.currentThread();
+
+        // 若当前线程正持有锁, 则简单的将lockCount加1, 实现可重入
+        LockData lockData = threadData.get(currentThread);
+        if ( lockData != null )
+        {
+            // re-entering
+            lockData.lockCount.incrementAndGet();
+            return true;
+        }
+
+        // 带上最大等待时长去请求锁
+        String lockPath = internals.attemptLock(time, unit, getLockNodeBytes());
+        if ( lockPath != null )
+        {
+            // 获得锁之后，记录当前的线程获得锁的信息，在重入时只需在LockData中增加次数统计即可
+            LockData newLockData = new LockData(currentThread, lockPath);
+            threadData.put(currentThread, newLockData);
+            return true;
+        }
+
+        return false;
+    }
+    
+}
+
+```
+
+请求锁的具体实现位于LockInternals类中
+
+```java
+public class LockInternals {
+    
+    String attemptLock(long time, TimeUnit unit, byte[] lockNodeBytes) throws Exception {
+        final long      startMillis = System.currentTimeMillis();
+        final Long      millisToWait = (unit != null) ? unit.toMillis(time) : null;
+        final byte[]    localLockNodeBytes = (revocable.get() != null) ? new byte[0] : lockNodeBytes;
+        int             retryCount = 0;
+
+        String          ourPath = null;
+        boolean         hasTheLock = false;
+        boolean         isDone = false;
+        
+        // 此循环是判定session过期时重试使用
+        while ( !isDone )
+        {
+            isDone = true;
+
+            try
+            {
+                // 在锁空间下创建临时顺序子节点
+                ourPath = driver.createsTheLock(client, path, localLockNodeBytes);
+                // 判断是否获得锁（子节点序号最小），获得锁则直接返回，否则阻塞等待前一个子节点删除通知
+                hasTheLock = internalLockLoop(startMillis, millisToWait, ourPath);
+            }
+            catch ( KeeperException.NoNodeException e )
+            {
+                // -- 当捕捉到NoNodeException时,由于有可能是因为session过期导致的,
+                // 这里需要根据重试策略进行重试
+                // gets thrown by StandardLockInternalsDriver when it can't find the lock node
+                // this can happen when the session expires, etc. So, if the retry allows, just try it all again
+                if ( client.getZookeeperClient().getRetryPolicy().allowRetry(retryCount++, System.currentTimeMillis() - startMillis, RetryLoop.getDefaultRetrySleeper()) )
+                {
+                    isDone = false;
+                }
+                else
+                {
+                    throw e;
+                }
+            }
+        }
+
+        if ( hasTheLock )
+        {
+            return ourPath;
+        }
+
+        return null;
+    }
+    
+    private boolean internalLockLoop(long startMillis, Long millisToWait, String ourPath) throws Exception {
+        boolean     haveTheLock = false;
+        boolean     doDelete = false;
+        try
+        {
+            if ( revocable.get() != null )
+            {
+                client.getData().usingWatcher(revocableWatcher).forPath(ourPath);
+            }
+            
+            // 此循环是接收到notify后重试获取锁时使用, 即自旋
+            while ( (client.getState() == CuratorFrameworkState.STARTED) && !haveTheLock )
+            {
+                // 获取所有子节点列表, 并且按照从小到大排序
+                List<String>        children = getSortedChildren();
+                
+                // 判断当前子节点是否是最小子节点
+                String              sequenceNodeName = ourPath.substring(basePath.length() + 1); // +1 to include the slash
+                PredicateResults    predicateResults = driver.getsTheLock(client, children, sequenceNodeName, maxLeases);
+                if ( predicateResults.getsTheLock() )
+                {
+                    //如果为最小子节点则认为获得锁 
+                    haveTheLock = true;
+                }
+                else
+                {
+                    //否则获取前一个子节点作为监视对象
+                    String  previousSequencePath = basePath + "/" + predicateResults.getPathToWatch();
+
+                    // 这里使用对象监视器做线程同步，当获取不到锁时监听前一个子节点删除消息并且进行wait()，
+                    // 当前一个子节点删除（也就是锁释放）时，回调会通过notifyAll唤醒此线程，此线程继续自旋判断是否获得锁
+                    synchronized(this)
+                    {
+                        try 
+                        {
+                            // use getData() instead of exists() to avoid leaving unneeded watchers which is a type of resource leak
+                            // 这里使用getData()接口而不是checkExists()是因为，如果前一个子节点已经被删除了那么会抛出异常而且不会设置事件监听器，
+                            // 而checkExists虽然也可以获取到节点是否存在的信息但是同时设置了监听器，这个监听器其实永远不会触发，对于zookeeper来说属于资源泄露
+                            client.getData().usingWatcher(watcher).forPath(previousSequencePath);
+                            
+                            // 如果设置了阻塞等待的时间
+                            if ( millisToWait != null )
+                            {
+                                millisToWait -= (System.currentTimeMillis() - startMillis);
+                                startMillis = System.currentTimeMillis();
+                                if ( millisToWait <= 0 )
+                                {
+                                    doDelete = true;    // timed out - delete our node
+                                    break;
+                                }
+
+                                // 等待相应的时间
+                                wait(millisToWait);
+                            }
+                            else
+                            {
+                                // 永远等待
+                                wait();
+                            }
+                        }
+                        catch ( KeeperException.NoNodeException e ) 
+                        {
+                            // it has been deleted (i.e. lock released). Try to acquire again
+                            // 上面使用getData来设置监听器时，如果前一个子节点已经被删除那么会抛出NoNodeException，只需要自旋一次即可，无需额外处理
+                        }
+                    }
+                }
+            }
+        }
+        catch ( Exception e )
+        {
+            ThreadUtils.checkInterrupted(e);
+            doDelete = true;
+            throw e;
+        }
+        finally
+        {
+            if ( doDelete )
+            {
+                deleteOurPath(ourPath);
+            }
+        }
+        return haveTheLock;
+    }
+    
+    // Watch回调事件定义
+    private final Watcher watcher = new Watcher()
+    {
+        @Override
+        public void process(WatchedEvent event)
+        {
+            notifyFromWatcher();
+        }
+    };
+    private synchronized void notifyFromWatcher()
+    {
+        // 唤醒线程
+        notifyAll();
+    }
+}
+```
+
+
 ## 参考
 * [Zookeeper客户端Curator使用详解](http://www.throwable.club/2018/12/16/zookeeper-curator-usage/)
 * [基于Zookeeper的分布式锁](http://www.dengshenyu.com/java/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/2017/10/23/zookeeper-distributed-lock.html)
 * [七张图彻底讲清楚ZooKeeper分布式锁的实现原理](https://juejin.im/post/5c01532ef265da61362232ed)
+* [秋雨霏霏Curator系列文章](https://my.oschina.net/roccn?tab=newest&catalogId=5647769)

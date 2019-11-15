@@ -6,6 +6,25 @@ tags:
    - middleware
 ---
 
+## 简介
+
+### API概述
+znode节点可以含有数据，也可以没有。如果一个znode节点包含数据的话，那么数据是以字节数组的形式来存储。字节数组的具体格式依赖于应用本身的实现，Zookeeper不直接提供解析的支持，应用可以使用如Protocol Buffer、Thrift、Avro或MessagePack等序列化包来处理保存于znode节点的数据，但往往UTF-8或ASCII编码的字符串已经够用了。
+
+Zookeeper的API提供了如下操作：
+
+create /path data：创建一个名为/path的znode节点，并包含data数据
+delete /path：删除名为/path的znode
+exists /path：检查是否存在名为/path的节点
+setData /path data：设置名为/path的znode的数据为data
+getData /path：返回名为/path节点的数据
+getChildren /path：返回/path节点的子节点列表
+
+需要注意的是，Zookeeper并不允许局部的写入或读取，当进行数据读写时，znode的内容会被整个替换或读取出来。
+
+### 不适用的场景
+Zookeeper应该用来管理分布式应用的协作关键数据，这些数据一般都是精且少的，Zookeeper不适合用作海量数据存储。在实际应用中，建议将协同数据和应用数据分开，协同数据可以使用Zookeeper，而应用数据则可以考虑数据库或者分布式文件系统等存储方案
+
 ## ZAB协议(Zookeeper Atomic broadcast protocol)
 
 ZAB 协议是为分布式协调服务 ZooKeeper 专门设计的一种支持崩溃恢复的原子广播协议。在 ZooKeeper 中，主要依赖 ZAB 协议来实现分布式数据一致性，基于该协议，ZooKeeper 实现了一种主备模式的系统架构来保持集群中各个副本之间的数据一致性。
@@ -31,6 +50,19 @@ ZAB 协议是为分布式协调服务 ZooKeeper 专门设计的一种支持崩�
 这一阶段 follower 发送它们的 lastZixd 给 leader，leader 根据 lastZixd 决定如何同步数据。这里的实现跟前面 Phase 2 有所不同：Follower 收到 TRUNC 指令会中止 L.lastCommittedZxid 之后的提议，收到 DIFF 指令会接收新的提议。
 
 * Broadcast Phase (广播阶段)
+
+
+## zookeeper watch机制
+Watch机制官方声明：一个Watch事件是一个一次性的触发器，当被设置了Watch的数据发生了改变的时候，则服务器将这个改变发送给设置了Watch的客户端，以便通知它们。
+Zookeeper机制的特点：
+1、一次性触发数据发生改变时，一个watcher event会被发送到client，但是client只会收到一次这样的信息。
+2、watcher event异步发送watcher的通知事件从server发送到client是异步的，这就存在一个问题，不同的客户端和服务器之间通过socket进行通信，由于网络延迟或其他因素导致客户端在不通的时刻监听到事件，由于Zookeeper本身提供了ordering guarantee，即客户端监听事件后，才会感知它所监视znode发生了变化。所以我们使用Zookeeper不能期望能够监控到节点每次的变化。Zookeeper只能保证最终的一致性，而无法保证强一致性。
+3、数据监视Zookeeper有数据监视和子数据监视getdata() and exists()设置数据监视，getchildren()设置了子节点监视。
+4、注册watcher getData、exists、getChildren
+5、触发watcher create、delete、setData
+6、setData()会触发znode上设置的data watch（如果set成功的话）。一个成功的create() 操作会触发被创建的znode上的数据watch，以及其父节点上的child watch。而一个成功的delete()操作将会同时触发一个znode的data watch和child watch（因为这样就没有子节点了），同时也会触发其父节点的child watch。
+7、当一个客户端连接到一个新的服务器上时，watch将会被以任意会话事件触发。当与一个服务器失去连接的时候，是无法接收到watch的。而当client重新连接时，如果需要的话，所有先前注册过的watch，都会被重新注册。通常这是完全透明的。只有在一个特殊情况下，watch可能会丢失：对于一个未创建的znode的exist watch，如果在客户端断开连接期间被创建了，并且随后在客户端连接上之前又删除了，这种情况下，这个watch事件可能会被丢失。
+8、Watch是轻量级的，其实就是本地JVM的Callback，服务器端只是存了是否有设置了Watcher的布尔类型
 
 ## Question
 Q1、如何使用ZK进行选举？画图说明
@@ -59,5 +91,6 @@ A16:生产环境中最好部署奇数个(3\5\7...),偶数个是不可以的。
 
 
 ## 参考
-* [从PAXOS到Zookeeper分布式一致性原理与时间]
+* [从PAXOS到Zookeeper分布式一致性原理与实践]
 * [看大牛如何分析Zookeeper ZAB 协议](https://juejin.im/post/5b924b0de51d450e9a2de615)
+* [Zookeeper: 分布式过程协同技术详解](http://www.dengshenyu.com/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/2017/11/01/zookeeper.html)
