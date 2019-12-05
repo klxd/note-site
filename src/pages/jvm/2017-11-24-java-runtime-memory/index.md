@@ -164,6 +164,37 @@ tags:
   * 如果不成立,则检查 HandlePromotionFailure(是否允许担保失败)
     * HandlePromotionFailure 为 true,继续检查最大的可用连续空间是否大于历次晋升到老年代对象的**平均大小**
     * 如果小于,或者 HandlePromotionFailure 为 false,则改为进行 FullGC
+    
+## 常用虚拟机配置参数  (HotSpot虚拟机)
+
+使用java命令运行class文件或jar文件时, 可以指定虚拟机参数, 参数的使用方法有如下3种:
+* -XX:+<option> 开启option参数
+* -XX:-<option> 关闭option参数
+* -XX:<option>=<value> 将option参数的值设定为value
+
+
+-Xmx5120m 
+-Xms5120m 
+-Xmn1536m 
+-XX:MetaspaceSize=256m 
+-XX:+UseCompressedOops 
+-XX:+UseParNewGC (默认关闭, 打开此开关后,使用ParNew+Serial Old的收集器组合进行内存回收)
+-XX:+UseConcMarkSweepGC (默认关闭, 打开后使用ParNew+CMS+Serial Old的收集器组合进行内存回收)
+-XX:ParallelGCThreads=8 
+-XX:+CMSClassUnloadingEnabled 
+-XX:+UseCMSCompactAtFullCollection (默认开启,设置CMS收集器在完成垃圾收集后是否要进行一次内存碎片整理) 
+
+-XX:CMSFullGCsBeforeCompaction=0 (无默认值,设置CMS收集器在进行若干次垃圾收集后再启动一次内存碎片整理)
+-XX:+CMSParallelRemarkEnabled 
+-XX:+ExplicitGCInvokesConcurrent 
+-XX:+UseCMSInitiatingOccupancyOnly 
+-XX:CMSInitiatingOccupancyFraction=65 
+-XX:CMSScheduleRemarkEdenPenetration=20 
+-XX:+ParallelRefProcEnabled 
+-XX:+AlwaysPreTouch
+
+SurvivorRatio (默认为8, 新生代中Eden区域与Survivor区域的容量比值)
+
 
 ## Question
 
@@ -192,3 +223,6 @@ tags:
 * JVM 的永久代中会发生垃圾回收吗
 * 标记清除、标记整理、复制算法的原理与特点？分别用在什么地方
 * 如果让你优化收集方法，有什么思路
+
+
+[关键业务系统jvm参数推荐](http://chen-tao.github.io/2017/01/10/jvm-param-rcmd-2016/)
