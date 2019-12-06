@@ -6,14 +6,10 @@ tags:
     - algorithm
 ---
 
-## 背包问题
+# 828
+题意: U(str) = 字符串中只出现一次的字符的个数, 给出一个字符串, 求其所有子串U(str)的和
 
-## leetcode中的背包问题
-
-## leetcode中的LCS(longest common subsequent)
-
-* 1143. Longest Common Subsequence (最长公共子序列)
-* 583. Delete Operation for Two Strings
-* 712. Minimum ASCII Delete Sum for Two Strings
-* 1092. Shortest Common Supersequence (最短公共父序列)
-
+思路:
+不用找出所有的子串, 而从每个字符去考虑;
+对于每个字符(位置为idx), 考虑左右两边第一个相同的字符的位置, 记为(idxL和idxR),
+则此字符能贡献的U(str)为 `(idx - idxL) * (idxR - idx)`.(考虑所有的子串组合)

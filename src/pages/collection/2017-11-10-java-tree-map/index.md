@@ -42,7 +42,8 @@ public class TreeMap<K,V>
 
 ## 红黑树
 
->红黑树是一种近似平衡的二叉查找树，它能够确保任何一个节点的左右子树的高度差不会超过二者中较低那个的一陪。＞具体来说，红黑树是满足如下条件的二叉查找树（binary search tree）：
+红黑树是一种近似平衡的二叉查找树，它能够确保任何一个节点的左右子树的高度差不会超过二者中较低那个的一陪。
+具体来说，红黑树是满足如下条件的二叉查找树（binary search tree）：
 
 * 每个节点要么是红色，要么是黑色。
 * 根节点必须是黑色
@@ -215,3 +216,7 @@ navigableKeySet、descendingKeySet分别获取正序/反序的键集(NavigableSe
 第4类，获取键-值对的子集。
 NavigableMap<K,V> descendingMap();
 subMap、headMap、tailMap返回大于或小于某个key的一个SortedMap<K,V>
+
+
+# 练习题
+leetcode-826
