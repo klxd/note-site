@@ -384,3 +384,4 @@ throws InterruptedException {
 * join方法的实现使用了**等待-通知**机制, 以线程的isAlive()作为循环判断条件
 
   
+* [线程的中断(interrupt)机制](https://www.jianshu.com/p/27b00630faa0)

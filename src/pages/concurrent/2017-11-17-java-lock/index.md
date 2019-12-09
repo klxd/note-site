@@ -10,6 +10,7 @@ tags:
 
 * lock 获取锁的过程比较可控,粒度更细,synchronize 获得锁的过程由 jvm 控制
 * synchronize 会自动释放锁,lock 释放锁需要显式调用
+* 轮询锁与定时锁需要Lock中tryLock接口来支持，可中断的获取锁操作需要lockInterruptibly支持，synchronize无法做到
 
 ## synchronized 关键字
 
@@ -89,7 +90,9 @@ void lockInterruptibly() throws InterruptedException;
 ```
 
 * 可中断地获取锁,和 lock()方法不同之处在于该方法会响应中断,即在锁的获取中可以中断当前线程
-* 当通过这个方法去获取锁时，如果线程正在等待获取锁，则这个线程能够响应中断，即中断线程的等待状态。例如当两个线程同时通过 lock.lockInterruptibly()想获取某个锁时，假若此时线程 A 获取到了锁，而线程 B 只有在等待，那 么对线程 B 调用 threadB.interrupt()方法能够中断线程 B 的等待过程。
+* 当通过这个方法去获取锁时，如果线程正在等待获取锁，则这个线程能够响应中断，即中断线程的等待状态。
+例如当两个线程同时通过 lock.lockInterruptibly()想获取某个锁时，假若此时线程 A 获取到了锁，而线程 B 只有在等待，
+那 么对线程 B 调用threadB.interrupt()方法能够中断线程 B 的等待过程。
 
 ### tryLock 方法
 
@@ -175,6 +178,8 @@ public class ReentrantLock implements Lock, java.io.Serializable {
 * 公平性问题: 若在绝对时间上,先对锁进行获取的请求一定先被满足,那么这个锁是公平的,否则不是
 * 不同公平性的区别: 非公平性锁会使得其他锁饥饿,但是减少了线程的切换,保证了更大的吞吐量
 
+* 注：内置锁（synchronized）并不会提供确定的公平性保证，Java语言规范并没有要求JVM以公平的方式实现内置锁（各种JVM实现也没有这么做，即内置锁是不公平的）
+
 ## ReadWriteLock 接口
 
 ```java
@@ -214,4 +219,6 @@ Q:
 * volatile 修饰符的有过什么实践
 * volatile 变量是什么？volatile 变量和 atomic 变量有什么不同
 * volatile 类型变量提供什么保证？能使得一个非原子操作变成原子操作吗
+-- volatile只能确保可见性， 一般不保证原子性（如count++）
+-- 对于64位的double/long的读和写操作，虚拟机规范不要求其是原子操作，此时对其加上volatile声明可以确保其读写操作是原子的
 * 能创建 volatile 数组吗？
