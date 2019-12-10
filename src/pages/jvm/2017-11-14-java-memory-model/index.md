@@ -7,6 +7,24 @@ tags:
    - jvm
 ---
 
+## Java内存模型和硬件内存架构之间的桥接
+Java内存模型与硬件内存架构之间存在差异。硬件内存架构没有区分线程栈和堆。对于硬件，所有的线程栈和堆都分布在主内存中。部分线程栈和堆可能有时候会出现在CPU缓存中和CPU内部的寄存器中。如下图所示：
+[Bridging The Gap Between The Java Memory Model And The Hardware Memory Architecture](JMM_hardware.jpg)
+从抽象的角度来看，JMM定义了线程和主内存之间的抽象关系：
+线程之间的共享变量存储在主内存（Main Memory）中
+每个线程都有一个私有的本地内存（Local Memory），本地内存是JMM的一个抽象概念，并不真实存在，它涵盖了缓存、写缓冲区、寄存器以及其他的硬件和编译器优化。本地内存中存储了该线程以读/写共享变量的拷贝副本。
+从更低的层次来说，主内存就是硬件的内存，而为了获取更好的运行速度，虚拟机及硬件系统可能会让工作内存优先存储于寄存器和高速缓存中。
+Java内存模型中的线程的工作内存（working memory）是cpu的寄存器和高速缓存的抽象描述。而JVM的静态内存储模型（JVM内存模型）只是一种对内存的物理划分而已，它只局限在内存，而且只局限在JVM的内存。
+
+## 指令序列的重排序
+
+1）编译器优化的重排序。编译器在不改变单线程程序语义的前提下，可以重新安排语句的执行顺序。
+
+2）指令级并行的重排序。现代处理器采用了指令级并行技术（Instruction-LevelParallelism，ILP）来将多条指令重叠执行。如果不存在数据依赖性，处理器可以改变语句对应机器指令的执行顺序。
+
+3）内存系统的重排序。由于处理器使用缓存和读/写缓冲区，这使得加载和存储操作看上去可能是在乱序执行。
+
+
 # Java Memory Model
 
 从 JDK5 开始，java 使用新的 JSR -133 内存模型（本文除非特别说明，针对的都是 JSR- 133 内存模型）
@@ -16,6 +34,9 @@ JSR-133 提出了 happens-before 的概念，通过这个概念来阐述操作�
 * 监视器锁规则：对一个监视器锁的解锁，happens-before 于随后对这个监视器锁的加锁。
 * volatile 变量规则：对一个 volatile 域的写，happens-before 于任意后续对这个 volatile 域的读。
 * 传递性：如果 A happens-before B，且 B happens-before C，那么 A happens- before C。
+
+
+
 
 [深入理解 Java 内存模型（一）——基础][1]
 [jsr133][2]
@@ -123,3 +144,4 @@ public class Resource {
 
 
 [极客学院 内存模型](http://wiki.jikexueyuan.com/project/java-concurrent/java-memory-model.html)
+[tutorials.jenkov.com: Java Memory Model](http://tutorials.jenkov.com/java-concurrency/java-memory-model.html)
