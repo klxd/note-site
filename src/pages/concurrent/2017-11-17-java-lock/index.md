@@ -23,7 +23,7 @@ tags:
 
 ## synchronized 锁优化
 偏向锁、轻量级锁、重量级锁
-Synchronized是通过对象内部的一个叫做监视器锁（monitor）来实现的，监视器锁本质又是依赖于底层的操作系统的Mutex Lock（互斥锁）来实现的。
+Synchronized是通过对象内部的一个叫做监视器锁（monitor, 指令monitorenter和monitorexit）来实现的，监视器锁本质又是依赖于底层的操作系统的Mutex Lock（互斥锁）来实现的。
 而操作系统实现线程之间的切换需要从用户态转换到核心态，这个成本非常高，状态之间的转换需要相对比较长的时间，
 这就是为什么Synchronized效率低的原因。因此，这种依赖于操作系统Mutex Lock所实现的锁我们称之为“重量级锁”。
 

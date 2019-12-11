@@ -120,9 +120,14 @@ public class Resource {
 ```
 
 * 理解了**独占性**的含义,却没有理解**可见性**的含义
+* resource = new Resource(); 可以分为如下三行伪代码
+  1. memory = allocate()  // 1. 分配对象的内存空间
+  2. ctorInstance(memory) // 2. 初始化对象
+  3. instance = memory    // 3. 设置instance指向刚分配的内存地址
+  由于指令重排的存在, 2和3可能会被重排序, 此时另外的线程可能看到一个还未初始化的对象
 * 获取一个resource的引用时(first check), 没用使用同步, 还是可能导致**构造完成前的提前暴露**,
   线程可能看到一个仅被部分构造的Resource.
-* 在Java 5.0以后, 如果把resource声明为volatile类型, 则DCL是线程安全的, 
+* 在Java 5.0以后, 如果把resource声明为volatile类型(禁止2和3之间的重排序), 则DCL是线程安全的, 
   然而已经没有理由再使用DCL, 使用延迟初始化占位类模式能带来同样的优势, 并且更好理解
 
 # placeholder
@@ -140,7 +145,7 @@ public class Resource {
     }
 }
 ```
-* 不需要额外的同步, 由JVM的类加载机制保证实例创建的唯一性.
+* 不需要额外的同步, 由JVM的类加载机制保证实例创建的唯一性 (使用了Class对象的初始化锁).
 
 
 [极客学院 内存模型](http://wiki.jikexueyuan.com/project/java-concurrent/java-memory-model.html)
