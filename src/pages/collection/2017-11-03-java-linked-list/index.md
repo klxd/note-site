@@ -13,6 +13,7 @@ tags:
 * 可以当做队列(Queue)或栈(Stack)使用,虽然首选还是 ArrayDeque
 * 没有实现同步
 * 底层通过**双向链表实现**
+* 允许插入null
 
 ## 链表节点 Node
 

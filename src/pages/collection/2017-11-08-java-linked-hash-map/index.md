@@ -41,7 +41,7 @@ public class LinkedHashMap<K,V>
     final boolean accessOrder;
 
     // -- HashMap.Node的直接子类，新增了两个域用于实现双向链表
-    static class Entry<K,V> extends HashMap.Node<K,V> {ii
+    static class Entry<K,V> extends HashMap.Node<K,V> {
         Entry<K,V> before, after;
         Entry(int hash, K key, V value, Node<K,V> next) {
             super(hash, key, value, next);

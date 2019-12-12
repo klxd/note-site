@@ -166,7 +166,7 @@ final Node<K,V> getNode(int hash, Object key) {
             ((k = first.key) == key || (key != null && key.equals(k))))
             return first;
         if ((e = first.next) != null) {
-            if (first instanceof TreeNode)
+            if (first instanceof TreeNode) // 可能是冲突链表或红黑树,TreeNode也是Node的子类
                 return ((TreeNode<K,V>)first).getTreeNode(hash, key);
             do {
                 if (e.hash == hash &&
