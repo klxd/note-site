@@ -110,3 +110,6 @@ class Solution {
 ## 32. Longest Valid Parentheses
 给出由'('和')'组成的字符串, 找到最大的合法串的长度,
 ")()())" =>　4, "()(()" => 2
+
+33. Search in Rotated Sorted Array
+给出一个经过旋转的排序数组,从中搜索出目标元素下标,不存在则返回-1

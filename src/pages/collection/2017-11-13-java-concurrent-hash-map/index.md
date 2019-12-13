@@ -7,6 +7,10 @@ tags:
    - java collection framework
 ---
 
+## 分析要点
+* JDK1.8版本的ConcurrentHashMap的底层数据结构接近HashMap, 都是Node数组, 当冲突链表长度大于阈值时, 都会转化为红黑树进行存储
+* 使用CAS+Synchronized保证线程安全, 加锁粒度为数组元素Node
+
 ## Node
 
 ```java
@@ -46,6 +50,7 @@ static class Node<K,V> implements Map.Entry<K,V> {
 
     /**
      * Virtualized support for map.get(); overridden in subclasses.
+     * -- 用于辅助get方法,子类中会有覆盖实现
      */
     Node<K,V> find(int h, Object k) {
         Node<K,V> e = this;
@@ -66,6 +71,9 @@ static class Node<K,V> implements Map.Entry<K,V> {
 /**
  * A node inserted at head of bins during transfer operations.
  * -- 扩容操作中放置于旧tab中的占位符
+ * -- 一个用于连接两个table的节点类。它包含一个nextTable指针，用于指向下一张表。
+ *    而且这个节点的key value next指针全部为null，它的hash值为-1. 
+ *    这里面定义的find的方法是从nextTable里进行查询节点，而不是以自身为头节点进行查找
  */
 static final class ForwardingNode<K,V> extends Node<K,V> {
     final Node<K,V>[] nextTable;
@@ -160,6 +168,7 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
 
     /**
      * The next table index (plus one) to split while resizing.
+     * 扩容过程中的下一个桶下标, 扩容开始初始化为原始tab大小, 扩容过程逐渐减小至0
      */
     private transient volatile int transferIndex;
 
@@ -212,6 +221,35 @@ public int size() {
     return ((n < 0L) ? 0 :
             (n > (long)Integer.MAX_VALUE) ? Integer.MAX_VALUE :
             (int)n);
+}
+```
+
+## get方法
+```java
+public class ConcurrentHashMap<K,V> {
+    public V get(Object key) {
+        Node<K,V>[] tab; Node<K,V> e, p; int n, eh; K ek;
+        int h = spread(key.hashCode());
+        if ((tab = table) != null && (n = tab.length) > 0 &&
+            (e = tabAt(tab, (n - 1) & h)) != null) { // -- 调用tabAt方法
+            if ((eh = e.hash) == h) { // -- 根据hash找到对应的node, 校验key
+                if ((ek = e.key) == key || (ek != null && key.equals(ek)))
+                    return e.val;
+            }
+            // eh<0为特殊节点, 调用find函数
+            // eh=-1，说明该节点是一个ForwardingNode，正在迁移，此时调用ForwardingNode的find方法去nextTable里找。
+            // eh=-2，说明该节点是一个TreeBin，此时调用TreeBin的find方法遍历红黑树，由于红黑树有可能正在旋转变色，所以find里会有读写锁
+            else if (eh < 0)
+                return (p = e.find(h, key)) != null ? p.val : null;
+            // eh>=0，说明该节点下挂的是一个链表，直接遍历该链表即可。
+            while ((e = e.next) != null) {
+                if (e.hash == h &&
+                    ((ek = e.key) == key || (ek != null && key.equals(ek))))
+                    return e.val;
+            }
+        }
+        return null;
+    }
 }
 ```
 
@@ -355,32 +393,42 @@ final Node<K,V>[] helpTransfer(Node<K,V>[] tab, Node<K,V> f) {
 
 扩容方法
 
-* 基本思想和 HashMap 很像
+* 基本思想和HashMap很像, 在扩容的时候，tab长度翻倍, rehash的时候直接将冲突链表拆成两份放到对应的位置，这点和HashMap的resize方法类似。
 * 支持并发扩容在扩容的时候,总会涉及到一个数组到另一个数组的拷贝操作,基本思路是把这个拷贝操作并发进行.
+* 通过给每个线程分配桶区间，避免线程间的争用，通过为每个桶节点加锁，避免putVal方法导致数据不一致
+* 而如果有新的线程想put数据时，也会经过helpTransfer帮助其扩容
+* 核心代码: CAS设置sizeCtl与transferIndex变量，协调多个线程对table数组中的node进行迁移
+
 
 ```java
 /**
  * Moves and/or copies the nodes in each bin to new table. See
  * above for explanation.
  */
+class Clazz {
 private final void transfer(Node<K,V>[] tab, Node<K,V>[] nextTab) {
     int n = tab.length, stride;
+    // stride表示一个线程每次转移的桶的数量, 若在多核CPU的机器上运行,尽量保证每个CPU分到的桶的数量一样
+    // -- 若CPU核心数大于1, 则将length / 8 然后除以CPU核心数。如果得到的结果小于 16，那么就使用 16
     if ((stride = (NCPU > 1) ? (n >>> 3) / NCPU : n) < MIN_TRANSFER_STRIDE)
         stride = MIN_TRANSFER_STRIDE; // subdivide range
+    // 初始化nextTab
     if (nextTab == null) {            // initiating
         try {
             @SuppressWarnings("unchecked")
-            Node<K,V>[] nt = (Node<K,V>[])new Node<?,?>[n << 1]; // -- 扩容为原来的两倍
+            Node<K,V>[] nt = (Node<K,V>[])new Node<?,?>[n << 1]; // -- 扩容为原来的两倍,方便计算新的桶位置
             nextTab = nt;
         } catch (Throwable ex) {      // try to cope with OOME
             sizeCtl = Integer.MAX_VALUE;
             return;
         }
         nextTable = nextTab;
-        transferIndex = n;
+        transferIndex = n; // -- 初始化桶下标
     }
     int nextn = nextTab.length;
-    ForwardingNode<K,V> fwd = new ForwardingNode<K,V>(nextTab); // - 用于标记连接节点
+    // 标记连接节点, 创建一个fwd节点，用于占位。当别的线程发现这个槽位中是 fwd 类型的节点，则跳过这个节点。
+    ForwardingNode<K,V> fwd = new ForwardingNode<K,V>(nextTab);
+    // 首次推进为 true，如果等于 true，说明需要再次推进一个下标（i--），反之，如果是 false，那么就不能推进下标，需要将当前的下标处理完毕才能继续推进
     boolean advance = true;
     boolean finishing = false; // to ensure sweep before committing nextTab
     for (int i = 0, bound = 0;;) {
@@ -389,10 +437,12 @@ private final void transfer(Node<K,V>[] tab, Node<K,V>[] nextTab) {
             int nextIndex, nextBound;
             if (--i >= bound || finishing)
                 advance = false;
+            // -- 如果transferIndex=0，表示所以hash桶均被分配，将i置为-1，准备退出transfer方法
             else if ((nextIndex = transferIndex) <= 0) {
                 i = -1;
                 advance = false;
             }
+            // -- 当迁移完bound这个桶后，尝试更新transferIndex，，获取下一批待迁移的hash桶
             else if (U.compareAndSwapInt
                      (this, TRANSFERINDEX, nextIndex,
                       nextBound = (nextIndex > stride ?
@@ -402,6 +452,7 @@ private final void transfer(Node<K,V>[] tab, Node<K,V>[] nextTab) {
                 advance = false;
             }
         }
+        //退出transfer
         if (i < 0 || i >= n || i + n >= nextn) {
             int sc;
             if (finishing) { // -- 扩容完成,实例nextTable指向null, table指向临时变量nextTab
@@ -410,7 +461,14 @@ private final void transfer(Node<K,V>[] tab, Node<K,V>[] nextTab) {
                 sizeCtl = (n << 1) - (n >>> 1); // -- 扩容阈值为当前容量的0.75倍
                 return;
             }
-            // -- 利用cas操作更新扩容阈值,sizeCtl减一,表示有一个新的线程加入到扩容操作
+            /**
+                第一个扩容的线程，执行transfer方法之前，会设置 sizeCtl = (resizeStamp(n) << RESIZE_STAMP_SHIFT) + 2)
+                后续帮其扩容的线程，执行transfer方法之前，会设置 sizeCtl = sizeCtl+1
+                每一个退出transfer的方法的线程，退出之前，会设置 sizeCtl = sizeCtl-1
+                那么最后一个线程退出时必然有sc == (resizeStamp(n) << RESIZE_STAMP_SHIFT) + 2)，
+                即 (sc - 2) == resizeStamp(n) << RESIZE_STAMP_SHIFT
+            */
+            // -- 利用cas操作更新扩容阈值,sizeCtl减一,表示这个线程结束帮助扩容了，将sc的低16位减一。
             if (U.compareAndSwapInt(this, SIZECTL, sc = sizeCtl, sc - 1)) {
                 if ((sc - 2) != resizeStamp(n) << RESIZE_STAMP_SHIFT)
                     return;
@@ -505,12 +563,14 @@ private final void transfer(Node<K,V>[] tab, Node<K,V>[] nextTab) {
         }
     }
 }
+}
 ```
 
 ### 三个核心方法
 
 * 原子操作
 * 对 table 中指定位置节点进行操作
+* 一个读方法, 两个写方法(分别对应有锁和无锁)
 
 ```java
 // -- 获得tab中i位置上的node节点
@@ -518,7 +578,7 @@ static final <K,V> Node<K,V> tabAt(Node<K,V>[] tab, int i) {
     return (Node<K,V>)U.getObjectVolatile(tab, ((long)i << ASHIFT) + ABASE);
 }
 
-// -- 利用cas操作设置tab中i位置上的node节点
+// -- 利用cas操作设置tab中i位置上的node节点, 无锁方法,一般配合自旋调用
 static final <K,V> boolean casTabAt(Node<K,V>[] tab, int i,
                                     Node<K,V> c, Node<K,V> v) {
     return U.compareAndSwapObject(tab, ((long)i << ASHIFT) + ABASE, c, v);
@@ -530,9 +590,20 @@ static final <K,V> void setTabAt(Node<K,V>[] tab, int i, Node<K,V> v) {
 }
 ```
 
-[Concurrent HashMap in Java7 & Java8](http://www.jasongj.com/java/concurrenthashmap/)
+
+## Q & A
+* 为什么 ConcurrentHashMap 的读操作不需要加锁(lock-free)
+ 1. 核心的读方法tabAt(内部为Unsafe.getObjectVolatile), 配合Node节点上的`value/next`字段均用volatile修饰, 保证了Node节点的可见性
+ 2. 当节点为TreeBin时, 调用内部的find方法会有读写锁, 但其也是由CAS实现的乐观锁
+* ConcurrentHashMap迭代器是强一致性还是弱一致性？HashMap呢？
+ConcurrentHashMap弱一致性，HashMap强一致性.
+ConcurrentHashMap可以支持在迭代过程中，向map添加新元素，而HashMap则抛出了ConcurrentModificationException，
+
+
+[ConcurrentHashMap源码分析（JDK8） 扩容实现机制](https://www.jianshu.com/p/487d00afe6ca)
+[Java进阶（六）从ConcurrentHashMap的演进看Java多线程核心技术](http://www.jasongj.com/java/concurrenthashmap/)
 [什么是 cas](http://www.cnblogs.com/Mainz/p/3546347.html)
 [cas in java](http://cmsblogs.com/?p=2235)
-[Concurrent HashMap in Java7 & Java8](http://blog.csdn.net/u010723709/article/details/48007881)
-[Concurrent HashMap in Java7 & Java8](http://www.jianshu.com/p/cf5e024d9432)
+[ConcurrentHashMap源码分析（JDK8版本）](http://blog.csdn.net/u010723709/article/details/48007881)
+[Java 8 ConcurrentHashMap源码分析](http://www.jianshu.com/p/cf5e024d9432)
 [what is thread safe](http://www.jasongj.com/java/thread_safe/)
