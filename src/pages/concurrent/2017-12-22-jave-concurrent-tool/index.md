@@ -15,6 +15,7 @@ CountDownLatch 允许一个或者多个线程等待其他线程完成操作,
   线程都将被阻塞,直到这个计数值到达0.
 * `CountDownLatch`被设计为只触发一次,计数值不能被重置(只能减少不能重置).
   如果需要可重置计数值的版本,可以考虑使用`CyclicBarrier`.
+* 内部使用队列同步器(AbstractQueuedSynchronizer, AQS实现)
 
 ### 接口解析
 
@@ -105,9 +106,9 @@ end
 
 ## 同步屏障 CyclicBarrier
 
-CyclicBarrier (栅栏)让一组线程在到达一个屏障(同步点)时被阻塞,直到满足数量的线程到达屏障时,屏障才会撤销,让所有被屏障阻塞的线程继续运行.
-
-Cyclic 意思为循环使用的,表示了 CyclicBarrier 可以被复用.具体的体现是每次当最后一个线程到达屏障时,屏障会自动重置为初始状态
+* CyclicBarrier (栅栏)让一组线程在到达一个屏障(await,同步点)时被阻塞,直到满足数量的线程到达屏障时,屏障才会撤销,让所有被屏障阻塞的线程继续运行.
+* Cyclic 意思为循环使用的,表示了 CyclicBarrier 可以被复用.具体的体现是每次当最后一个线程到达屏障时,屏障会**自动**重置为初始状态.
+* 内部使用ReentrantLock与上面的Condition实现
 
 ### 接口解析
 
@@ -269,7 +270,8 @@ Thread 2 is finish
 
 ## 控制并发线程数的 Semaphore
 
-Semaphore(信号量)可以用来控制同时访问特定资源的线程数量
+* Semaphore(信号量, `ˈseməˌfôr`)可以用来控制同时访问特定资源的线程数量
+* 内部使用队列同步器(AbstractQueuedSynchronizer, AQS)实现
 
 ### 接口解析
 

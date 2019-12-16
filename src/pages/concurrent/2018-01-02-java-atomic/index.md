@@ -11,7 +11,8 @@ tags:
 * AtomicInteger 原子更新整形
 * AtomicBoolean 原子更新布尔类型
 * AtomicLong 原子更新长整形
-* 对于其他基本类型`double`,`float`,`byte`,`char`没有相应的原子更新类,因为其相应的更新类均可以使用以上三个类进行包装得到,如`byte`和`char`可简单包装为整形,
+* 对于其他基本类型`double`,`float`,`byte`,`char`没有相应的原子更新类,因为其相应的更新类均可以使用以上三个类进行包装得到(AtomicBoolean就是通过包装为int实现),
+  如`byte`和`char`可简单包装为整形,
   `float`可以使用`Float.floatToIntBits`转化为整形,
   `double`可以使用`Double.doubleToLongBits`转化为长整形
 
@@ -171,9 +172,13 @@ public class AtomicInteger extends Number implements java.io.Serializable {
 ## 原子更新引用类型
 
 * AtomicReference
+原子更新基本类型的AtomicInteger,只能更新一个变量,如果要原子更新多个变量,就需
+要使用这个原子更新引用类型提供的类
 
 ```java
 public class AtomicReference<V> implements java.io.Serializable {
+
+    private volatile V value;
 
     /**
      * 构造函数,附带初始值
@@ -361,7 +366,8 @@ User[name: u2, id: 12]
 
 * AtomicIntegerFieldUpdater: 原子更新整型的字段的更新器
 * AtomicLongFieldUpdater: 原子更新长整型字段的更新器
-* AtomicStampedReference: 原子更新带有版本号的引用类型.该类将整数值与引用关联起来,可用于原子的更新数据和数据的版本号,可以解决使用 CAS 进行原子更新时可能出现的 ABA 问题
+* AtomicStampedReference: 原子更新带有版本号的引用类型.该类将整数值与引用关联起来,可用于原子的更新数据和数据的版本号,
+  可以解决使用CAS进行原子更新时可能出现的 ABA 问题
 
 ```java
 public abstract class AtomicIntegerFieldUpdater<T> {

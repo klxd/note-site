@@ -256,6 +256,8 @@ Q:
 -- volatile只能确保可见性， 一般不保证原子性（如count++）
 -- 对于64位的double/long的读和写操作，虚拟机规范不要求其是原子操作，此时对其加上volatile声明可以确保其读写操作是原子的
 * 能创建 volatile 数组吗？
+-- volatile修饰的变量如果是对象或数组之类的，其含义是对象获数组的地址(引用)具有可见性，但是数组或对象内部的成员改变不具备可见性：
+-- AtomicIntegerArray, AtomicLongArray, AtomicReferenceArray 能保证原子更新数组里的元素
 
 
 [美团:不可不说的Java“锁”事](https://tech.meituan.com/2018/11/15/java-lock.html)
