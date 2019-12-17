@@ -23,6 +23,7 @@ tags:
      用于存储局部变量表,操作数栈,动态链接和方法出口等信息
   3. 若线程请求的栈深度大于虚拟机所允许的深度,将抛出 StackOverflowError;
      若虚拟机栈可以动态扩展,当扩展时无法申请到足够的内存,将抛出 OutOfMemoryError
+
 * 本地方法栈(Native Method Stack)
   1. Java 虚拟机栈为 Java 方法(字节码)服务,而本地方法栈为 Native 方法服务
   2. Sun HotSpot 虚拟机把本地方法栈和虚拟机栈合二为一, `-Xss`控制其大小
@@ -64,7 +65,8 @@ tags:
 * 软引用(Soft Reference): 系统将要发生内存溢出异常之前,将会把软引用中的对象进行回收,
   若这次回收仍没有释放足够的内存,才会抛出内存溢出异常
 * 弱引用(Weak Reference): 只被弱引用关联的对象只能生存到下一次垃圾回收之前,即当垃圾收集器工作时,总会回收掉只被弱引用关联的对象
-* 虚引用(Phantom Reference): 最弱的一种引用关系,一个对象是否有虚引用的存在,完全不会对其生存时间构成影响,也**无法**通过虚引用来获得一个对象实例.为一个对象设置虚引用关联的唯一目的就是能在这个对象被收集器回收时收到一个系统通知
+* 虚引用(Phantom Reference): 最弱的一种引用关系,一个对象是否有虚引用的存在,完全不会对其生存时间构成影响,也**无法**通过虚引用来获得一个对象实例.
+  为一个对象设置虚引用关联的唯一目的就是能在这个对象被收集器回收时收到一个系统通知
 
 ## 垃圾回收与 finalize
 
@@ -73,7 +75,8 @@ tags:
 1. 在可达性分析算法中不可达的对象,会被**第一次标记**为并且进行一次筛选:
    筛选条件是是否有必要执行 finalize 方法(对象没有覆盖了 finalize 方法或者对象的这个方法已经被虚拟机执行过,将视为*没有必要执行*)
 2. 如果被判定为有必要执行 finalize()方法,那么对象会放置在 F-Queue 队列中,由一个低优先级的
-   Finalizer 线程去执行它.稍后的 GC 将对 F-Queue 中的对象进行**第二次标记**,如果此时对象又和引用链上的其他对象进行了关联(比如把 this 赋值给某个类变量),那么它将被移除出*即将回收的集合*,否则将被真正回收
+   Finalizer 线程去执行它.稍后的 GC 将对 F-Queue 中的对象进行**第二次标记**,如果此时对象又和引用链上的其他对象进行了关联(比如把 this 赋值给某个类变量),
+   那么它将被移除出*即将回收的集合*,否则将被真正回收
 
 ## 方法区中的垃圾回收
 
@@ -101,6 +104,9 @@ tags:
   * 基本思路: 标记过程和就"标记-清除"算法一样,然后让所有存活的对象都向一端移动,然后清理掉边界以外的内存
   * 优点: 没有内存碎片
   * 适用于**老年代**
+  
+## Eden & Survivor收集方法
+。。。
 
 ## 垃圾收集器
 
@@ -142,6 +148,11 @@ tags:
       3. 空间整合(整体看来基于`标记-整理`,没有内存碎片)
       4. 可预测的停顿(明确指定在长度为 M 毫秒的时间片段内 GC 时间不得超过 N 毫秒)
 
+## 垃圾收集中的并行与并发
+* 并行（Parallel）：指多条垃圾收集线程并行工作，但此时用户线程仍然处于等待状态
+* 并发（Concurrent）：指用户线程与垃圾收集线程同时执行（但不一定是并行的，可能交替执行），
+  用户程序继续运行，而垃圾收集线程运行在另一个CPU上
+
 ## GC 类型
 
 * 新生代 GC(MinorGC / YoungGC): 发生在新生代的垃圾收集动作,非常频繁,速度较快
@@ -180,11 +191,10 @@ tags:
 -XX:+UseCompressedOops 
 -XX:+UseParNewGC (默认关闭, 打开此开关后,使用ParNew+Serial Old的收集器组合进行内存回收)
 -XX:+UseConcMarkSweepGC (默认关闭, 打开后使用ParNew+CMS+Serial Old的收集器组合进行内存回收)
--XX:ParallelGCThreads=8 
+-XX:ParallelGCThreads=8 （限制垃圾收集的线程数）
 -XX:+CMSClassUnloadingEnabled 
 -XX:+UseCMSCompactAtFullCollection (默认开启,设置CMS收集器在完成垃圾收集后是否要进行一次内存碎片整理) 
-
--XX:CMSFullGCsBeforeCompaction=0 (无默认值,设置CMS收集器在进行若干次垃圾收集后再启动一次内存碎片整理)
+-XX:CMSFullGCsBeforeCompaction=0 (默认值0,设置CMS收集器在进行若干次垃圾收集后再启动一次内存碎片整理)
 -XX:+CMSParallelRemarkEnabled 
 -XX:+ExplicitGCInvokesConcurrent 
 -XX:+UseCMSInitiatingOccupancyOnly 
@@ -193,7 +203,7 @@ tags:
 -XX:+ParallelRefProcEnabled 
 -XX:+AlwaysPreTouch
 
-SurvivorRatio (默认为8, 新生代中Eden区域与Survivor区域的容量比值)
+-XX:SurvivorRatio (默认为8, 新生代中Eden区域与Survivor区域的容量比值)
 
 
 ## Question

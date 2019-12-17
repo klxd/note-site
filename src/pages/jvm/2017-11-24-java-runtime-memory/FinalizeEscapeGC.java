@@ -28,6 +28,8 @@ public class FinalizeEscapeGC {
         Thread.sleep(500);
         testHookAlive();
 
+        // 任何一个对象的finalize方法只会被系统自动调用一次，所以第二次'自救'失败
+
     }
 
 }
