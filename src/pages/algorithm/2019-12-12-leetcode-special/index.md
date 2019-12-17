@@ -115,3 +115,94 @@ class Solution {
 给出一个经过旋转的排序数组,从中搜索出目标元素下标,不存在则返回-1
 
 相似题：给出一个经过旋转的数组，返回其中最小的数字
+
+## 35. Search Insert Position
+给出一个数组和一个数字, 找到数字在数组中的下标,若无法找到则给出此数字应该插入的位子
+```java
+class Solution {
+    public int searchInsert(int[] nums, int target) {
+        int left = 0, right = nums.length - 1;
+        while (left <= right) {
+            int mid = left + ((right - left) >> 1);
+            if (nums[mid] < target) {
+                left = mid + 1;
+            } else if (nums[mid] > target) {
+                right = mid - 1;
+            } else {
+                return mid;
+            }
+        }
+        return left;
+    }
+}
+```
+
+## 41. First Missing Positive
+给出一个数组, 找到第一个缺失的正数, 要求时间O(n),空间O(1)
+```java
+class Solution {
+    public int firstMissingPositive(int[] nums) {
+        for (int i = 0; i < nums.length; i++) {
+            while (nums[i] > 0
+                   && nums[i] <= nums.length
+                   && nums[nums[i] - 1] != nums[i]) {
+                int temp = nums[i];
+                nums[i] = nums[temp - 1];
+                nums[temp - 1] = temp;
+            }
+        }
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] != i + 1) {
+                return i + 1;
+            }
+        }
+        return nums.length + 1;
+    }
+}
+```
+
+## 42. Trapping Rain Water
+给出一个高度数组,计算容水量
+解法一: 时间O(n), 空间O(n)
+```java
+class Solution {
+    public int trap(int[] height) {
+        int n = height.length, ans = 0;
+        if (n == 0) {
+            return ans;
+        }
+        int maxLeft[] = new int[n], maxRight[] = new int[n];
+        maxLeft[0] = height[0];
+        for (int i = 1; i < n; i++) {
+            maxLeft[i] = Math.max(maxLeft[i - 1], height[i]);
+        }
+        maxRight[n - 1] = height[n - 1];
+        for (int i = n - 2; i >= 0; i--) {
+            maxRight[i] = Math.max(maxRight[i + 1], height[i]);
+        }
+        for (int i = 0; i < n; i++) {
+            ans += Math.min(maxLeft[i], maxRight[i]) - height[i];
+        }
+        return ans;
+    }
+}
+```
+解法二: 时间O(n), 空间O(1)
+```java
+class Solution {
+    public int trap(int[] height) {
+        int left = 0, right = height.length - 1, ans = 0;
+        int leftMax = 0, rightMax = 0;
+        while (left <= right) {
+            leftMax = Math.max(leftMax, height[left]);
+            rightMax = Math.max(rightMax, height[right]);
+            if (leftMax < rightMax) {
+                ans += leftMax - height[left++];
+            } else {
+                ans += rightMax - height[right--];
+            }
+        }
+        return ans;
+    }
+}
+```
