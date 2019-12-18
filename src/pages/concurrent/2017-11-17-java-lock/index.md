@@ -17,7 +17,8 @@ tags:
 
 * lock 获取锁的过程比较可控,粒度更细,synchronize 获得锁的过程由 jvm 控制
 * synchronize 会自动释放锁,lock 释放锁需要显式调用
-* 轮询锁与定时锁需要Lock中tryLock接口来支持，可中断的获取锁操作需要lockInterruptibly支持，synchronize无法做到
+* 轮询锁与定时锁需要Lock中tryLock接口来支持，可中断的获取锁操作需要lockInterruptibly支持, 公平/非公平锁可由ReentrantLock构造函数决定，synchronize无法做到
+* ReentrantLock可以同时绑定多个Condition对象(多次调用newCondition), synchronize锁对象的wait/notify只能实现一个隐含的条件
 * 由于JDK1.6中加入了针对锁的优化措施（见后面），使得synchronized与ReentrantLock的性能基本持平。ReentrantLock只是提供了synchronized更丰富的功能，而不一定有更优的性能，所以在synchronized能实现需求的情况下，优先考虑使用synchronized来进行同步。
 
 

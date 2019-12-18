@@ -233,7 +233,8 @@ B+ 树是 B 树的一种变体，也是一种多路平衡查找树， 它和 B �
 ## 对MySQL的了解，和oracle的区别
 
 
-
+## Q & A
+* B+树的结构，插入一个元素的过程
 
 ## 参考
 * [浅入深出MySQL中事务的实现](https://draveness.me/mysql-transaction)

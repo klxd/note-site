@@ -42,5 +42,9 @@ IP选址和路由选择
 为应用程序提供服务 HTTP, FTP, Telnet等
 
 
+## Q & A
+* http请求的整个过程
+* https的处理过程,https什么时候使用对称加密
+
 ## 参考
 * [阮一峰:互联网协议入门](http://www.ruanyifeng.com/blog/2012/05/internet_protocol_suite_part_i.html)

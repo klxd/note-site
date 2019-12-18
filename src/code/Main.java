@@ -11,59 +11,73 @@ class Main {
     public static void main(String[] args) {
         Main main = new Main();
         //int[][] mat = {{1, 1, 3, 2, 4, 3, 2}, {1, 1, 3, 2, 4, 3, 2}, {1, 1, 3, 2, 4, 3, 2}};
-        int[][] mat = {{18,70},{61,1},{25,85},{14,40},{11,96},{97,96},{63,45}};
+        int[][] mat = {{1, 2}, {3, 4}};
 
-
-        System.out.println(main.maxSideLength(mat, 40184));
-    }
-
-    public int maxSideLength(int[][] mat, int threshold) {
-        int n = mat.length, m = mat[0].length;
-        int left = 1, right = Math.min(n, m);
-        while (left <= right) {
-            int mid = left + ((right - left) >> 1);
-            System.out.println(left + " " + right + " " + mid);
-            if (satisfy(mat, threshold, mid)) {
-                System.out.println(mid + "true");
-                left = mid + 1;
-            } else {
-                System.out.println(mid + "false");
-                right = mid - 1;
-            }
+        for (int a[] : mat) {
+            System.out.println(Arrays.toString(a));
         }
-        return left - 1;
+        System.out.println(main.totalNQueens(4));
+
     }
 
-    private boolean satisfy(int[][] mat, int threshold, int len) {
-        int n = mat.length, m = mat[0].length;
-        int sum = 0, base = 0;
-        for (int i = 0; i + len - 1< n; i++) {
-            for (int j = 0; j + len - 1 < m; j++) {
-                if (i == 0 && j == 0) {
-                    for (int a = 0; a < len; a++) {
-                        for (int b = 0; b < len; b++) {
-                            base += mat[a][b];
-                        }
-                    }
-                    sum = base;
-                } else if (j == 0) {
-                    for (int b = 0; b < len; b++) {
-                        base -= mat[i - 1][b];
-                        base += mat[i + len - 1][b];
-                    }
-                    sum = base;
-                } else {
-                    for (int a = 0; a < len; a++) {
-                        sum -= mat[i + a][j - 1];
-                        sum += mat[i + a][j + len - 1];
-                    }
-                }
-                if (sum <= threshold) {
-                    return true;
+    /**
+     * [".Q..",  // Solution 1
+     *   "...Q",
+     *   "Q...",
+     *   "..Q."],
+     *
+     *  ["..Q.",  // Solution 2
+     *   "Q...",
+     *   "...Q",
+     *   ".Q.."]
+     * ]
+     */
+    public int totalNQueens(int n) {
+        char[][] map = new char[n][n];
+        for (int i = 0; i < map.length; i++) {
+            Arrays.fill(map[i], '.');
+        }
+        boolean col[] = new boolean[n];
+        solve(map, 0, col);
+        return cnt;
+    }
+
+    private int cnt = 0;
+
+    private void solve(char[][] map, int cur, boolean[] col) {
+        if (cur == map.length) {
+            cnt++;
+            return;
+        }
+        for (int i = 0; i < map[cur].length; i++) {
+            if (col[i]) {
+                continue;
+            }
+            boolean canPut = true;
+            for (int x = cur, y = i; canPut && x >= 0 && y >= 0; x--, y--) {
+                if (map[x][y] == 'Q') {
+                    canPut = false;
                 }
             }
+            for (int x = cur, y = i; canPut && x >= 0 && y < map.length; x--, y++) {
+                if (map[x][y] == 'Q') {
+                    canPut = false;
+                }
+            }
+            if (canPut) {
+                map[cur][i] = 'Q';
+                col[i] = true;
+                solve(map, cur + 1, col);
+                col[i] = false;
+                map[cur][i] = '.';
+            }
         }
-        return false;
     }
+
+    public List<Boolean> canMakePaliQueries(String s, int[][] queries) {
+
+        return null;
+    }
+
 
 }

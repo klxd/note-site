@@ -206,3 +206,91 @@ class Solution {
     }
 }
 ```
+
+45. Jump Game II
+给出一个步长数组,`arr[i]`标识在位置i上能跳的步长,求跳到最后一格的最小步数
+时间O(n), 空间O(1)
+```java
+class Solution {
+public int jump(int[] A) {
+	int jumps = 0, curEnd = 0, curFarthest = 0;
+	for (int i = 0; i < A.length - 1; i++) {
+		curFarthest = Math.max(curFarthest, i + A[i]);
+		if (i == curEnd) {
+			jumps++;
+			curEnd = curFarthest;
+		}
+	}
+	return jumps;
+}
+}
+```
+
+## 48 Rotate Image
+旋转一个方形矩阵90度,要求空间O(1)
+解法一: 将矩阵分为多个环,每个环分为4段,每段上的数字交替替换
+```java
+class Solution {
+    public void rotate(int[][] mat) {
+        int n = mat.length, k = 0;
+        while (k < n >> 1) {
+            for (int i = 0; i < n - k - k - 1; i++) {
+                int temp = mat[k][k + i];
+                mat[k][k + i] = mat[n - k - 1 - i][k];
+                mat[n - k - i - 1][k] = mat[n - k - 1][n - k - i - 1];
+                mat[n - k - 1][n - k - i - 1] = mat[k + i][n - k - 1];
+                mat[k + i][n - k - 1] = temp;
+            }   
+            k++;
+        }
+    }
+}
+```
+解法二:对矩阵做如下两个操作: 1.从对角线翻转 2.翻转每一行 (左右翻转)
+1  2  3             
+4  5  6
+7  8  9
+
+1  4  7
+2  5  8
+3  6  9
+
+7  4  1
+8  5  2
+9  6  3
+
+解法三: 对矩阵做如下两个操作: 1.逆序交换所有行(上下翻转) 2.从对角线翻转
+1  2  3             
+4  5  6
+7  8  9
+
+7  8  9
+4  5  6
+1  2  3
+
+7  4  1
+8  5  2
+9  6  3
+```java
+class Solution {
+public void rotate(int[][] matrix) {
+    int s = 0, e = matrix.length - 1;
+    while(s < e){
+        int[] temp = matrix[s];
+        matrix[s] = matrix[e];
+        matrix[e] = temp;
+        s++; e--;
+    }
+
+    for(int i = 0; i < matrix.length; i++){
+        for(int j = i+1; j < matrix[i].length; j++){
+            int temp = matrix[i][j];
+            matrix[i][j] = matrix[j][i];
+            matrix[j][i] = temp;
+        }
+    }
+}
+}
+```
+
+## 2个有序数组，找2个数组合并的第K大数字，O(1)空间
