@@ -204,6 +204,7 @@ NavigableMap提供的功能可以分为4类
 第1类，提供操作键-值对的方法
 lowerEntry、floorEntry、ceilingEntry 和 higherEntry 方法
 它们分别返回与小于、小于等于、大于等于、大于给定键的键关联的 Map.Entry<K, V>对象, 若不存在则返回null
+注意,为了使map内部结构不被破坏,此处返回的Entry均为AbstractMap.SimpleImmutableEntry的示例,调用其setValue方法会抛异常.
 firstEntry、pollFirstEntry、lastEntry 和 pollLastEntry 方法，
 它们返回和/或移除最小和最大的映射关系（如果存在），否则返回 null。
 
@@ -219,4 +220,5 @@ subMap、headMap、tailMap返回大于或小于某个key的一个SortedMap<K,V>
 
 
 # 练习题
+leetcode-56
 leetcode-826

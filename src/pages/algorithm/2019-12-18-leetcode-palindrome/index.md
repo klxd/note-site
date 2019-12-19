@@ -1,5 +1,5 @@
 ---
-title: 双指针
+title: 回文串
 date: "2019-08-06T22:40:32.169Z"
 path: "/two-pointer"
 tags:

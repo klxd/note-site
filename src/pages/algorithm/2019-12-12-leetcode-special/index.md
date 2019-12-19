@@ -1,7 +1,7 @@
 ---
 title: LeetCode特殊解法
 date: "2016-01-12T22:40:32.169Z"
-path: "/leetcode/"
+path: "/leetcode-special"
 tags:
     - leetcode
 ---
@@ -294,3 +294,122 @@ public void rotate(int[][] matrix) {
 ```
 
 ## 2个有序数组，找2个数组合并的第K大数字，O(1)空间
+
+## 60. Permutation Sequence
+求集合`[1,2,3,...,n]`的第k个排列
+解法一: 递归求解,对于位置i,计算剩余`n-i`个数字的排列数量`base=(n-1)!`,
+取商为当前位置应该放置的数的排位,取模为剩余的排列序号
+```java
+class Solution {
+    public String getPermutation(int n, int k) {
+        char[] ans = new char[n];
+        boolean used[] = new boolean[n];
+        find(ans, 0, used, k - 1); // 注意k应为0下标开始
+        return String.valueOf(ans);
+    }
+
+    private int calc(int n) {
+        if (n <= 0) {
+            return 1;
+        }
+        return n * calc(n - 1);
+    }
+
+    private void find(char[] ans, int curSize, boolean[] used, int k) {
+        if (curSize == ans.length) {
+            return;
+        }
+        int base = calc(ans.length - curSize - 1);
+        int curIdx = k / base;
+        for (int i = 0; i < used.length; i++) {
+            if (!used[i]) {
+                if (curIdx-- == 0) {
+                    used[i] = true;
+                    ans[curSize] = (char)('0' + i + 1);
+                    find(ans, curSize + 1, used, k % base);
+                }
+            }
+        }
+    }
+}
+```
+
+解法二: 使用循环优化上述递归解法, 使用StringBuilder代替char[], 
+使用LinkedList代替boolean[], 阶乘应只计算一次,后续使用除法得到.
+
+
+## 69. Sqrt(x)
+二分求int的开平方
+```java
+class Solution {
+    public int mySqrt(int x) {
+        int left = 0, right = x;
+        while (left <= right) {
+            int mid = left + ((right - left) >> 1);
+            long multi = (long) mid * mid;
+
+            if (multi > x || multi < 0) {
+                right = mid - 1;
+            } else if (multi < x){
+                left = mid + 1;
+            } else {
+                return mid;
+            }
+        }
+        return left - 1;
+    }
+}
+```
+
+## 74. Search a 2D Matrix
+给出一个每行依次递增的矩阵,从中搜索元素
+O(log(n * m)), 当成有序数组处理,二分搜索
+```java
+class Solution {
+    public boolean searchMatrix(int[][] mat, int target) {
+        if (mat.length == 0) {
+            return false;
+        }
+        int n = mat.length, m = mat[0].length;
+        int left = 0, right = n * m - 1;
+        while (left <= right) {
+            int mid = left + ((right - left) >> 1);
+            int x = mid / m, y = mid % m;
+            if (mat[x][y] > target) {
+                right = mid - 1;
+            } else if (mat[x][y] < target) {
+                left = mid + 1;
+            } else {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+```
+
+## 240. Search a 2D Matrix II
+给出一个行列分别递增的矩阵,从中搜索元素
+O(n+m), 从右上开始搜索,每次排除一行或者一列
+```java
+class Solution {
+    public boolean searchMatrix(int[][] mat, int target) {
+        if (mat.length == 0) {
+            return false;
+        }
+        int x = 0, y = mat[0].length - 1;
+        while (x < mat.length && y >= 0) {
+            if (mat[x][y] > target) {
+                y--;
+            } else if (mat[x][y] < target) {
+                x++;
+            } else {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+```
+
+
