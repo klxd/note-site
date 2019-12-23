@@ -206,6 +206,7 @@ jstack用于打印出给定的java进程ID或core file或远程调试服务的Ja
 * 如何用工具分析jvm状态（visualVM看堆中对象的分配，对象间的引用、是否有内存泄漏，jstack看线程状态、是否死锁等等）
 * linux怎么看一个端口被什么进程占用（lsof -i:xxx）
 * Linux的磁盘管理
+* Linux怎么查看系统负载情况
 
 ## 参考
 * [Java 命令行工具的使用](http://blog.csdn.net/fenglibing/article/details/6411951)

@@ -408,6 +408,7 @@ final void treeifyBin(Node<K,V>[] tab, int hash) {
 * 如何决定选用 HashMap 还是 TreeMap
 * 如果 HashMap 的大小超过了负载因子(load factor)定义的容量，怎么办
 * HashMap 是线程安全的吗？并发下使用的 Map 是什么，它们内部原理分别是什么，比如存储方式、 hashcode、扩容、 默认容量等
+* HashMap检测到hash冲突后，将元素插入在链表的末尾还是开头
 
 
 ## 参考

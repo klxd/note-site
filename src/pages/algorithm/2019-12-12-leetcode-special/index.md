@@ -61,7 +61,7 @@ class Solution {
 ## 31 Next Permutation 生成下一个排列
 给出一个数组, 求该数组下一个排列
 解法: 时间O(n), 空间O(1)
-以数组{2, 3, 6, 5, 4, 1}
+以数组{2, 3, 6, 5, 4, 1}为例,
 1. 从右往左, 找到第一个不是递增的数字
 2. (1)如果无法找到这样的数字,证明此数组是倒序排列的,已经是'最大'的排列,只要将其翻转即可得到下一个(最小)排列
    (2)若找到了这样的数字, 此例中是3, 我们再从最右往左找到第一个比它大的数字, 这样的数字肯定会存在, 此例中是4
@@ -117,7 +117,7 @@ class Solution {
 相似题：给出一个经过旋转的数组，返回其中最小的数字
 
 ## 35. Search Insert Position
-给出一个数组和一个数字, 找到数字在数组中的下标,若无法找到则给出此数字应该插入的位子
+给出一个数组和一个数字, 找到数字在数组中的下标,若无法找到则给出此数字应该插入的位置
 ```java
 class Solution {
     public int searchInsert(int[] nums, int target) {
@@ -139,6 +139,8 @@ class Solution {
 
 ## 41. First Missing Positive
 给出一个数组, 找到第一个缺失的正数, 要求时间O(n),空间O(1)
+思路:遍历数组,若`nums[i]`在数组长度的区间内且`nums[nums[i-1]]`位置上不是对应的数字,则交换两个位置上的数字,
+此方法能保证每个数字最多交换一次,就可以放到正确的位置, 时间复杂度O(n); 再次遍历数组即可找到第一个缺失的正数
 ```java
 class Solution {
     public int firstMissingPositive(int[] nums) {
@@ -162,8 +164,10 @@ class Solution {
 ```
 
 ## 42. Trapping Rain Water
-给出一个高度数组,计算容水量
+给出一个高度数组,计算容水量(凹陷的面积)
 解法一: 时间O(n), 空间O(n)
+开两个长度为n的数组分别记录位置i左边的最大值和右边的最大值,
+每个位置的容水高度为`Math.min(maxLeft[i], maxRight[i]) - height[i]`
 ```java
 class Solution {
     public int trap(int[] height) {
@@ -188,6 +192,10 @@ class Solution {
 }
 ```
 解法二: 时间O(n), 空间O(1)
+双指针法,从首尾两端分别遍历,记录下leftMax和rightMax,对于每一个left/right,
+若当前有`leftMax < rightMax`, 则left位置的容水量肯定为`leftMax - height[left]`,
+因为不管后续rightMax高度怎么变化,此位置的容水量总会受限于当前的leftMax.
+同理可得`leftMax >= rightMax`的情况.
 ```java
 class Solution {
     public int trap(int[] height) {
@@ -207,9 +215,10 @@ class Solution {
 }
 ```
 
-45. Jump Game II
+## 45. Jump Game II
 给出一个步长数组,`arr[i]`标识在位置i上能跳的步长,求跳到最后一格的最小步数
 时间O(n), 空间O(1)
+思路:类似树的层次遍历,记录当前步数所能达到的最远距离
 ```java
 class Solution {
 public int jump(int[] A) {
@@ -414,5 +423,6 @@ class Solution {
 
 
 ## 81. Search in Rotated Sorted Array II
+todo
 
 

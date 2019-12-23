@@ -14,20 +14,20 @@ import java.util.TreeMap;
 class Main {
     public static void main(String[] args) {
         Main main = new Main();
-        System.out.println(main.largestRectangleArea(new int[] {10,  1, 2, 3}));
+        System.out.println(main.largestRectangleArea(new int[]{2, 1, 5, 4, 2, 3, 1, 1, 1, 1, 1}));
     }
 
     public int largestRectangleArea(int[] heights) {
         Deque<Integer> stack = new ArrayDeque<>();
         int ans = 0;
         for (int i = 0; i <= heights.length; i++) {
-            int curH = i == heights.length ? 0 : heights[i];
-            int lastIdx = stack.isEmpty() ? -1 : stack.peekLast();
-            if (!stack.isEmpty() && stack.peekLast() > curH) {
-                int tempIdx = stack.pop();
-                ans = Math.max(ans, heights[tempIdx] * (lastIdx - tempIdx + 1));
+            int h = i == heights.length ? 0 : heights[i];
+            while (!stack.isEmpty() && heights[stack.peekLast()] > h) {
+                int curHeight = heights[stack.pollLast()];
+                int curWidth = stack.isEmpty() ? i : (i - stack.peekLast() - 1);
+                ans = Math.max(ans, curWidth * curHeight);
             }
-            stack.push(i);
+            stack.offerLast(i);
         }
         return ans;
     }
