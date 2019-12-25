@@ -148,5 +148,6 @@ Q:LinkedTransferQueue与SynchronousQueue（公平模式）有什么异同呢？
   （4）前者可以自己控制放元素是否需要阻塞线程，比如使用四个添加元素的方法就不会阻塞线程，只入队元素，使用transfer()会阻塞线程；
   （5）取元素两者基本一样，都会阻塞等待有新的元素进入被匹配到；
   
+* 简述ConcurrentLinkedQueue和LinkedBlockingQueue的用处和不同之处  
   
 [死磕 java集合之ConcurrentLinkedQueue源码分析](https://cloud.tencent.com/developer/article/1458983)

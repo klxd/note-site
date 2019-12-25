@@ -219,6 +219,23 @@ NavigableMap<K,V> descendingMap();
 subMap、headMap、tailMap返回大于或小于某个key的一个SortedMap<K,V>
 
 
-# 练习题
+## 如何翻转 TreeMap / TreeSet 
+Q: 一个已经构建好的TreeSet，怎么完成倒排序
+解法一: 创建一个新的TreeSet, 构造函数中传入方向排序的比较器, 再调用addAll方法,
+时间复杂度O(NLogN), 相当于重新排序一遍
+```java
+TreeSet<Integer> treeSet = new TreeSet<>(Arrays.asList(1, 5, 3));
+System.out.println(treeSet);
+
+TreeSet<Integer> treeSet1 = new TreeSet<>(Comparator.reverseOrder());
+treeSet1.addAll(treeSet);
+```
+
+解法二: 直接调用descendingSet方法, 内部使用线性倒排方法重新构造一棵树, 时间复杂度O(N)
+```java
+TreeSet<Integer> treeSet2 = (TreeSet<Integer>) treeSet.descendingSet();
+```
+
+## 练习题
 leetcode-56
 leetcode-826

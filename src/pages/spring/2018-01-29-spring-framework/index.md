@@ -11,6 +11,9 @@ tags:
 * AOP的实现方法 - 动态代理
 * 控制反转的实现
 * Spring事务处理机制
+* Spring事务的传播属性
+
+* Springmvc 中DispatcherServlet初始化过程
 
 * 如何解决两个Bean之间的循环依赖
 

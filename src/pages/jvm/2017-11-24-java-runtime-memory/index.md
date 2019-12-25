@@ -237,5 +237,10 @@ tags:
 * GC停顿原因，如何降低停顿？
 * JVM的内存布局以及垃圾回收原理及过程讲一下，讲一下CMS垃圾收集器垃圾回收的流程，以及CMS的缺点
 * ParNew 收集过程，如何调优 ParNew？如何减少 full gc？调大 YoungGen 有什么好处坏处？
+* 请解释如下jvm参数的含义：
+  -server -Xms512m -Xmx512m -Xss1024K
+  -XX:PermSize=256m -XX:MaxPermSize=512m -
+  XX:MaxTenuringThreshold=20XX:CMSInitiatingOccupancyFraction=80 -
+  XX:+UseCMSInitiatingOccupancyOnly。
 
 [关键业务系统jvm参数推荐](http://chen-tao.github.io/2017/01/10/jvm-param-rcmd-2016/)

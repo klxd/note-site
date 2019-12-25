@@ -6,30 +6,52 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 class Main {
     public static void main(String[] args) {
         Main main = new Main();
-        System.out.println(main.largestRectangleArea(new int[]{2, 1, 5, 4, 2, 3, 1, 1, 1, 1, 1}));
+        TreeSet<Integer> treeSet = new TreeSet<>(Arrays.asList(1, 5, 3));
+        System.out.println(treeSet);
+
+        TreeSet<Integer> treeSet1 = new TreeSet<>(Comparator.reverseOrder());
+        treeSet1.addAll(treeSet);
+        System.out.println(treeSet1);
+
+        TreeSet<Integer> treeSet2 = (TreeSet<Integer>) treeSet.descendingSet();
+        System.out.println(treeSet2);
     }
 
-    public int largestRectangleArea(int[] heights) {
-        Deque<Integer> stack = new ArrayDeque<>();
-        int ans = 0;
-        for (int i = 0; i <= heights.length; i++) {
-            int h = i == heights.length ? 0 : heights[i];
-            while (!stack.isEmpty() && heights[stack.peekLast()] > h) {
-                int curHeight = heights[stack.pollLast()];
-                int curWidth = stack.isEmpty() ? i : (i - stack.peekLast() - 1);
-                ans = Math.max(ans, curWidth * curHeight);
+    class Node {
+        public int val;
+        public Node left;
+        public Node right;
+        public Node next;
+    }
+
+    public Node connect(Node root) {
+        Node temp = root, tempChild = new Node();
+        while (temp != null) {
+            Node currentChild = tempChild;
+            while (temp != null) {
+                if (temp.left != null) {
+                    currentChild.next = temp.left;
+                    currentChild = currentChild.next;
+                }
+                if (temp.right != null) {
+                    currentChild.next = temp.right;
+                    currentChild = currentChild.next;
+                }
+                temp = temp.next;
             }
-            stack.offerLast(i);
+            temp = tempChild.next;
+            tempChild.next = null;
         }
-        return ans;
+        return root;
     }
-
 }

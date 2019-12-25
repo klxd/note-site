@@ -119,3 +119,8 @@ Buffer的工作方式跟C语言里的字符数组非常的像，类比一下，c
 * clear(): 回到初始状态，即 limit 等于 capacity，position 置0。重新对Buffer进行写入操作前调用。
 * compact(): 将未读取完的数据（position 与 limit 之间的数据）移动到缓冲区开头，并将 position设置为这段数据末尾的下一个位置。
   其实就等价于重新向缓冲区中写入了这么一段数据。
+
+
+## Q & A
+* IO模型有哪些, nio, bio，aio的区别, reactor模型
+* 
