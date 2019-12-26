@@ -72,9 +72,66 @@ Java 中类的生命周期包括以下 7 个阶段:
   2. 只有当父类加载器反馈自己无法完成加载请求时候,子加载器才会尝试自己去加载
 * 优点: Java 类随着它的类加载器一起具备了一种带有优先级的**层次关系**
 
+实现双亲委派模型的代码都集中在`java.lang.ClassLoader#loadClass`中,
+
+```java
+public abstract class ClassLoader {
+    protected Class<?> loadClass(String name, boolean resolve)
+            throws ClassNotFoundException
+        {
+            // 同名的类加载时竞争同一把锁(用ConcurrentHashMap管理)
+            synchronized (getClassLoadingLock(name)) {
+                // First, check if the class has already been loaded
+                Class<?> c = findLoadedClass(name);
+                if (c == null) {
+                    long t0 = System.nanoTime();
+                    try {
+                        // 尝试用父亲加载器加载
+                        if (parent != null) {
+                            c = parent.loadClass(name, false);
+                        } else {
+                            c = findBootstrapClassOrNull(name);
+                        }
+                    } catch (ClassNotFoundException e) {
+                        // ClassNotFoundException thrown if class not found
+                        // from the non-null parent class loader
+                    }
+    
+                    if (c == null) {
+                        // -- 在父亲加载器无法加载的时候, 调用本身的findClass方法来加载
+                        // If still not found, then invoke findClass in order
+                        // to find the class.
+                        long t1 = System.nanoTime();
+                        c = findClass(name);
+    
+                        // this is the defining class loader; record the stats
+                        sun.misc.PerfCounter.getParentDelegationTime().addTime(t1 - t0);
+                        sun.misc.PerfCounter.getFindClassTime().addElapsedTimeFrom(t1);
+                        sun.misc.PerfCounter.getFindClasses().increment();
+                    }
+                }
+                if (resolve) {
+                    resolveClass(c);
+                }
+                return c;
+            }
+        }
+}
+```
+
+### 打破双亲委派 ?
+双亲委派模型不是一个强制性的约束模型,而是Java设计者推荐给开发者的一种类加载器的实现方式.
+实现双亲委派模型的代码都集中在`java.lang.ClassLoader#loadClass`中, 
+JDK1.2之后不提倡用户再去覆盖loadClass方法,而应该把自己的类加载逻辑写到findClass()方法中,
+这样可以保证写出来的加载器符合双亲委派规则.
+所以, 不按照JVM的约束, 实现自己的loadClass方法即可以打破双亲委派
+
+双亲委派3次**被破坏**
+* JDK1.2以前没有findClass方法, 实现自己的类加载器的时候均重写了loadClass
+* JNDI服务, 线程上下文类加载器, 父亲类加载器请求子类加载器去完成加载, Java中涉及SPI的加载动作基本都采用这种方式
+* 代码热替换, 模块热部署, OSGi中, 每更换一个Bundle时, 把Bundle连同类加载器一起换掉以实现代码的热替换
+
 ### Question:
 
 * Java 类加载器都有哪些
 * JVM 如何加载字节码文件
-* 双亲委派模型是什么
-* 可以打破双亲委派么，怎么打破

@@ -426,3 +426,57 @@ class Solution {
 todo
 
 
+## 128. Longest Consecutive Sequence
+题意: 给出一个无序数组, 找到其中最长的连续数字, 如`[100, 4, 200, 1, 3, 2]`, ans = 4;
+解法一: 使用HashMap记录数字i上的最长连续数字, 时间O(n), 空间O(n)
+```java
+class Solution {
+    public int longestConsecutive(int[] nums) {
+        int ans = 0;
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int num : nums) {
+            if (map.containsKey(num)) {
+                continue;
+            }
+            int preLen = map.getOrDefault(num - 1, 0);
+            int nextLen = map.getOrDefault(num + 1, 0);
+            int sum = preLen + nextLen + 1;
+            ans = Math.max(ans, sum);
+
+            // prevent re-calculate
+            map.put(num, sum);
+            if (preLen > 0) {
+                map.put(num - preLen, sum);
+            }
+            if (nextLen > 0) {
+                map.put(num + nextLen, sum);
+            }
+
+        }
+        return ans;
+    }
+}
+```
+
+解法二: 使用HashSet记录所有数字, 如果`num - 1`不存在, 则向右找到所有连续数字, 时间O(n)
+```java
+class Solution {
+    public int longestConsecutive(int[] nums) {
+        Set<Integer> set = new HashSet<>();
+        for (int num : nums) {
+            set.add(num);
+        }
+        int ans = 0;
+        for (int num : nums) {
+            if (!set.contains(num - 1)) {
+                int cnt = 1, next = num + 1;
+                while (set.contains(next++)) {
+                    cnt++;
+                }
+                ans = Math.max(ans, cnt);
+            }
+        }
+        return ans;
+    }
+}
+```
