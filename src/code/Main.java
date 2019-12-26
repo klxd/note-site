@@ -9,49 +9,130 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.concurrent.ThreadLocalRandom;
 
 class Main {
     public static void main(String[] args) {
         Main main = new Main();
-        TreeSet<Integer> treeSet = new TreeSet<>(Arrays.asList(1, 5, 3));
-        System.out.println(treeSet);
-
-        TreeSet<Integer> treeSet1 = new TreeSet<>(Comparator.reverseOrder());
-        treeSet1.addAll(treeSet);
-        System.out.println(treeSet1);
-
-        TreeSet<Integer> treeSet2 = (TreeSet<Integer>) treeSet.descendingSet();
-        System.out.println(treeSet2);
-    }
-
-    class Node {
-        public int val;
-        public Node left;
-        public Node right;
-        public Node next;
-    }
-
-    public Node connect(Node root) {
-        Node temp = root, tempChild = new Node();
-        while (temp != null) {
-            Node currentChild = tempChild;
-            while (temp != null) {
-                if (temp.left != null) {
-                    currentChild.next = temp.left;
-                    currentChild = currentChild.next;
-                }
-                if (temp.right != null) {
-                    currentChild.next = temp.right;
-                    currentChild = currentChild.next;
-                }
-                temp = temp.next;
-            }
-            temp = tempChild.next;
-            tempChild.next = null;
+        Skiplist skiplist = new Skiplist();
+        Map<Integer, Integer> cnt = new HashMap<>();
+        for (int i = 0; i < 200000; i++) {
+            int level = skiplist.randLevel();
+            cnt.put(level, cnt.getOrDefault(level, 0) + 1);
         }
-        return root;
+        //["Skiplist","add","search","search","erase","erase","search"]
+        //[[],[1],[0],[1],[0],[1],[1]]
+        skiplist.add(1);
+        System.out.println(skiplist.erase(0));
+        System.out.println(skiplist.erase(1));
+        System.out.println(skiplist.search(1));
     }
+
+    static class Node {
+        public int val;
+        public Node right;
+        public Node down;
+
+        Node() {
+        }
+
+        Node(int v, Node r, Node d) {
+            this.val = v;
+            this.right = r;
+            this.down = d;
+        }
+    }
+
+    static class Skiplist {
+
+        private Node head = new Node();
+
+        private Random random = new Random();
+
+        private int randLevel() {
+            int rnd = random.nextInt();
+            int level = 1;
+            while ((((rnd) >>>= 1) & 1) != 0) {
+                level++;
+            }
+            return level;
+        }
+
+        public Skiplist() {
+        }
+
+        public boolean search(int target) {
+            Node temp = head;
+            while (temp != null) {
+                while (temp.right != null && temp.right.val < target) {
+                    temp = temp.right;
+                }
+                if (temp.right == null || temp.right.val > target) {
+                    temp = temp.down;
+                } else {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public void add(int num) {
+            Node temp = head;
+            Deque<Node> insertPoints = new ArrayDeque<>();
+            while (temp != null) {
+                while (temp.right != null && temp.right.val < num) {
+                    temp = temp.right;
+                }
+                insertPoints.add(temp);
+                temp = temp.down;
+            }
+            Node downNode = null;
+            int level = randLevel();
+            while (level-- > 0 && !insertPoints.isEmpty()) {
+                Node insert = insertPoints.pollLast();
+                insert.right = new Node(num, insert.right, downNode);
+                downNode = insert.right;
+            }
+            if (level > 0) {
+                head = new Node(0, new Node(num, null, downNode), head);
+            }
+        }
+
+        public boolean erase(int num) {
+            Node temp = head;
+            boolean found = false;
+            while (temp != null) {
+                while (temp.right != null && temp.right.val < num) {
+                    temp = temp.right;
+                }
+                if (temp.right == null || temp.right.val > num) {
+                    temp = temp.down;
+                } else {
+                    found = true;
+                    temp.right = temp.right.right;
+                    temp = temp.down;
+                }
+            }
+            return found;
+        }
+
+        private void print() {
+            Node temp = head;
+            while (temp != null) {
+                Node first = temp;
+                while (first != null) {
+                    System.out.print(first.val + " ");
+                    first = first.right;
+                }
+                System.out.println();
+                temp = temp.down;
+            }
+        }
+    }
+
+
 }
