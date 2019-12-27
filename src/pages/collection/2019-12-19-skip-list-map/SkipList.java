@@ -6,13 +6,13 @@ public class SkipList {
 
     static class Node {
         public int val;
-        public Main.Node right;
-        public Main.Node down;
+        public Node right;
+        public Node down;
 
         Node() {
         }
 
-        Node(int v, Main.Node r, Main.Node d) {
+        Node(int v, Node r, Node d) {
             this.val = v;
             this.right = r;
             this.down = d;
@@ -20,7 +20,7 @@ public class SkipList {
     }
 
 
-    private Main.Node head = new Main.Node();
+    private Node head = new Node();
 
     private Random random = new Random();
 
@@ -34,7 +34,7 @@ public class SkipList {
     }
 
     public boolean search(int target) {
-        Main.Node temp = head;
+        Node temp = head;
         while (temp != null) {
             while (temp.right != null && temp.right.val < target) {
                 temp = temp.right;
@@ -49,8 +49,8 @@ public class SkipList {
     }
 
     public void add(int num) {
-        Main.Node temp = head;
-        Deque<Main.Node> insertPoints = new ArrayDeque<>();
+        Node temp = head;
+        Deque<Node> insertPoints = new ArrayDeque<>();
         while (temp != null) {
             while (temp.right != null && temp.right.val < num) {
                 temp = temp.right;
@@ -58,20 +58,20 @@ public class SkipList {
             insertPoints.add(temp);
             temp = temp.down;
         }
-        Main.Node downNode = null;
+        Node downNode = null;
         int level = randLevel();
         while (level-- > 0 && !insertPoints.isEmpty()) {
-            Main.Node insert = insertPoints.pollLast();
-            insert.right = new Main.Node(num, insert.right, downNode);
+            Node insert = insertPoints.pollLast();
+            insert.right = new Node(num, insert.right, downNode);
             downNode = insert.right;
         }
         if (level > 0) {
-            head = new Main.Node(0, new Main.Node(num, null, downNode), head);
+            head = new Node(0, new Node(num, null, downNode), head);
         }
     }
 
     public boolean erase(int num) {
-        Main.Node temp = head;
+        Node temp = head;
         boolean found = false;
         while (temp != null) {
             while (temp.right != null && temp.right.val < num) {
@@ -89,9 +89,9 @@ public class SkipList {
     }
 
     private void print() {
-        Main.Node temp = head;
+        Node temp = head;
         while (temp != null) {
-            Main.Node first = temp;
+            Node first = temp;
             while (first != null) {
                 System.out.print(first.val + " ");
                 first = first.right;
