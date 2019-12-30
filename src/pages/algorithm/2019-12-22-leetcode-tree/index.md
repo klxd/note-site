@@ -134,3 +134,150 @@ class Solution {
     }
 }
 ```
+
+## 1305. All Elements in Two Binary Search Trees
+题意: 给出两颗二叉搜索树, 求其中所有元素排序后的列表
+
+解法一:
+分别中序遍历得到两个有序列表, 再使用归并排序得到答案
+时间O(N), `15ms`(一次遍历+排序), 空间O(N).
+注意:`Collections#sort`中使用了Timsort,底层思想类似于merge-sort,
+所以对于两个大段排序好的集合,排序时间复杂度O(n)
+```java
+class Solution {
+    public List<Integer> getAllElements(TreeNode root1, TreeNode root2) {
+        List<Integer> ans = new ArrayList<>();
+        travel(ans, root1);
+        travel(ans, root2);
+        Collections.sort(ans);
+        return ans;
+    }
+    
+    private void travel(List<Integer> ans, TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        travel(ans, root.left);
+        ans.add(root.val);
+        travel(ans, root.right);
+    }
+    
+}
+```
+
+解法二:
+借鉴二叉树的非递归中序遍历, 使用一个栈储存已经处理过左子树的节点,
+由于有两棵树, 需要递归地初始化好两个栈, 之后每一步中比较两个栈顶的元素大小,
+利用归并排序依次处理, 再将其右子树继续递归的插入栈中.
+时间复杂度: O(n), `18ms`, 两次遍历(进栈&出栈), 空间: O(n)
+```java
+class Solution {
+    public List<Integer> getAllElements(TreeNode root1, TreeNode root2) {
+        Deque<TreeNode> s1 = new ArrayDeque<>(), s2 = new ArrayDeque<>();
+        pushLeft(root1, s1);
+        pushLeft(root2, s2);
+        List<Integer> ans = new ArrayList<>();
+        while (!s1.isEmpty() || !s2.isEmpty()) {
+            Deque<TreeNode> s = s1.isEmpty() ? s2 : 
+                (s2.isEmpty() ? s1 : (s1.peekLast().val < s2.peekLast().val ? s1 : s2));
+            TreeNode cur = s.pollLast();
+            ans.add(cur.val);
+            pushLeft(cur.right, s);
+        }
+        return ans;
+    }
+    
+    private void pushLeft(TreeNode node, Deque<TreeNode> stack) {
+        if (node == null) {
+            return;
+        }
+        stack.offerLast(node);
+        pushLeft(node.left, stack);
+    }
+}
+```
+
+## 144. Binary Tree Preorder Traversal
+二叉树的前序遍历, 要求不使用递归
+解法一: 将左右子树分别进栈
+```java
+class Solution {
+    public List<Integer> preorderTraversal(TreeNode root) {
+        List<Integer> ans = new ArrayList<>();
+        if (root == null) {
+            return ans;
+        }
+        Deque<TreeNode> stack = new LinkedList<>();
+        stack.offerLast(root);
+        while (!stack.isEmpty()) {
+            TreeNode temp = stack.pollLast();
+            ans.add(temp.val);
+            if (temp.right != null) {
+                stack.offerLast(temp.right);
+            }
+            if (temp.left != null) {
+                stack.offerLast(temp.left);
+            }
+        }
+        return ans;
+    }
+}
+```
+
+解法二: 只将右子树进栈
+```java
+class Solution {
+    public List<Integer> preorderTraversal(TreeNode root) {
+        Deque<TreeNode> stack = new LinkedList<>();
+        List<Integer> ans = new ArrayList<>();
+        while (root != null || !stack.isEmpty()) {
+            root = root == null ? stack.pollLast() : root;
+            ans.add(root.val);
+            if (root.right != null) {
+                stack.offerLast(root.right);
+            }
+            root = root.left;
+        }
+        return ans;
+    }
+}
+```
+
+## 145. Binary Tree Postorder Traversal
+二叉树后序遍历,要求不使用递归
+思路: 递归时, 后序遍历的栈中需要存储当前节点的所有祖先;
+考虑非递归时用Deque模拟栈调用, 每当从栈顶弹出一个元素, 
+无法直接判定是需要访问它, 还是访问它的子节点; 
+考虑后序遍历时, 每当访问一个节点, 其前一个被访问的节点一定是它的儿子节点(叶子节点除外),
+所以利用一个变量`lastVisit`来确定是直接访问此节点, 还是先访问其儿子节点.
+```java
+class Solution {
+    public List<Integer> postorderTraversal(TreeNode root) {
+        List<Integer> ans = new ArrayList<>();
+        if (root == null) {
+            return ans;
+        }
+        Deque<TreeNode> stack = new LinkedList<>();
+        TreeNode lastVisit = root;
+        stack.offerLast(root);
+        while (!stack.isEmpty()) {
+            TreeNode temp = stack.peekLast();
+            if ((temp.left == null && temp.right == null)
+                || temp.left == lastVisit || temp.right == lastVisit) {
+                ans.add(stack.pollLast().val);
+                lastVisit = temp;
+            } else {
+                if (temp.right != null) {
+                    stack.offerLast(temp.right);
+                }
+                if (temp.left != null) {
+                    stack.offerLast(temp.left);
+                }
+            }
+        }
+        return ans;
+    }
+}
+```
+
+
