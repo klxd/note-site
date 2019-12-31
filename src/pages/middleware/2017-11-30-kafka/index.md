@@ -27,6 +27,7 @@ tags:
 * Consumer Group
   * 每个 consumer 属于一个特定的 Consumer Group
   * 可为每个 consumer 指定一个 group name,若不指定则属于默认 group
+* Offset 消息存储在Kafka的Broker上, 消费者拉取消息的过程中需要知道消息在文件中的**偏移量**
 
 ## Kafka的技术优势
 快速: 每秒处理数兆字节的读写操作
@@ -41,6 +42,15 @@ Zookeeper用于Kafka的分布式应用:
 * Zookeeper用于在集群中不同节点之间的通信
 * 在Kafka中, 它被用于移交偏移量
 * Leader检测 分布式同步 配置管理 识别新节点 节点实时状态
+
+## Broker注册
+ZK上会有个专门用来进行broker注册的节点`/brokers/ids/`, 每个broker启动时, 都会到这个节点上创建一个临时子节点,
+如`broker/ids/1`, `1∈[0, N]`; 并将自己的IP地址和端口信息写入改节点
+
+## Topic注册
+Kafka中每一个Topic, 都会以`brokers/topics/[topic]`的形式记录, 如`brokers/topics/login`;
+Broker服务器启动之后, 会到该节点下注册自己的brokerId, 如`brokers/topics/login/3 -> 2`,
+表示BrokerId为3的一个服务器对于login这个topic的消息, 提供了2个分区进行消息存储
 
 
 
