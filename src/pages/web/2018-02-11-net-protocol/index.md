@@ -46,6 +46,8 @@ IP选址和路由选择
 * http请求的整个过程
 * https的处理过程,https什么时候使用对称加密
 * https和http区别，有没有用过其他安全传输手段
+* HTTP 301 302有啥区别
+
 
 ## 参考
 * [阮一峰:互联网协议入门](http://www.ruanyifeng.com/blog/2012/05/internet_protocol_suite_part_i.html)

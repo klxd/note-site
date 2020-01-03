@@ -189,6 +189,8 @@ Redis虽然是一种内存型数据库，一旦服务器进程退出，数据库
 
 * 是否使用过Redis集群，集群的原理是什么？Redis Sentinal着眼于高可用，在master宕机时会自动将slave提升为master，继续提供服务。Redis Cluster着眼于扩展性，在单个redis内存不足时，使用Cluster进行分片存储
 
+* 如果Redis有1亿个key，使用keys命令是否会影响线上服务, 有一条命令可以实现上面这个功能
+
 * [50道Redis题目](https://mp.weixin.qq.com/s?__biz=MzI3ODcxMzQzMw==&mid=2247486734&idx=2&sn=d8454c6cbd09ab60ef5a728a36c19e8c&chksm=eb538838dc24012e15b813df90a115803c243eb6a242c052d684c6c3819b5f3300f3a2d482be&scene=21#wechat_redirect)
 
 ## 参考
