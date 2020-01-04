@@ -61,6 +61,8 @@ Broker服务器启动之后, 会到该节点下注册自己的brokerId, 如`brok
 
 ## Kafka 对比 RabbitMQ
 
+开发语言： RocketMQ-Java  Kafka-Scala  RabbitMQ-Erlang
+
 RabbitMQ,遵循AMQP协议，由内在高并发的erlanng语言开发，用在实时的对可靠性要求比较高的消息传递上。
 
 kafka是Linkedin于2010年12月份开源的消息发布订阅系统,它主要用于处理活跃的流式数据,大数据量的数据处理上。
