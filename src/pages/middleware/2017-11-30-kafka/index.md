@@ -61,7 +61,7 @@ Broker服务器启动之后, 会到该节点下注册自己的brokerId, 如`brok
 
 ## Kafka 对比 RabbitMQ
 
-开发语言： RocketMQ-Java  Kafka-Scala  RabbitMQ-Erlang
+开发语言： RocketMQ-Java  Kafka-Scala  RabbitMQ-Erlang ActiveMQ-Java
 
 RabbitMQ,遵循AMQP协议，由内在高并发的erlanng语言开发，用在实时的对可靠性要求比较高的消息传递上。
 
