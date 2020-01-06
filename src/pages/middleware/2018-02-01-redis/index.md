@@ -6,6 +6,11 @@ tags:
    - middleware
 ---
 
+## 书籍
+* Redis开发与运维：命令介绍，由浅入深
+* Redis设计与实现：底层实现，原理讲解
+* Redis实战：样例代码较多，读时需了解上下文情景
+
 ## Redis中的五种基本数据类型
 
 * string 字符串是redis最基本的类型
@@ -13,6 +18,136 @@ tags:
 * list 简单的字符串列表，按照插入顺序排序
 * set string类型的无序集合 通过hash和skiplist实现的
 * zset(sort set) 每个元素都会关联一个double类型的分数。redis正是通过分数来为集合中的成员进行从小到大的排序
+
+## string
+
+## 哈希
+### 设置值
+* `hset key field value`
+* `hsetnx` 功能与setnx类似
+* `hmset key field value [field value ...]`: 批量设置
+
+### 获取值
+* `hget key filed`
+* `hmget key field [field ...]`: 批量获取
+* `hkeys key`: 返回指定哈希键（key）所有的field
+* `hvals key`: 返回指定哈希键所有的value
+* `hgetall key`: 返回所有field-value，field太多时建议用`hscan`代替
+
+### 删除值
+* `hdel key field [field ...]`
+
+### other
+* `hlen key`: 计算field的个数
+* `hexist key field`: 判断field是否存在
+* `hincrby key field`: 类似incrby，+1
+* `hincrbyfloat key field`: 类似incrbyfloat
+* `hstrlen key field`: 计算value的字符串长度 版本3.2以上
+
+### hash内部编码
+* ziplist - 压缩列表
+  当元素个数小于`hash-max-ziplist-entries`(默认512个)，同时所有的值都小于`hash-max-ziplist-value`时使用
+* hashtable - 哈希表，无法使用ziplist时使用，空间换时间
+
+
+## 列表list
+最多可以存储2^32-1个元素，列表中的元素是有序的，且是可以重复的
+
+### 添加
+* `rpush key value [value ...]`: 右侧插入，
+* `lpush key value [value ...]`: 左侧插入
+* `linsert key before|after pivot value`: 从列表中找到等于pivot的元素，在其前或后插入新元素
+
+### 查
+* `lrange key start end`: 索引下标从左到右是0到N-1，从右到左是-1到-N，end项包含本身
+* `lindex key index`: 获取列表指定下标的元素
+* `llen key`: 获取列表长度
+### 删除
+* `lpop key`: 弹出最左侧元素
+* `rpop key`: 弹出最右侧元素
+* `lrem key count value`：count>0，从左到右,删除最多count个；count<0，从右到左，删除最多count绝对值个；count=0，删除所有
+* `ltrim key start end`：保留start到end（闭区间）内的元素
+
+### 修改
+* `lset key index newValue`: 修改指定下标元素
+
+### 阻塞
+* `blpop key [key ...] timeout`
+* `brpop key [key ...] timeout`
+
+可以同时监听多个列表的key， timeout为最长阻塞时间，单位为秒；
+使用这两个命令时，如果有多个键，会从左往右遍历，若其中某个list有元素则立刻返回；
+阻塞时，多个key中任何一个先有元素，则最先弹出那个元素；
+多个客户端阻塞在同一个key，最先执行brpop/blpop命令的客户端会获取到值（公平地）；
+
+### list内部编码
+* ziplist：列表元素小于`list-max-ziplist-entries`（默认512个），同时列表中的值都小于`list-max-ziplist-value`时使用
+* linkedlist：链表，无法使用ziplist时使用
+* quicklist：以ziplist为节点的linkedlist，结合了两者的优势
+
+### list使用场景
+* 消息队列：`lpush + brpop`命令组合可以实现阻塞队列，可保证多个客户端消费的负载均衡与高可用，
+  缺点：无法保证消息正确被消费，无法实现消息多次消费（多消费者组）
+* 有限集合：`lpush + ltrim`
+* 栈：`lpush + lpop`
+
+
+## 集合set
+无序集合，不允许重复，最多2^32-1个
+
+### 添加
+* `sadd key element [element ...]`: 返回添加成功的个数
+
+### 删除
+* `srem key element [element ...]`: 返回删除成功的个数
+* `spop key [count]`：随机弹出一个元素，3.2开始支持count
+
+### 查
+* `scard key`: 计算元素个数，时间复杂度O（1）
+* `sismember key element`: 是否在集合中
+* `srandmember key [count]`: 随机从集合中返回元素，count默认为1
+* `smembers key`: 获取所有元素，元素过多建议使用`sscan`
+
+### 集合间操作
+* `sinter key [key ...]`: 求多个集合的交集
+* `suinon key [key ...]`: 求多个集合的并集
+* `sdiff key [key ...]`: 求多个集合的差集，在第一个key中但是不在后续的key中
+
+* `sinterstore destination key [key ...]`: 将交集保存在destination集合中
+* `suinonstore destination key [key ...]`
+* `sdiffstore destination key [key ...]`
+
+### set内部编码
+* intset 整数集合，当集合中元素都是整数且个数小于`set-max-intset-entries`(默认512个)时使用
+* hashtable 哈希表
+
+### set使用情景
+* `sadd` 打标签tag
+* `srandmember/spop`: 生成随机数，抽奖
+* `sadd + sinter`: 社交需求
+
+## 有序集合zset
+元素不能重复，但有序，每个元素有一个score（分数可以重复）作为排序依据
+
+### 集合内
+* `zadd key score member [score member ...]`: 添加成员，时间复杂度为logN
+* `zcard key`: 计算成员个数，时间复杂度O（1）
+* `zscore key member`: 计算某个成员的分数
+* `zrank key member`: 计算成员排名，从低到高排名，下标0开始
+* `zrevrank key member`: 计算成员排名，从高到低排名，下标0开始
+* `zrem key member [member ...]`: 删除成员
+* `zincrby key increment member`: 增加成员分数
+* `zrange key start end [withscores]`: 返回指定排名范围的成员，从低到高
+* `zrevrange key start end [withscores]`: 返回指定排名范围的成员，从高到低
+
+
+### zset内部编码
+* ziplist 压缩列表，当有序集合元素个数小于`zset-max-ziplist-entries`（默认128个），同时每个元素的值都小于`zset-max-ziplist-value`(默认64字节)
+* 无法使用ziplist时使用
+
+### zset使用场景
+* `zadd+zincrby`: 统计获赞数
+* `zrevrangebyrank key 0 9`：取排行榜前10名
 
 ## 事务——Transactions
 虽然 Redis 的 Transactions 提供的并不是严格的 ACID 的事务
