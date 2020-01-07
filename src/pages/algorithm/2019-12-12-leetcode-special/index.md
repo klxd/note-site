@@ -516,3 +516,51 @@ class Solution {
 从右往左扫, 若当前位置分数比右边邻居大,则糖果为右边邻居+1,
 累加得答案
 
+## 168. Excel Sheet Column Title
+题意: 1 -> A, 2 -> B, ... 26 -> Z, 27 -> AA, 28 -> AB...
+
+思路: 不同于一般的取模+除法, 需要有一个减一的操作;
+分析,excel标题虽然是26进制,但是没有0这个标识,满26不进一;
+考虑52, 52 % 26 == 0, 此时不是由于没有0标识, 须把此位置设'Z',此时下一次处理的数不是`52 / 2`,
+而是`(52 - 26) / 2`, 考虑整数除法, 可以将n减一, 然后直接做除法操作.
+```java
+class Solution {
+    public String convertToTitle(int n) {
+        StringBuilder sb = new StringBuilder();
+        while (n > 0) {
+            n--;
+            sb.append((char)('A' + n % 26));
+            n /= 26;
+        }
+        return sb.reverse().toString();
+    }
+}
+```
+
+## 171. Excel Sheet Column Number
+题意: A -> 1, B -> 2 ...  Z -> 26, AA -> 27, AB -> 28 
+
+```java
+class Solution {
+    public int titleToNumber(String s) {
+        int ans = 0;
+        for (int i = 0; i < s.length(); i++) {
+            ans = ans * 26 + s.charAt(i) - 'A' + 1;
+        }
+        return ans;
+    }
+}
+```
+
+```java
+class Solution {
+    public int titleToNumber(String s) {
+        int ans = 0;
+        for (int i = s.length() - 1, base = 1; i >= 0; i--) {
+            ans += (s.charAt(i) - 'A' + 1) * base;
+            base *= 26;
+        }
+        return ans;
+    }
+}
+```

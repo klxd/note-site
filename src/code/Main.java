@@ -49,6 +49,9 @@ class Main {
             System.out.println(ans.get(i)[0] + " " + ans.get(i)[1]);
         }
 
+        StringBuilder sb = new StringBuilder();
+        Integer idx = null;
+
     }
 
     public int singleNumber(int[] nums) {

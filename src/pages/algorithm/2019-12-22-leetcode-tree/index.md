@@ -199,7 +199,7 @@ class Solution {
 
 ## 144. Binary Tree Preorder Traversal
 二叉树的前序遍历, 要求不使用递归
-解法一: 将左右子树分别进栈
+解法一: 将左右子树分别进栈(先右后左)
 ```java
 class Solution {
     public List<Integer> preorderTraversal(TreeNode root) {
@@ -280,4 +280,38 @@ class Solution {
 }
 ```
 
+## 173. Binary Search Tree Iterator
+二叉搜索树的迭代器, 要求平均时间O(n), 辅助空间O(height)
+
+思路: 参考二叉树的非递归中序遍历,使用一个栈存储已经处理过左子树的节点
+```java
+class BSTIterator {
+
+    public BSTIterator(TreeNode root) {
+        while (root != null) {
+            deque.offerFirst(root);
+            root = root.left;
+        }
+    }
+    
+    Deque<TreeNode> deque = new ArrayDeque<>();
+    
+    /** @return the next smallest number */
+    public int next() {
+        TreeNode first = deque.pollFirst();
+        TreeNode right = first.right;
+        while (right != null) {
+            deque.offerFirst(right);
+            right = right.left;
+        }
+        
+        return first.val;
+    }
+    
+    /** @return whether we have a next smallest number */
+    public boolean hasNext() {
+        return !deque.isEmpty();
+    }
+}
+```
 
