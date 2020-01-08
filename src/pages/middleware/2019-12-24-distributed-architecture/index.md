@@ -147,8 +147,10 @@ public class SnowflakeIdProvider implements IdProvider {
 * 虚拟节点可以改进一致性哈希加入删除节点时的负载均衡问题，将物理节点抽象为多个虚拟节点，
   每个虚拟节点支持连续哈希环上的一段，加入/删除物理节点时，将虚拟节点分配到其他多个物理节点上，
   即去除了上文**下一个节点**的概念。
-  
 
+
+## 配置中心Apollo
+[Apollo配置中心架构剖析](https://mp.weixin.qq.com/s/-hUaQPzfsl9Lm3IqQW3VDQ)
 
 ## Q & A
 * 设计一个秒杀系统，30分钟没付款就自动关闭交易
