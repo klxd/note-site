@@ -124,3 +124,4 @@ Hystrix一共有如下几种降级回退模式
 
 
 [Hystrix系列文章](https://chenyongjun.vip/articles/114)
+[Hystrix原理与实战](https://my.oschina.net/7001/blog/1619842)

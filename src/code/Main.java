@@ -25,33 +25,17 @@ import java.util.concurrent.ThreadLocalRandom;
 
 class Main {
     public static void main(String[] args) {
-        Scanner scan = new Scanner(System.in);
-        int n = scan.nextInt();
-        int[][] arr = new int[n][2];
-        for (int i = 0; i < n; i++) {
-            System.out.println(i);
-            arr[i][0] = scan.nextInt();
-            arr[i][1] = scan.nextInt();
-        }
-        System.out.println("here");
-        scan.close();
+        long a = Long.MIN_VALUE;
+        System.out.println(a);
+        System.out.println(String.valueOf(a).length());
+        System.out.println(63 - 10 - 12);
 
-        Arrays.sort(arr, (a, b) -> b[0] - a[0]);
-        int curMaxY = Integer.MIN_VALUE;
-        List<int[]> ans = new ArrayList<>();
-        for (int i = 0; i < n; i++) {
-            if (curMaxY < arr[i][1]) {
-                curMaxY = arr[i][1];
-                ans.add(arr[i]);
-            }
-        }
-        for (int i = ans.size() - 1; i >= 0; i--) {
-            System.out.println(ans.get(i)[0] + " " + ans.get(i)[1]);
-        }
+        long b = 1;
 
-        StringBuilder sb = new StringBuilder();
-        Integer idx = null;
+        System.out.println(1L << 41);
+        System.out.println(Math.pow(2, 41));
 
+        System.out.println((1L << 28) / (365 * 24 * 60 * 60));
     }
 
     public int singleNumber(int[] nums) {

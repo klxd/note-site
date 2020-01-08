@@ -42,8 +42,101 @@ tags:
 
 ## 多机的Sequence问题处理
 * 只考虑唯一性，使用UUID的生成方式；缺点：无连续性，存储空间较大
-* 抽象一个id生成器服务，并发控制更新（如Zookeeper集群），改进每次取一个为每次取一段
+* 抽象一个id生成器服务，并发控制更新（如Zookeeper集群, Redis集群），改进每次取一个为每次取一段
 * 雪花算法
+
+## snowflake 雪花算法
+* 使用41bit作为毫秒数, 可保存69年的时间区间, `(1L << 41) / (365 * 24 * 60 * 60 * 1000L) = 69`
+* 10bit作为机器的ID(5个bit是数据中心，5个bit的机器ID), 最多支持1024个机器id
+* 12bit作为毫秒内的流水号, 意味着每个节点在每毫秒可以产生 4096 个 ID
+* 最后还有一个符号位，永远是0, 保证id为正数
+
+### snowflake分析
+属于半依赖数据源方式,需要保证机器id不重复,实际应用场景中要依赖外部参数配置或数据库记录
+* 优点：高性能、低延迟、去中心化、按时间有序
+* 缺点：
+1. 要求机器时钟同步, 回拨会导致可能生成id重复
+2. 只能趋势递增, 不像数据库id严格递增
+
+### snowflake实现
+```java
+public class SnowflakeIdProvider implements IdProvider {
+  public static final int machineBits = 10;
+  public static final int sequenceBits = 12;
+
+  public static final short machineIdUpperBound = (short) (round(pow(2, machineBits)) - 1);
+  public static final short sequenceUpperBound = (short) (round(pow(2, sequenceBits)) - 1);
+
+  public static final int timestampLShift = machineBits + sequenceBits;
+  public static final int machineLShift = sequenceBits;
+  public static final int sequenceLShift = 0;
+
+  private int machineId;
+  private long pauseMs = 0L;
+  // 默认时间函数实现为当前时间毫秒,可以自定义
+  private TimeFunction timeFn = SystemTimeFunction.getInstance();
+  private short sequenceNum = 0;
+  private long lastTimestamp = -1L;
+  private final Object mutex = new Object();
+
+  // 传入机器码初始化
+  public SnowflakeIdProvider(int machineId) {
+    if (machineId < 0 || machineId > machineIdUpperBound) {
+      throw new IllegalArgumentException("machineId must be in the (inclusive) range [0, 1023]");
+    }
+    this.machineId = machineId;
+  }
+
+  public void setTimeFn(TimeFunction timeFn) {
+    this.timeFn = timeFn;
+  }
+
+  public void setPauseMs(int pause) {
+    this.pauseMs = pause;
+  }
+
+  public long getId() throws InvalidSystemClockException, SequenceExhaustedException {
+    long now = timeFn.now();
+    long seq;
+
+    // 同步锁保证线程安全
+    synchronized(mutex) {
+      maybePause();
+
+      if (now < lastTimestamp) {
+        // 时钟回拨异常, 有些实现是容忍一定时间的时钟回拨, 用等待机制实现
+        throw new InvalidSystemClockException();
+      } else if (now > lastTimestamp) {
+        // 时间已增加, 流水号重置  
+        sequenceNum = 0;
+      } else {
+        // 时间相同, 流水号增大
+        if (sequenceNum < SnowflakeIdProvider.sequenceUpperBound) {
+          sequenceNum++;
+        } else {
+          // 12bit的流水号不够用时, 这里是报错处理,
+          // 有些实现是自旋等待到下一个有剩余的时间戳
+          throw new SequenceExhaustedException(sequenceNum);
+        }
+      }
+      seq = sequenceNum;
+      lastTimestamp = now;
+    }
+
+    return (now << timestampLShift) | (machineId << machineLShift) | (seq << sequenceLShift);
+  }
+
+  private void maybePause() {
+    if (pauseMs > 0) {
+      try {
+        Thread.sleep(pauseMs);
+      } catch (InterruptedException ie) {
+      }
+    }
+  }
+}
+
+```
 
 ## 一致性哈希
 一致性哈希解决了**固定哈希**分片在迁移和扩展节点时的问题
@@ -57,21 +150,12 @@ tags:
   
 
 
-
-## Hystrix
-
-[Hystrix原理与实战](https://my.oschina.net/7001/blog/1619842)
 ## Q & A
-
-* 分布式集群下如何做到唯一序列号
 * 设计一个秒杀系统，30分钟没付款就自动关闭交易
-* 如何使用redis和zookeeper实现分布式锁
-* redlock，算法实现，争议点
+
 * 分布式事务的原理，优缺点，如何使用分布式事务，2pc 3pc 的区别
-* 一致性hash
 * 设计建立和保持100w的长连接
 * 解释什么是MESI协议(缓存一致性)
-* paxos算法， 什么是zab协议
 * 实现分布式环境下的countDownLatch
 
 * 限流策略，令牌桶和漏斗算法的使用场景
