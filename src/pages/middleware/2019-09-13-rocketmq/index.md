@@ -223,7 +223,7 @@ RocketMQ支持两种消息模式: Clustering和Broadcasting。
   有 一个 Consumer 无 法收到消息，其他 3 个 Consumer 各处理 Topic三分之一的消息。可见 Message Queue数量设置过小不利于做负载均衡， 
   通常情况下，应把一个 Topic 的 Message Queue 数设置为 16。
 * DefaultMQPullConsumer 的负载均衡， DefaultMQPullConsumer 有两个辅助方法可以帮助实现负载均衡，一个是 registerMessageQueueListener 函数，
-  该函数在有新的Consumer加人或退出时被触 发。 另一个辅助工具是 MQPullConsumerScheduleService类，使用这个 Class 类 似使用 DefaultM Q PushConsumer，
+  该函数在有新的Consumer加入或退出时被触 发。 另一个辅助工具是 MQPullConsumerScheduleService类，使用这个 Class 类 似使用 DefaultM Q PushConsumer，
   但是它把 Pull 消息的 主动 性留给了使用 者
  
 ### 死信队列
