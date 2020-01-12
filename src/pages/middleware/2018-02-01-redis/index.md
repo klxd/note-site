@@ -21,6 +21,11 @@ tags:
 
 ## string
 
+### string内部编码
+* raw 动态字符串编码
+* embstr：优化内存分配的字符串编码
+* int：整数编码
+
 ## 哈希
 ### 设置值
 * `hset key field value`
@@ -119,6 +124,8 @@ tags:
 
 ### set内部编码
 * intset 整数集合，当集合中元素都是整数且个数小于`set-max-intset-entries`(默认512个)时使用
+  intset的encoding为3种int16，int32和int64，当整数超出当前类型时自动升级且不能回退，
+  intset内部按升序存储了整数数组，插入速度为O(n)
 * hashtable 哈希表
 
 ### set使用情景
@@ -149,7 +156,68 @@ tags:
 * `zadd+zincrby`: 统计获赞数
 * `zrevrangebyrank key 0 9`：取排行榜前10名
 
+## 过期时间
+* `expire key seconds`: 键在seconds秒后过期，0表示键不存在，负值则键立刻被删除
+* `expireat key timestamp`: 键在秒级时间戳timestamp后过期
+* `ttl` & `pttl`：查询键的过期时间， 大于等于0：键的剩余过期时间； -1；没有过期时间； -2：键不存在
+* `pexpire key milliseconds`: milliseconds毫秒后过期
+* `pexpireat key millsseconds-timestamp`: 键在毫秒级时间戳后过期，所有过期相关命令的最终实现
+* `persist`：消除过期时间
+* 字符串的set指令会消除过期时间，setex作为set+expire的组合，是原子执行
+
+## 键遍历
+* `keys pattern`: 键过多时可能阻塞
+* `scan cursor [match-pattern] [count-number]`： 渐进式遍历, 
+   cursor为游标，第一次从0开始，每次遍历完返回当前游标的值，直到返回0结束，
+   match-pattern可选，与keys的模式匹配类似；
+   count-number表示每次要遍历的键的个数，默认为10，
+   注意scan遍历过程中若键有变化，则可能遍历漏或重复遍历
+* `hscan`，`sscan`和`zscan`分别代替`hgetall`，`smembers`和`zrange`，（lrange不存在阻塞问题，返回个数可自定义）
+   
+
+## Bitmaps
+使用字符串实现
+* `setbit key offset value`: value为0或1
+* `getbit key offset`：获取位置在offset的值
+* `bitcount key [start] [end]`: 获取指定范围中1的个数
+* `bitop op destkey key[key ...]`: op可以是 `and，or, not, xor`
+* `bitpos key targetBit [start][end]`: 计算Bitmaps中第一个值为targetBit的偏移量
+
+## HyperLogLog
+* 实际类型为字符串类型，提供一种基数算法，可以用极小的内存空间完成独立总数的统计，如IP，email，Id等
+* 指令`pfadd，pfcount，pfmerge`
+* 只计算独立总数，不需要获取单条数据
+* 可以容忍一定误差率，毕竟HyperLogLog在内存占用量上有很大优势
+
+
+## 发布订阅
+* `publish channel message`：发布消息
+* `subscribe channel [channel...]`: 订阅消息
+* 客户端执行订阅命令后则进入订阅状态，只能接收subscribe，unsubscribe，psubscribe，punsubscribe相关命令
+* 新开启订阅的客户端无法接收之前的消息，因为redis不会对消息做持久化
+
+## Jedis
+* Jedis中pipeline使用：pipeline = jedis.pipelined(); pipeline.del(String key)...; pipeline.sync();
+* Jedis.close()在直连下是关闭连接，在连接池则是归还连接
+* monitor: 能监听所有其他客户端的命令，但是可能redis的输出缓冲暴涨，占用大量内存
+
+## redis内存
+* 内存上限可以通过`config set maxMemory`进行动态修改
+* 过期键删除，redis中有两种策略
+   * 惰性删除，当客户端访问到过期键时执行删除操作
+   * 定时任务删除，维护一个定时任务，默认每秒运行10次，根据键的过期比例，采用快慢两种模式回收键
+* 内存溢出控制策略，由参数`maxmemory-policy`控制
+  1. noeviction：默认策略，不删除数据，但是拒绝所有写入操作
+  2. volatile-lru：根据lru算法删除设置了超时属性的键，若没有可删除的键，回到noeviction
+  3. allkeys-lru：不管键有没有超时属性，根据lru删除键
+  4. allkeys-random：随机删除键
+  5. volatile-random：随机删除过期键
+  6. volatile-ttl: 根据对象的ttl属性，删除即将要过期的数据，若没有则回到noeviction
+* 整数对象池：redis内部维护0-9999的整数对象池，注意对象池在使用volatile-lru和allkeys-lru相关淘汰策略时无效，ziplist也无法使用对象池
+
 ## 事务——Transactions
+* `multi`代表事务开始，`exec`/`discard`代表事务结束，他们之间的命令是原子执行的
+* 事务中有命令错误，则事务不执行，若是运行时错误，则事务部分执行，不支持*回滚*
 虽然 Redis 的 Transactions 提供的并不是严格的 ACID 的事务
 （比如一串用 EXEC 提交执行的命令，在执行中服务器宕机，那么会有一部分命令执行了，剩下的没执行）,
 但是这个 Transactions 还是提供了基本的命令打包执行的功能
@@ -184,10 +252,12 @@ MIGRATE target_host target_port key target_database id timeout
 在分布式系统中为了解决单点问题，通常会把数据复制多个副本部署到其他机器，满足故障恢复和负载均衡等需求。
 Redis也是如此，它为我们提供了复制功能，实现了相同数据的多个Redis副本。复制功能是高可用Redis的基础
 
-* 参与复制的Redis实例划分为主节点（master）和从节点（slave）。默认情况下，Redis都是主节点。每个从节点只能有一个主节点，而主节点可以同时具有多个从节点。
-  复制的数据流是单向的，只能由主节点复制到从节点。
+* 参与复制的Redis实例划分为主节点（master）和从节点（slave）。默认情况下，Redis都是主节点。每个从节点只能有一个主节点，
+  通过配置或命令`slaveof {masterHost}{masterPort}`实现。
+  而主节点可以同时具有多个从节点。复制的数据流是单向的，只能由主节点复制到从节点。
 * 默认情况下，从节点使用slave-read-only=yes配置为只读模式。由于复制只能从主节点到从节点，对于从节点的任何修改主节点都无法感知，
   修改从节点会造成主从数据不一致。因此建议线上不要修改从节点的只读模式。
+* 主从复制拓扑： 一主一从，一主多从，树状主从结构
 
 ## 主从节点模式下如何保持一致性
 从Redis 2.8版本开始，可以配置主服务器连接N个以上从服务器才允许对主服务器进行写操作。
@@ -219,16 +289,55 @@ Redis虽然是一种内存型数据库，一旦服务器进程退出，数据库
    * 载入, 优先使用AOF文件来还原数据, redis启动时只要检测到RDB文件的存在, 且没有AOF文件(AOF持久化功能关闭), 就会自动载入
      
 * AOF(Append Only File)持久化
-   * AOF持久化是通过保存Redis服务器所执行的写命令来记录数据库状态的。
-   * 命令请求会先保存到AOF缓冲区(内存)里面, 再定期写入并同步到AOF文件
-   * appendfsync选项的不同值对AOF持久化功能的安全性和服务器性能有很大影响
+   * AOF持久化是通过保存Redis服务器所执行的写命令来记录数据库状态的，配置`appendonly yes`来开启
+   * 命令请求会先保存到AOF缓冲区(内存)里面, 再定期写入并同步到AOF文件，类似rocketmq的异步刷盘
+   * appendfsync选项的不同值对AOF持久化功能的安全性和服务器性能有很大影响，`always，everysec，no`，常用`everysec`，最多丢失两秒的数据
    * AOF重写可以产生一个新的AOF文件, 这个新的文件和原有的文件所保存的数据库状态一样, 但体积更小
-   * AOF重写是通过读取数据库中的键值对来实现的,无须对现有的AOF文件进行任何分析操作
+   * AOF重写是通过读取数据库中的键值对来实现的,无须对现有的AOF文件进行任何分析操作，
+     手动触发`bgrewriteaof`命令，自动触发：配置`auto-aof-rewrite-min-size`和`auto-aof-rewrite-percentage`
 
 对比:
 * AOF更安全，可将数据及时同步到文件中，但需要较多的磁盘IO，AOF文件尺寸较大，文件内容恢复相对较慢， 也更完整。
-* RDB持久化，安全性较差，它是正常时期数据备份及master-slave数据同步的最佳手段，文件尺寸较小，恢复数度较快
+* RDB持久化，安全性较差，它是正常时期数据备份及master-slave数据同步的最佳手段，文件尺寸较小，恢复数度较快，
+  每次运行都要fork操作创建子进程，属于重量级操作
 
+
+## Redis高可用 Sentinel-哨兵
+Redis Sentinel是一个分布式架构，其中包含若干个Sentinel节点和Redis数据节点，每个Sentinel节点会对数据节点和其他Sentinel节点进行监控，
+当发现节点不可达时，会对节点做下线标识，如果被标识的是主节点，它会与其他Sentinel节点进行协商，当大多数Sentinel节点都任务主节点不可达时，
+选举出一个Sentinel节点来进行自动故障转移工作，同时会将这个变化实时通知给应用方
+哨兵的功能
+* 监控，定期检测数据节点和其他Sentinel节点
+* 通知，通知故障转移的结果给应用方
+* 主节点故障转移
+* 配置提供者：客户端初始化时连接的时Sentinel节点集合，从中获取主节点信息
+
+配置：`sentinel monitor <master-name> <ip> <port> <quorum>`
+
+### 哨兵架构下的客户端连接
+* 遍历Sentinel节点集合，找到一个可用的Sentinel节点
+* 通过`sentinel get-master-addr-by-name master-name`这个api获得主节点信息
+* 验证当前获取的主节点信息，防止故障转移时节点变化
+* 为Sentinel节点单独启动一个线程，订阅Sentinel节点上切换master相关的channel信息
+
+### 哨兵实现原理
+Sentinel三个定时监控任务
+1. 每隔10秒，每个Sentinel节点会向主节点和从节点发送info命令获取最新的*拓扑结构*
+2. 每隔两秒，每个Sentinel节点会向Redis数据节点的`__sentinel__:hello`频道发送该Sentinel节点对于主节点的判断和当前的Sentinel信息。
+3. 每隔1秒，每个Sentinel节点会向主节点、从节点和其余的Sentinel节点发送ping命令做心跳检测，确认节点是否可达
+
+主观下线，当前节点认为某节点下线；
+客观下线：超过`quorum`个Sentinel节点认为某节点下线
+
+### 领导者Sentinel节点选举 - Raft算法
+大致思路（Redis开发与运维9.5.3）
+1. 每个在线的Sentinel节点都有资格成为领导者，当它确认主节点主观下线时，会向其他Sentinel节点发送命令，要求将自己设置为领导者
+2. 收到命令的Sentinel节点，如果没有同意过其他Sentinel节点的请求命令，则同意该请求，否则拒绝
+3. 如果该Sentinel节点发现自己的票数大于等于`max(quorum, num(sentinels) / 2 + 1)`,那么它将成为领导者
+4. 如果此过程没有选举出领导者，将进入下次选举
+
+* <https://www.cnblogs.com/xybaby/p/10124083.html>
+* <https://www.cnblogs.com/mindwind/p/5231986.html>
 
 ## 缓存穿透
 
@@ -274,8 +383,6 @@ Redis虽然是一种内存型数据库，一旦服务器进程退出，数据库
 
 ##　Raft算法
 
-* <https://www.cnblogs.com/xybaby/p/10124083.html>
-* <https://www.cnblogs.com/mindwind/p/5231986.html>
 
 ## 一致性哈希
 
@@ -299,10 +406,15 @@ Redis虽然是一种内存型数据库，一旦服务器进程退出，数据库
 * 缓存预热
 
 * Redis有哪些数据结构？
-  字符串String、字典Hash、列表List、集合Set、有序集合SortedSet。如果你是Redis中高级用户，还需要加上下面几种数据结构HyperLogLog、Geo、Pub/Sub。如果你说还玩过Redis Module，像BloomFilter，RedisSearch，Redis-ML，面试官得眼睛就开始发亮了。
+  字符串String、字典Hash、列表List、集合Set、有序集合SortedSet。
+  如果你是Redis中高级用户，还需要加上下面几种数据结构HyperLogLog、Geo、Pub/Sub。
+  如果你说还玩过Redis Module，像BloomFilter，RedisSearch，Redis-ML，面试官得眼睛就开始发亮了。
   
 * 使用过Redis分布式锁么，它是什么回事？
-  先拿setnx来争抢锁，抢到之后，再用expire给锁加一个过期时间防止锁忘记了释放。这时候对方会告诉你说你回答得不错，然后接着问如果在setnx之后执行expire之前进程意外crash或者要重启维护了，那会怎么样？这时候你要给予惊讶的反馈：唉，是喔，这个锁就永远得不到释放了。紧接着你需要抓一抓自己得脑袋，故作思考片刻，好像接下来的结果是你主动思考出来的然后回答：我记得set指令有非常复杂的参数，这个应该是可以同时把setnx和expire合成一条指令来用的！对方这时会显露笑容，心里开始默念：摁，这小子还不错。
+  先拿setnx来争抢锁，抢到之后，再用expire给锁加一个过期时间防止锁忘记了释放。
+  这时候对方会告诉你说你回答得不错，然后接着问如果在setnx之后执行expire之前进程意外crash或者要重启维护了，那会怎么样？
+  这时候你要给予惊讶的反馈：唉，是喔，这个锁就永远得不到释放了。紧接着你需要抓一抓自己得脑袋，故作思考片刻，
+  好像接下来的结果是你主动思考出来的然后回答：我记得set指令有非常复杂的参数，这个应该是可以同时把setnx和expire合成一条指令来用的！
   
 * 假如Redis里面有1亿个key，其中有10w个key是以某个固定的已知的前缀开头的，如果将它们全部找出来？使用keys指令可以扫出指定模式的key列表。对方接着追问：如果这个redis正在给线上的业务提供服务，那使用keys指令会有什么问题？这个时候你要回答redis关键的一个特性：redis的单线程的。keys指令会导致线程阻塞一段时间，线上服务会停顿，直到指令执行完毕，服务才能恢复。这个时候可以使用scan指令，scan指令可以无阻塞的提取出指定模式的key列表，但是会有一定的重复概率，在客户端做一次去重就可以了，但是整体所花费的时间会比直接用keys指令长。
 
