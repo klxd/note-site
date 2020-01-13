@@ -25,17 +25,12 @@ import java.util.concurrent.ThreadLocalRandom;
 
 class Main {
     public static void main(String[] args) {
-        long a = Long.MIN_VALUE;
-        System.out.println(a);
-        System.out.println(String.valueOf(a).length());
-        System.out.println(63 - 10 - 12);
+        Main main = new Main();
 
-        long b = 1;
+        int [] arr = {-1, 10, -2, 30, 99};
+        main.quickSort(arr, 0, arr.length - 1);
+        System.out.println(Arrays.toString(arr));
 
-        System.out.println(1L << 41);
-        System.out.println(Math.pow(2, 41));
-
-        System.out.println((1L << 28) / (365 * 24 * 60 * 60));
     }
 
     public int singleNumber(int[] nums) {
@@ -48,6 +43,35 @@ class Main {
             two &= mask;
         }
         return one;
+    }
+
+    public void quickSort(int arr[], int left, int right) {
+        if (left >= right) {
+            return;
+        }
+        int p = partition(arr, left, right);
+        quickSort(arr, left, p - 1);
+        quickSort(arr, p + 1, right);
+    }
+
+    private int partition(int arr[], int left, int right) {
+        int pivot = arr[left];
+        int i = left, j = right;
+        while (true) {
+            while (arr[i] < pivot) {
+                i++;
+            }
+            while (arr[j] > pivot) {
+                j--;
+            }
+            if (i < j) {
+                int temp = arr[i];
+                arr[i++] = arr[j];
+                arr[j--] = temp;
+            } else {
+                return j;
+            }
+        }
     }
 
 }
