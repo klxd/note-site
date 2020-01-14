@@ -152,6 +152,9 @@ public class SnowflakeIdProvider implements IdProvider {
 哈希分区: 离散度好, 数据分布业务无关, 无法顺序访问, 代表产品: Redis Cluster, Cassandra, Dynamo
 顺序分区: 离散度易倾斜, 数据分布业务相关, 可以顺序访问, 代表产品: Bigtable, HBase, Hypertable
 
+## Raft算法
+[Raft 中文翻译]https://github.com/maemual/raft-zh_cn/blob/master/raft-zh_cn.md
+[raft-java实现](https://github.com/wenweihu86/raft-java)
 
 
 ## 配置中心Apollo

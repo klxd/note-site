@@ -123,4 +123,6 @@ Buffer的工作方式跟C语言里的字符数组非常的像，类比一下，c
 
 ## Q & A
 * IO模型有哪些, nio, bio，aio的区别, reactor模型
-* 
+
+
+[Java NIO浅析 (美团技术团队)](https://zhuanlan.zhihu.com/p/23488863)
