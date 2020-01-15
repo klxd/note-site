@@ -150,7 +150,7 @@ tags:
 
 ### zset内部编码
 * ziplist 压缩列表，当有序集合元素个数小于`zset-max-ziplist-entries`（默认128个），同时每个元素的值都小于`zset-max-ziplist-value`(默认64字节)
-* 无法使用ziplist时使用
+* skiplist: 无法使用ziplist时使用
 
 ### zset使用场景
 * `zadd+zincrby`: 统计获赞数

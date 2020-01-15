@@ -11,9 +11,9 @@ tags:
 
 * HashMap 的直接子类
 * 在 HashMap 的基础上，采用双向链表将所有的 entry 链接起来
-* 能保证迭代顺序与插入顺序相同
+* 能保证迭代顺序与*访问顺序*或*插入顺序*相同
 * 未实现同步（不是线程安全）
-*
+
 
 ```java
 public class LinkedHashMap<K,V>
@@ -46,6 +46,18 @@ public class LinkedHashMap<K,V>
         Entry(int hash, K key, V value, Node<K,V> next) {
             super(hash, key, value, next);
         }
+    }
+}
+```
+
+
+## LinkedHashMap实现LRU缓存
+LinkedHashMap留了一个方法用于决定是否删除最旧的entry, 可以重载这个方法根据业务决定是否返回true来删除最旧的entry,
+此方法会在put和putAll(每添加一个entry之后)中被调用.
+```java
+public class LinkedHashMap<K,V> {
+    protected boolean removeEldestEntry(Map.Entry<K,V> eldest) {
+        return false;
     }
 }
 ```

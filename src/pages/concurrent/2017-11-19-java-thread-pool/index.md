@@ -43,6 +43,14 @@ public class ScheduledThreadPoolExecutor
 ```
 
 ## ThreadPoolExecutor 详解
+构造参数
+* int corePoolSize: 核心线程数
+* int maximumPoolSize: 最大线程数
+* long keepAliveTime: 空闲线程存活时间
+* TimeUnit unit: 空闲线程存活时间单位
+* BlockingQueue<Runnable> workQueue: 工作队列
+* ThreadFactory threadFactory: 线程工厂
+* RejectedExecutionHandler handler: 拒绝策略
 
 ```java
 public class ThreadPoolExecutor extends AbstractExecutorService {
@@ -109,6 +117,55 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
     }
 }
 ```
+
+## 执行流程
+```java
+public class ThreadPoolExecutor extends AbstractExecutorService {
+    public void execute(Runnable command) {
+        if (command == null)
+            throw new NullPointerException();
+        /*
+         * Proceed in 3 steps:
+         *
+         * 1. If fewer than corePoolSize threads are running, try to
+         * start a new thread with the given command as its first
+         * task.  The call to addWorker atomically checks runState and
+         * workerCount, and so prevents false alarms that would add
+         * threads when it shouldn't, by returning false.
+         *
+         * 2. If a task can be successfully queued, then we still need
+         * to double-check whether we should have added a thread
+         * (because existing ones died since last checking) or that
+         * the pool shut down since entry into this method. So we
+         * recheck state and if necessary roll back the enqueuing if
+         * stopped, or start a new thread if there are none.
+         *
+         * 3. If we cannot queue task, then we try to add a new
+         * thread.  If it fails, we know we are shut down or saturated
+         * and so reject the task.
+         */
+        int c = ctl.get();
+        if (workerCountOf(c) < corePoolSize) {
+            if (addWorker(command, true))
+                return;
+            c = ctl.get();
+        }
+        if (isRunning(c) && workQueue.offer(command)) {
+            int recheck = ctl.get();
+            if (! isRunning(recheck) && remove(command))
+                reject(command);
+            else if (workerCountOf(recheck) == 0)
+                addWorker(null, false);
+        }
+        else if (!addWorker(command, false))
+            reject(command);
+    }
+}
+```
+* 新任务提交时, 若核心线程数未满, 尝试新建线程执行
+* 核心线程已满, 尝试放入任务队列
+* 任务队列已满, 尝试新建线程(不能超过最大线程数)
+* 以上都不满足, 执行拒绝策略
 
 ## FixedThreadPool
 

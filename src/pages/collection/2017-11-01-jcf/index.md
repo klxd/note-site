@@ -20,6 +20,7 @@ tags:
    * [ConcurrentHashMap](java-concurrent-hash-map)
 * Set
    * [HashSet](/java-hash-map#hash-set)
+   * [BitSet](/java-bit-set)
 
 
 ## interface Queue
@@ -62,7 +63,7 @@ public class Arrays {
 ```
 
 * 静态工具类,无法实例化
-* 内嵌一个 ArrayList 类,
+* 内嵌一个ArrayList类,
 
 ### Arrays.asList(T...a)
 
@@ -174,19 +175,8 @@ public class Arrays {
 * Arrays.ArrayList 直接将传入的数组作为底层容器
 * Arrays.ArrayList 没有实现`add`和`remove`等函数,若调用会直接抛出异常
 
-
-## 值得探索的集合类
-
-* BitSet
-* BlockingQueue
-
 ## Q
 
-* 怎么打印数组？ 怎样打印数组中的重复元素
 * Array 和 ArrayList 有什么区别？
-* 什么时候应该使用 Array 而不是 ArrayList
-* 数组和链表数据结构描述，各自的时间复杂度
 * 数组有没有 length()这个方法? String 有没有 length()这个方法
-* 队列和栈是什么，列出它们的区别
-* BlockingQueue 是什么
 * 简述 ConcurrentLinkedQueue 和 LinkedBlockingQueue 的用处和不同之处

@@ -57,7 +57,6 @@ AQS，非阻塞数据结构和原子变量类,这些 concurrent 包中的基础�
 基于AQS实现的同步器包括:ReentrantLock、Semaphore、ReentrantReadWriteLock、
 CountDownLatch和FutureTask
 
-## 
 
 ## 参考
 [Java CAS的理解](https://mritd.me/2017/02/06/java-cas/)

@@ -64,10 +64,10 @@ static class Node<K,V> implements Map.Entry<K,V> {
     }
 }
 ```
-* HashMap的底层节点
+* HashMap的底层节点, `Node<K,V>[] table`为底层数组
 * 实现了Map.Entry<K,V>接口, 保存了一个key-value键值对
 * 同时保存了hashCode的值,用于避免重复计算
-* 同时保存了下一个节点的值,用于???
+* 同时保存了下一个节点的值,用于实现冲突链表
 
 ## 内部域
 
@@ -365,7 +365,7 @@ final Node<K,V>[] resize() {
 ```
 
 * 扩容永远是将容量扩大一倍
-* 
+* 哈希值不用重新计算, 判断`e.hash & oldCap == 0`, 将就节点上的值放入高区间部分或低区间部分 
 
 ## tree
 JDK8 中 HashMap 引入了红黑树来处理哈希碰撞
@@ -395,6 +395,13 @@ final void treeifyBin(Node<K,V>[] tab, int hash) {
     }
 }
 ```
+
+## HashMap遍历
+* `Set<K> keySet()`: 遍历keys
+* `Collection<V> values()`: 遍历values
+* `Set<Map.Entry<K,V>> entrySet()`: 遍历entrySet, 最常用
+  * 底层实现HashMap.HashIterator, 遍历table拿到所有非空的node, 或其上的链表
+  * 时间复杂度O(table.length * 平均冲突链表的长度)
 
 ## Q
 
