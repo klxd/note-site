@@ -9,7 +9,7 @@ tags:
 ## 值得探索的问题
 
 * AOP的实现方法 - 动态代理
-* 控制反转的实现
+* 控制反转的实现 IoC的理解
 * Spring事务处理机制
 * Spring事务的传播属性
 
@@ -28,5 +28,8 @@ tags:
 * 过滤器和拦截器的区别 
  
 * spring sort for list 的应用
+
+* spring bean的加载模式？如何实现代理
+* 代理的几种模式？ gclib？
 
 ## 参考
