@@ -10,3 +10,16 @@ tags:
 * `<<`: 左移, 自动补0
 * `>>`: 右移, 根据符号位自动补1或0 `(-1 >> 1) == -1`
 * `>>>`: 无符号右移, 自动补0, `(-1 >>> 1) == Integer.MAX_VALUE`
+
+## Math.round
+* +0.5后向下取整
+```java
+System.out.println(Math.round(2.49)); // 2
+System.out.println(Math.round(-2.49)); // -2
+
+System.out.println(Math.round(2.5)); // 3
+System.out.println(Math.round(-2.5)); // -2
+
+System.out.println(Math.round(2.6)); // 3
+System.out.println(Math.round(-2.6)); // -3
+```

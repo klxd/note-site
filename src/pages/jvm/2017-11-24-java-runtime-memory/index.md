@@ -117,7 +117,7 @@ tags:
   * 适用于桌面应用(Client 模式),收集的内存不大,能在 100ms 內完成
 * ParNew
   * Serial 收集器的多线程版本,可**并行**,使用**复制**算法
-  * 唯一能与 CMS 收集器配合工作的新生代收集器
+  * **唯一**能与 CMS 收集器配合工作的新生代收集器
 * Parallel Scavenge
   * 新生代收集器,使用**复制**算法,可并行
   * 与其他收集器不同,不关注*用户线程的停顿时间*,而是关注**吞吐量**
@@ -180,7 +180,11 @@ tags:
   * 如果成立,则可以确保 MinorGC 是安全的
   * 如果不成立,则检查 HandlePromotionFailure(是否允许担保失败)
     * HandlePromotionFailure 为 true,继续检查最大的可用连续空间是否大于历次晋升到老年代对象的**平均大小**
-    * 如果小于,或者 HandlePromotionFailure 为 false,则改为进行 FullGC
+    * 如果小于,或者 HandlePromotionFailure 为 false,则改为进行FullGC
+    
+## 最佳实践
+* 不要分配大对象/数组, 大对象可能直接进入老年代, 可能引发后续的FGC
+* 注意内存泄露: 如ThreadLocal使用不当
     
 ## 常用虚拟机配置参数  (HotSpot虚拟机)
 
@@ -250,3 +254,4 @@ tags:
   XX:+UseCMSInitiatingOccupancyOnly。
 
 [关键业务系统jvm参数推荐](http://chen-tao.github.io/2017/01/10/jvm-param-rcmd-2016/)
+[Metaspace 之一：Metaspace整体介绍（永久代被替换原因、元空间特点、元空间内存查看分析方法）](https://www.cnblogs.com/duanxz/p/3520829.html)

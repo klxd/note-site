@@ -176,20 +176,97 @@ jstack用于打印出给定的java进程ID或core file或远程调试服务的Ja
         (to connect to a remote debug server)
 
 * 参数
-    * -F  当`jstack [-l] pid`没有相应(进程被挂起)的时候, 强制打印栈信息
+    * -F  当`jstack [-l] pid`没有响应(进程被挂起)的时候, 强制打印栈信息
     * -m  打印java虚拟机栈和本地方法栈的信息
     * -l  打印出关于锁的附加信息
 
-### jstat
+* 线程的状态
+  * Runnable: 该状态表示线程具备所有运行条件，在运行队列中准备操作系统的调度，或者正在运行。
+  * Wait on condition: 该状态出现在线程等待某个条件的发生。最常见的情况是线程在等待网络的读写, 也有可能是线程在sleep
+  * Waiting for monitor entry 和 in Object.wait(): 等待锁或者调用Object.wait()
+* 死锁自动检测, 线程Dump中可以直接报告出Java级别的死锁
+```
+Found one Java-level deadlock:
+
+=============================
+
+"Thread-1":
+
+waiting to lock monitor 0x0003f334 (object 0x22c19f18, a java.lang.Object),
+
+which is held by "Thread-0"
+
+"Thread-0":
+
+waiting to lock monitor 0x0003f314 (object 0x22c19f20, a java.lang.Object),
+
+which is held by "Thread-1"
+
+```
+
+
+### jstat (Java Virtual Machine Statistics Monitoring Tool)
+语法`jstat [ generalOption | outputOptions vmid [interval[s|ms] [count]]]`
+例子 `jstat -gcutil 8443 2s 10`: 查看pid为8443的进程的gc信息, 每2s一次, 打印10次;
 堆的使用情况进行实时的命令行的统计，使用jstat我们可以对指定的JVM做如下监控：
 
 - 类的加载及卸载情况
-
 - 查看新生代、老生代及持久代的容量及使用情况
-
 - 查看新生代、老生代及持久代的垃圾收集情况，包括垃圾回收的次数及垃圾回收所占用的时间
-
 - 查看新生代中Eden区及Survior区中容量及分配情况
+
+outputOptions -一个或多个输出选项，由单个的statOption选项组成，可以和-t, -h, and -J等选项配合使用。
+
+* class	用于查看类加载情况的统计
+* compiler	用于查看HotSpot中即时编译器编译情况的统计
+* gc	用于查看JVM中堆的垃圾收集情况的统计
+* gccapacity	用于查看新生代、老生代及持久代的存储容量情况
+* gccause	用于查看垃圾收集的统计情况（这个和-gcutil选项一样），如果有发生垃圾收集，它还会显示最后一次及当前正在发生垃圾收集的原因。
+* gcnew	用于查看新生代垃圾收集的情况
+* gcnewcapacity	用于查看新生代的存储容量情况
+* gcold	用于查看老生代及持久代发生GC的情况
+* gcoldcapacity	用于查看老生代的容量
+* gcpermcapacity	用于查看持久代的容量
+* gcutil	用于查看新生代、老生代及持代垃圾收集的情况
+* printcompilation	HotSpot编译方法的统计
+
+#### gcutil
+* S0	Heap上的 Survivor space 0 区已使用空间的百分比
+* S1	Heap上的 Survivor space 1 区已使用空间的百分比
+* E	    Heap上的 Eden space 区已使用空间的百分比
+* O	    Heap上的 Old space 区已使用空间的百分比
+* M     Metaspace utilization(元空间)已使用空间的百分比.
+* P	    Perm space 区已使用空间的百分比 (java1.8之后已废弃, 无此列)
+* YGC	从应用程序启动到采样时发生 Young GC 的次数
+* YGCT	从应用程序启动到采样时 Young GC 所用的时间(单位秒)
+* FGC	从应用程序启动到采样时发生 Full GC 的次数
+* FGCT	从应用程序启动到采样时 Full GC 所用的时间(单位秒)
+* GCT	从应用程序启动到采样时用于垃圾回收的总时间(单位秒)，它的值等于YGC+FGC
+
+```
+  S0     S1     E      O      M     CCS    YGC     YGCT    FGC    FGCT     GCT   
+  1.12   0.00  14.86  49.30  95.12  92.59 305592 2411.072   206   26.933 2438.005
+  1.12   0.00  38.48  49.30  95.12  92.59 305592 2411.072   206   26.933 2438.005
+  1.12   0.00  66.03  49.30  95.12  92.59 305592 2411.072   206   26.933 2438.005
+  1.12   0.00  87.06  49.30  95.12  92.59 305592 2411.072   206   26.933 2438.005
+  0.00   1.26   7.89  49.30  95.12  92.59 305593 2411.079   206   26.933 2438.013
+  0.00   1.26  33.05  49.30  95.12  92.59 305593 2411.079   206   26.933 2438.013
+  0.00   1.26  54.24  49.30  95.12  92.59 305593 2411.079   206   26.933 2438.013
+  0.00   1.26  85.42  49.30  95.12  92.59 305593 2411.079   206   26.933 2438.013
+  0.82   0.00  22.25  49.32  95.12  92.59 305594 2411.087   206   26.933 2438.020
+  0.82   0.00  39.81  49.32  95.12  92.59 305594 2411.087   206   26.933 2438.020
+```
+
+```
+# ps -p 16 -o etime
+    ELAPSED
+46-07:14:21
+```
+* 容器运行46天7小时, 发生206次FGC(每五个小时发生一次), 总时长26.933秒(每次131ms)
+* 每13秒一次YGC(每分钟4.5次), 总时长2411.072秒, 每次7.8ms
+
+## jmap
+* `jmap -F -dump:format=b,file=heapDump 1 #1是进程号`, 生成的heapDump文件有将近2个G的大小, 可使用VisualVM分析
 
 ## netstat
 列出系统上所有的网络套接字连接情况，包括 tcp, udp 以及 unix 套接字，

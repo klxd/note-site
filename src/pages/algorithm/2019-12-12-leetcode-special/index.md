@@ -87,7 +87,7 @@ class Solution {
             if (nums[i] > nums[k]) {
                 l = i;
                 break;
-            }
+            } 
         }
 
         int temp = nums[k];

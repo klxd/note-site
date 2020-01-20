@@ -1,3 +1,4 @@
+import javax.xml.bind.SchemaOutputResolver;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,6 +31,15 @@ class Main {
         int [] arr = {-1, 10, -2, 30, 99};
         main.quickSort(arr, 0, arr.length - 1);
         System.out.println(Arrays.toString(arr));
+
+        System.out.println(Math.round(2.49)); // 2
+        System.out.println(Math.round(-2.49)); // -2
+
+        System.out.println(Math.round(2.5)); // 3
+        System.out.println(Math.round(-2.5)); // -2
+
+        System.out.println(Math.round(2.6)); // 3
+        System.out.println(Math.round(-2.6)); // -3
 
     }
 

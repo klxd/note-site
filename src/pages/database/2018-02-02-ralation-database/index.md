@@ -76,6 +76,8 @@ oracle默认隔离级别 Read committed
 对于JDBC操作数据库来说，一个Connection对象相当于一个链接，
 而对于Connection对象设置的隔离级别只对该Connection对象有效，与其他链接Connection对象无关。
 
+[Innodb中的事务隔离级别和锁的关系](https://tech.meituan.com/2014/08/20/innodb-lock.html)
+
 ### 隔离级别的实现
 #### 锁
 锁是一种最为常见的并发控制机制，在一个事务中，我们并不会将整个数据库都加锁，
