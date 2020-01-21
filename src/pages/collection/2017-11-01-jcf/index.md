@@ -175,6 +175,15 @@ public class Arrays {
 * Arrays.ArrayList 直接将传入的数组作为底层容器
 * Arrays.ArrayList 没有实现`add`和`remove`等函数,若调用会直接抛出异常
 
+## Java集合类中的Iterator和ListIterator的区别对
+List来说，你也可以通过listIterator()取得其迭代器，两种迭代器在有些时候是不能通用的，Iterator和ListIterator主要区别在以下方面：
+* iterator()方法在set和list接口中都有定义，但是ListIterator()仅存在于list接口中（或实现类中）；
+* ListIterator有add()方法，可以向List中添加对象，而Iterator不能ListIterator和Iterator都有hasNext()和next()方法，可以实现顺序向后遍历，
+  但是ListIterator有hasPrevious()和previous()方法，可以实现逆向（顺序向前）遍历。Iterator就不可以。
+* ListIterator可以定位当前的索引位置，nextIndex()和previousIndex()可以实现。Iterator没有此功能。
+* 都可实现删除对象，但是ListIterator可以实现对象的修改，set()方法可以实现。Iierator仅能遍历，不能修改。
+   
+
 ## Q
 
 * Array 和 ArrayList 有什么区别？

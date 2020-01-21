@@ -3,6 +3,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,21 +26,20 @@ import java.util.concurrent.ThreadLocalRandom;
 
 
 class Main {
+    private static final ThreadLocal<SimpleDateFormat> threadLocal1 =  new ThreadLocal<SimpleDateFormat>() {
+        @Override
+        protected SimpleDateFormat initialValue() {
+            return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        }
+    };
+
+    private static final ThreadLocal<SimpleDateFormat> threadLocal2 = ThreadLocal.withInitial(() ->
+            new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+
+
+
     public static void main(String[] args) {
         Main main = new Main();
-
-        int [] arr = {-1, 10, -2, 30, 99};
-        main.quickSort(arr, 0, arr.length - 1);
-        System.out.println(Arrays.toString(arr));
-
-        System.out.println(Math.round(2.49)); // 2
-        System.out.println(Math.round(-2.49)); // -2
-
-        System.out.println(Math.round(2.5)); // 3
-        System.out.println(Math.round(-2.5)); // -2
-
-        System.out.println(Math.round(2.6)); // 3
-        System.out.println(Math.round(-2.6)); // -3
 
     }
 

@@ -66,6 +66,24 @@ public class ThreadLocal<T> {
 }
 ```
 
+## 使用方法
+* 设置初始值
+```java
+class Main {
+    // 传统内部类写法
+    private static final ThreadLocal<SimpleDateFormat> threadLocal1 =  new ThreadLocal<SimpleDateFormat>() {
+        @Override
+        protected SimpleDateFormat initialValue() {
+            return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        }
+    };
+
+    // 1.8之后
+    private static final ThreadLocal<SimpleDateFormat> threadLocal2 = ThreadLocal.withInitial(() ->
+            new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+}
+```
+
 ## 实现原理
 
 
@@ -166,17 +184,19 @@ public class ThreadLocal<T> {
 底层实现分析：
 * ThreadLocal 本身并不存储值，它只是作为一个 key 来让线程从 ThreadLocalMap 获取 value。
 * 值得注意的是图中的虚线，表示 ThreadLocalMap 是使用 ThreadLocal 的弱引用作为 Key 的，
-  弱引用的对象在 GC 时会被回收。
+  弱引用的对象在 GC 时会被回收。使用弱引用是防止当threadLocal对象不再被需要时, 由于thread对象持有它的引用, 导致其不能被回收
   
 内存泄漏产生情景：  
-* 如果一个ThreadLocal没有外部强引用来引用它，那么系统 GC 的时候，这个ThreadLocal势必会被回收，
+* 如果一个ThreadLocal没有外部强引用来引用它，那么系统 GC 的时候，这个ThreadLocal势必会被回收
+  (只要对象被除WeakReference对象之外所有的对象解除引用后，该对象便可以被GC回收)，
   这样一来，ThreadLocalMap中就会出现key为null的Entry，就没有办法访问这些key为null的Entry的value。
-* 如果当前线程再迟迟不结束的话，这些key为null的Entry的value就会一直存在一条强引用链：
+* 如果当前线程再迟迟不结束的话(如使用了线程池复用线程)，这些key为null的Entry的value就会一直存在一条强引用链：
   Thread Ref -> Thread -> ThreaLocalMap -> Entry -> value  
 
 预防手段：
 * ThreadLocalMap的设计中已经考虑到这种情况，也加上了一些防护措施：
    在ThreadLocal的get(),set(),remove()的时候都会清除线程ThreadLocalMap里所有key为null的value。
+* 最佳实践, 当不再使用一个ThreadLocal对象时, 需要调用threadLocal.remove(), 再使用threadLocal=null
 
 预防措施并不能保证不会内存泄漏：
 * 使用static的ThreadLocal，延长了ThreadLocal的生命周期，可能导致的内存泄漏
@@ -186,3 +206,4 @@ public class ThreadLocal<T> {
 ## 参考资料
 * **Java并发编程实战 第3章第3节**
 * [深入分析 ThreadLocal 内存泄漏问题](http://www.importnew.com/22039.html)
+* [正确理解Thread Local的原理与适用场景](http://www.jasongj.com/java/threadlocal/)

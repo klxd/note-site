@@ -248,6 +248,17 @@ Redis虽然是一种内存型数据库，一旦服务器进程退出，数据库
 * RDB持久化，安全性较差，它是正常时期数据备份及master-slave数据同步的最佳手段，文件尺寸较小，恢复数度较快，
   每次运行都要fork操作创建子进程，属于重量级操作
 
+## 开发规范
+【强制】：拒绝bigkey(防止网卡流量、慢查询)
+
+string类型控制在10KB以内，hash、list、set、zset元素个数不要超过5000。
+
+反例：一个包含200万个元素的list。
+
+非字符串的bigkey，不要使用del删除，使用hscan、sscan、zscan方式渐进式删除，同时要注意防止bigkey过期时间自动删除问题(例如一个200万的zset设置1小时过期，
+会触发del操作，造成阻塞，而且该操作不会出现在慢查询中(latency可查)
+
+[Redis开发规范解析-bigkey](https://mp.weixin.qq.com/s?__biz=Mzg2NTEyNzE0OA==&mid=2247483677&idx=1&sn=5c320b46f0e06ce9369a29909d62b401)
 
 # 缓存设计
 
@@ -360,6 +371,11 @@ Redis虽然是一种内存型数据库，一旦服务器进程退出，数据库
   Redis Sentinel着眼于高可用，在master宕机时会自动将slave提升为master，继续提供服务。
   Redis Cluster着眼于扩展性，在单个redis内存不足时，使用Cluster进行分片存储
 
+* Redis 如何做内存优化
+  * 缩减key的长度(能标识业务即可),缩减value长度,用更高效的序列化工具,存储二进制数据而不是字符串等
+  * redis中`0-9999`的整数共享对象池, 开发中使用整数存储值能减少内存使用
+  * redis能自动做编码优化, 可通过配置适当调整
+  * 控制外层键的数量, 可使用hash或set降低外层键的数量
 
 * [50道Redis题目](https://mp.weixin.qq.com/s?__biz=MzI3ODcxMzQzMw==&mid=2247486734&idx=2&sn=d8454c6cbd09ab60ef5a728a36c19e8c&chksm=eb538838dc24012e15b813df90a115803c243eb6a242c052d684c6c3819b5f3300f3a2d482be&scene=21#wechat_redirect)
 

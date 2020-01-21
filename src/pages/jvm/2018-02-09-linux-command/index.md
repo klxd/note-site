@@ -156,8 +156,18 @@ Processes: 301 total, 2 running, 299 sleeping, 1414 threads
 统计文件数量
 `ls -l | wc -l`
 
-## JVM线程数
+## netstat
+列出系统上所有的网络套接字连接情况，包括 tcp, udp 以及 unix 套接字，
+另外它还能列出处于监听状态（即等待接入请求）的套接字
 
+* -a 列出当前所有连接
+* -t 列出tcp协议的连接
+* -u 列出udp协议的连接
+* -n 禁用方向域名解析（查找IP对应的主机名），加快查找速度
+* -p 查看进程信息
+
+
+## JVM线程数
 
 
 ## JVM实时状态监控
@@ -265,25 +275,164 @@ outputOptions -一个或多个输出选项，由单个的statOption选项组成�
 * 容器运行46天7小时, 发生206次FGC(每五个小时发生一次), 总时长26.933秒(每次131ms)
 * 每13秒一次YGC(每分钟4.5次), 总时长2411.072秒, 每次7.8ms
 
-## jmap
-* `jmap -F -dump:format=b,file=heapDump 1 #1是进程号`, 生成的heapDump文件有将近2个G的大小, 可使用VisualVM分析
+## jmap (Java Memory Map)
+打印出某个java进程（使用pid）内存内的，所有‘对象’的情况（如：产生那些对象，及其数量）。
+* 直接使用
+```
+# jmap 16
+Attaching to process ID 16, please wait...
+Debugger attached successfully.
+Server compiler detected.
+JVM version is 25.201-b09
+0x0000000000400000      8K      /usr/java/jdk1.8.0_201-amd64/jre/bin/java
+0x00007f5025baa000      88K     /lib64/libgcc_s-4.4.7-20120601.so.1
+0x00007f5025dc0000      276K    /usr/java/jdk1.8.0_201-amd64/jre/lib/amd64/libsunec.so
+0x00007f5092cdd000      108K    /lib64/libresolv-2.12.so
+0x00007f5092ef7000      26K     /lib64/libnss_dns-2.12.so
+0x00007f50d8d1c000      91K     /usr/java/jdk1.8.0_201-amd64/jre/lib/amd64/libnio.so
+0x00007f50d8f2e000      114K    /usr/java/jdk1.8.0_201-amd64/jre/lib/amd64/libnet.so
+0x00007f50d9146000      50K     /usr/java/jdk1.8.0_201-amd64/jre/lib/amd64/libmanagement.so
+0x00007f50ff0a8000      124K    /usr/java/jdk1.8.0_201-amd64/jre/lib/amd64/libzip.so
+0x00007f50ff2c4000      64K     /lib64/libnss_files-2.12.so
+0x00007f50ff4d2000      226K    /usr/java/jdk1.8.0_201-amd64/jre/lib/amd64/libjava.so
+0x00007f50ff701000      64K     /usr/java/jdk1.8.0_201-amd64/jre/lib/amd64/libverify.so
+0x00007f50ff910000      42K     /lib64/librt-2.12.so
+0x00007f50ffb18000      582K    /lib64/libm-2.12.so
+0x00007f50ffd9c000      16645K  /usr/java/jdk1.8.0_201-amd64/jre/lib/amd64/server/libjvm.so
+0x00007f5100d85000      1875K   /lib64/libc-2.12.so
+0x00007f5101119000      19K     /lib64/libdl-2.12.so
+0x00007f510131d000      106K    /usr/java/jdk1.8.0_201-amd64/jre/lib/amd64/jli/libjli.so
+0x00007f5101535000      139K    /lib64/libpthread-2.12.so
+0x00007f5101752000      151K    /lib64/ld-2.12.so
+```
+* `jmap -dump:<dump-options>`: 以hprof二进制格式转储Java堆到指定filename的文件中(为了保证dump的信息是可靠的,所以会暂停应用,线上系统慎用)。
+  live子选项是可选的。如果指定了live子选项, 堆中只有活动的对象会被转储。想要浏览heap dump，你可以使用jhat(Java堆分析工具)读取生成的文件。
+  示例: `jmap -F -dump:format=b,file=heapDump 1 #1是进程号`, 生成的heapDump文件有将近2个G的大小, 可使用VisualVM分析
+  * -F 强迫.在pid没有相应的时候使用-dump或者-histo参数. 在这个模式下,live子参数无效.
 
-## netstat
-列出系统上所有的网络套接字连接情况，包括 tcp, udp 以及 unix 套接字，
-另外它还能列出处于监听状态（即等待接入请求）的套接字
+* -heap: 打印一个堆的摘要信息，包括使用的GC算法、堆配置信息和各内存区域内存使用信息
 
-* -a 列出当前所有连接
-* -t 列出tcp协议的连接
-* -u 列出udp协议的连接
-* -n 禁用方向域名解析（查找IP对应的主机名），加快查找速度
-* -p 查看进程信息
+```
+# jmap -heap 16
+Attaching to process ID 16, please wait...
+Debugger attached successfully.
+Server compiler detected.
+JVM version is 25.201-b09
 
+using parallel threads in the new generation.
+using thread-local object allocation.
+Concurrent Mark-Sweep GC
+
+Heap Configuration:
+   MinHeapFreeRatio         = 40
+   MaxHeapFreeRatio         = 70
+   MaxHeapSize              = 2147483648 (2048.0MB)
+   NewSize                  = 805306368 (768.0MB)
+   MaxNewSize               = 805306368 (768.0MB)
+   OldSize                  = 1342177280 (1280.0MB)
+   NewRatio                 = 2
+   SurvivorRatio            = 8
+   MetaspaceSize            = 268435456 (256.0MB)
+   CompressedClassSpaceSize = 1073741824 (1024.0MB)
+   MaxMetaspaceSize         = 17592186044415 MB
+   G1HeapRegionSize         = 0 (0.0MB)
+
+Heap Usage:
+New Generation (Eden + 1 Survivor Space):
+   capacity = 724828160 (691.25MB)
+   used     = 251852944 (240.18568420410156MB)
+   free     = 472975216 (451.06431579589844MB)
+   34.74657276008703% used
+Eden Space:
+   capacity = 644349952 (614.5MB)
+   used     = 250814512 (239.1953582763672MB)
+   free     = 393535440 (375.3046417236328MB)
+   38.925200695910036% used
+From Space:
+   capacity = 80478208 (76.75MB)
+   used     = 1038432 (0.990325927734375MB)
+   free     = 79439776 (75.75967407226562MB)
+   1.2903269416734529% used
+To Space:
+   capacity = 80478208 (76.75MB)
+   used     = 0 (0.0MB)
+   free     = 80478208 (76.75MB)
+   0.0% used
+concurrent mark-sweep generation:
+   capacity = 1342177280 (1280.0MB)
+   used     = 550666560 (525.1565551757812MB)
+   free     = 791510720 (754.8434448242188MB)
+   41.02785587310791% used
+
+42154 interned Strings occupying 5627216 bytes.
+```
+* `jmap -histo:live pid`: 显示堆中对象的统计信息
+   其中包括每个Java类、对象数量、内存大小(单位：字节)、完全限定的类名。打印的虚拟机内部的类名称将会带有一个’*’前缀。如果指定了live子选项，则只计算活动的对象。
+   如果连用SHELL `jmap -histo pid>a.log`可以将其保存到文本中去，在一段时间后，使用文本对比工具，可以对比出GC回收了哪些对象
+```
+#jmap -histo:live 16
+
+ num     #instances         #bytes  class name
+----------------------------------------------
+   1:        348055       55798856  [C
+   2:         39739       52493232  [B
+   3:        222390       14232960  com.mysql.jdbc.ConnectionPropertiesImpl$BooleanConnectionProperty
+   4:        320557       10257824  java.util.Hashtable$Entry
+   5:        344560        8269440  java.lang.String
+   6:         17009        5410464  [Ljava.util.HashMap$Node;
+   7:         81190        5196160  com.mysql.jdbc.ConnectionPropertiesImpl$StringConnectionProperty
+   8:         61335        4039000  [Ljava.lang.Object;
+   9:         52950        3388800  com.mysql.jdbc.ConnectionPropertiesImpl$IntegerConnectionProperty
+  10:        100025        3200800  java.util.HashMap$Node
+  11:          2999        2825728  [Ljava.util.Hashtable$Entry;
+  12:         29751        2618088  java.lang.reflect.Method
+  13:         81364        2603648  java.util.concurrent.ConcurrentHashMap$Node
+  14:         20946        2360872  [I
+  15:         19851        2230216  java.lang.Class
+  16:          1765        2174480  com.mysql.jdbc.JDBC4Connection
+  17:        103851        1661616  java.lang.Object
+  18:         33104        1588992  org.apache.tomcat.util.buf.ByteChunk
+  19:         32300        1550400  org.apache.tomcat.util.buf.CharChunk
+  20:         32100        1540800  org.apache.tomcat.util.buf.MessageBytes
+  21:         34527        1381080  java.util.LinkedHashMap$Entry
+  22:         51927        1246248  java.util.ArrayList
+  23:         10611        1188432  java.net.SocksSocketImpl
+  24:         15839         886984  java.util.LinkedHashMap
+  25:           542         884976  [Ljava.util.concurrent.ConcurrentHashMap$Node;
+  26:           200         818304  [Ljava.nio.ByteBuffer;
+  27:         20156         806240  java.lang.ref.SoftReference
+  28:         12407         595536  java.util.HashMap
+  29:         22498         539952  java.util.LinkedList$Node
+  30:         12294         511864  [Ljava.lang.String;
+  31:         23544         509176  [Ljava.lang.Class;
+  32:         10604         508992  java.net.SocketInputStream
+  33:         10604         508992  java.net.SocketOutputStream
+  34:         15269         488608  java.util.LinkedList
+  35:          4153         465136  java.util.GregorianCalendar
+  36:         10988         439520  java.lang.ref.Finalizer
+  37:          4154         398784  sun.util.calendar.Gregorian$Date
+  38:          5295         381240  com.mysql.jdbc.ConnectionPropertiesImpl$MemorySizeConnectionProperty
+  39:         23379         374064  java.lang.Integer
+  40:         11139         356448  java.lang.ref.WeakReference
+  41:         11131         356192  java.io.FileDescriptor
+  42:         10607         339424  java.net.Socket
+  43:          8052         322080  io.shardingsphere.core.parsing.parser.context.orderby.OrderItem
+  44:          4998         319872  com.google.protobuf.DescriptorProtos$FieldDescriptorProto
+  45:          3928         314240  java.lang.reflect.Constructor
+  46:          9294         297408  org.antlr.v4.runtime.atn.ATNConfig
+  ...
+  Total       2786540      216239448
+```
 
 # Q & A
 * 如何用工具分析jvm状态（visualVM看堆中对象的分配，对象间的引用、是否有内存泄漏，jstack看线程状态、是否死锁等等）
 * linux怎么看一个端口被什么进程占用（lsof -i:xxx）
 * Linux的磁盘管理
 * Linux怎么查看系统负载情况
+* 图形化调试工具, 
+   * jconsole: JVM中内存，线程,类,JVM摘要,MBeans等信息
+   * jvisualvm, 可以直接查看heap dump, 类实例内存占用比; 也能直接查看thread dump
+   * MAT(Memory Analyzer Tool,一个基于Eclipse的内存分析工具)
 
 ## 参考
 * [Java 命令行工具的使用](http://blog.csdn.net/fenglibing/article/details/6411951)
