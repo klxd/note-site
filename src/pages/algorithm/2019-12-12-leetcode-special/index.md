@@ -370,57 +370,6 @@ class Solution {
 }
 ```
 
-## 74. Search a 2D Matrix
-给出一个每行依次递增的矩阵,从中搜索元素
-O(log(n * m)), 当成有序数组处理,二分搜索
-```java
-class Solution {
-    public boolean searchMatrix(int[][] mat, int target) {
-        if (mat.length == 0) {
-            return false;
-        }
-        int n = mat.length, m = mat[0].length;
-        int left = 0, right = n * m - 1;
-        while (left <= right) {
-            int mid = left + ((right - left) >> 1);
-            int x = mid / m, y = mid % m;
-            if (mat[x][y] > target) {
-                right = mid - 1;
-            } else if (mat[x][y] < target) {
-                left = mid + 1;
-            } else {
-                return true;
-            }
-        }
-        return false;
-    }
-}
-```
-
-## 240. Search a 2D Matrix II
-给出一个行列分别递增的矩阵,从中搜索元素
-O(n+m), 从右上开始搜索,每次排除一行或者一列
-```java
-class Solution {
-    public boolean searchMatrix(int[][] mat, int target) {
-        if (mat.length == 0) {
-            return false;
-        }
-        int x = 0, y = mat[0].length - 1;
-        while (x < mat.length && y >= 0) {
-            if (mat[x][y] > target) {
-                y--;
-            } else if (mat[x][y] < target) {
-                x++;
-            } else {
-                return true;
-            }
-        }
-        return false;
-    }
-}
-```
-
 
 ## 81. Search in Rotated Sorted Array II
 todo

@@ -6,6 +6,10 @@ tags:
    - spring
 ---
 
+## Spring Boot特性
+* 内嵌了如Tomcat，Jetty和Undertow这样的容器
+* 可以自动配置Spring
+
 ## Spring Boot 的自动配置是如何实现的？
 Spring Boot 项目的启动注解是：@SpringBootApplication，其实它就是由下面三个注解组成的：
 

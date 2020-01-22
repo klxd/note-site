@@ -26,21 +26,38 @@ import java.util.concurrent.ThreadLocalRandom;
 
 
 class Main {
-    private static final ThreadLocal<SimpleDateFormat> threadLocal1 =  new ThreadLocal<SimpleDateFormat>() {
-        @Override
-        protected SimpleDateFormat initialValue() {
-            return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        }
-    };
-
-    private static final ThreadLocal<SimpleDateFormat> threadLocal2 = ThreadLocal.withInitial(() ->
-            new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
-
-
 
     public static void main(String[] args) {
         Main main = new Main();
+        int[][] mat = {
+                {1, 5, 9},
+                {10, 11, 13},
+                {12, 13, 15}};
+        int[][] mat2 = {
+                {1, 2},
+                {1, 3},
+        };
+        System.out.println(main.kthSmallest(mat2, 2));
+    }
 
+    public int kthSmallest(int[][] mat, int k) {
+        int n = mat.length, row = 0, col = n - 1;
+        while (true) {
+            int cntLt = 0, cntLe = 0, colLt = n - 1, colLe = n - 1;
+            for (int i = 0; i < n; i++) {
+                while (colLt >= 0 && mat[i][colLt] >= mat[row][col]) colLt--;
+                while (colLe >= 0 && mat[i][colLe] > mat[row][col]) colLe--;
+                cntLt += colLt + 1;
+                cntLe += colLe + 1;
+            }
+            if (cntLe < k) {
+                row++;
+            } else if (cntLt >= k) {
+                col--;
+            } else {
+                return mat[row][col];
+            }
+        }
     }
 
     public int singleNumber(int[] nums) {
