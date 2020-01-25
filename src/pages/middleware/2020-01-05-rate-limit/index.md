@@ -115,3 +115,5 @@ final long reserveEarliestAvailable(int requiredPermits, long nowMicros) {
 
 
 * [限流原理解读之guava中的RateLimiter](https://juejin.im/post/5bb48d7b5188255c865e31bc)
+
+.[Java杂记限流小结](https://mp.weixin.qq.com/s/seBL3l6IeZV9F9fMDhhWyw)
