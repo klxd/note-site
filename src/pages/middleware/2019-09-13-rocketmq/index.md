@@ -1,7 +1,7 @@
 ---
 title: Rocket MQ学习笔记
 date: "2019-09-13T22:22:22.169Z"
-path:  "/kafka"
+path:  "/rocketmq-note"
 tags:
    - middleware
    - rocketmq
