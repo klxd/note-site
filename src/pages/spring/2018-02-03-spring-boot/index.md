@@ -42,3 +42,10 @@ spring.datasource.hikari.connection-test-query=SELECT 1
 ## 端口信息如何配置
 
 ## spring boot中对数据库乐观锁的支持(@version注解)
+
+## Q & A
+* Spring Boot零配置如何实现
+* Springmvc中如何嵌入tomcat，如何把web。xml去掉
+* spring boot中监听器和设计模式中观察者模式的关系，模拟java中事件驱动编程模型
+* Spring boot启动流程分析，如何初始化DispatchServlet和tomcat
+* Spring boot配置文件类型，语法和加载顺序

@@ -16,3 +16,10 @@ Ribbon和Feign都是用于调用其他服务的，不过方式不同。
 ## Q & A
 [SpringBoot和SpringCloud面试题](https://swenfang.github.io/2019/05/12/%E9%9D%A2%E8%AF%95%E6%80%BB%E7%BB%93/SpringBoot%E5%92%8CSpringCloud%E9%9D%A2%E8%AF%95%E9%A2%98/)
 [Spring Cloud底层原理](https://juejin.im/post/5be13b83f265da6116393fc7)
+
+* Eureka服务注册机制和心跳和保护机制，eureka对比zookeeper，CAP原则
+* Ribbon负载均衡，核心组件IRule
+* Fegin源码分析和声明式服务调用，如何与Hystrix结合
+* Hystrix实现服务限流降级
+* Zuul统一网关详解，服务路由和过滤器使用等
+* 分布式配置中心Config，如何与github和gitlab结合

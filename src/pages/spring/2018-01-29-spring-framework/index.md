@@ -29,8 +29,11 @@ tags:
   当经过上述几个步骤后，bean对象已经被正确构造，但如果你想要对象被使用前再进行一些自定义的处理，就可以通过BeanPostProcessor接口实现。 该接口提供了两个函数：
   * postProcessBeforeInitialization( Object bean, String beanName ) 当前正在初始化的bean对象会被传递进来，我们就可以对这个bean作任何处理。
     这个函数会先于InitializingBean执行，因此称为前置处理。 所有Aware接口的注入就是在这一步完成的。
+    @Autowired注解就是通过postProcessBeforeInitialization实现的（AutowiredAnnotationBeanPostProcessor）。
+    `@Post`
   * postProcessAfterInitialization( Object bean, String beanName ) 当前正在初始化的bean对象会被传递进来，我们就可以对这个bean作任何处理。
-    这个函数会在InitializingBean完成后执行，因此称为后置处理。
+    这个函数会在InitializingBean完成后执行，因此称为后置处理。注意此方法是在InitializingBean与init-method之后调用, 
+    完成spring-aop代理是在此步骤完成， `wrappedBean = applyBeanPostProcessorAfterInitialization(...)`
     
 5. InitializingBean与init-method
   当BeanPostProcessor的前置处理完成后就会进入本阶段。 
@@ -84,6 +87,17 @@ tags:
 * 后置通知(After Advice): 无论连接点是通过什么方式退出的(正常返回或者抛出异常)都会执行在结束后执行这些Advice。通过@After注解使用。
 * 围绕通知(Around Advice): 围绕连接点执行的Advice，这是最强大的Advice, 通常说的拦截器类型的advice。通过 @Around注解使用,
   如作用于controller上的Advice`@Around("execution(public * com.company.web.controller.*Controller.*(..))")`
+
+## 扩展Spring的几种方式
+基于XML配置的扩展 1.定义schema 2.创建NamespaceHandler 3.注册Spring handler和Spring schema
+
+基于Java配置的扩展
+自定义注解
+自定义ImportBeanDefinitionRegistrar实现
+[扩展Spring的几种方式](https://blog.csdn.net/liyantianmin/article/details/81049579)
+
+## FactoryBean和BeanFactory的区别
+* 实例化时机， 单例池
 
 ## 值得探索的问题
 

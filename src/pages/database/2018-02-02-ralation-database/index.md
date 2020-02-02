@@ -308,6 +308,59 @@ innodb在创建或重建B树索引时执行批量加载.这种索引构建方法
 * 数据库列有索引， 什么时候不使用索引
 * 两个列都有索引，优先使用哪个索引
 
+## explain
+Explain命令在解决数据库性能上是第一推荐使用命令
+Explain语法：`explain select … from … [where …]`
+返回结果`id | select_type | table | type | possible_keys | key | key_len | ref | rows | Extra |`
+
+type：这列最重要，显示了连接使用了哪种类别,有无使用索引，是使用Explain命令分析性能瓶颈的关键项之一。结果值从好到坏依次是：
+`system > const > eq_ref > ref > fulltext > ref_or_null > index_merge > unique_subquery > index_subquery > range > index > ALL`
+一般来说，得保证查询至少达到range级别，最好能达到ref，否则就可能会出现性能问题。
+
+ALL：Full Table Scan， MySQL将遍历全表以找到匹配的行
+
+index: Full Index Scan，index与ALL区别为index类型只遍历索引树
+
+range:只检索给定范围的行，使用一个索引来选择行
+
+ref: 表示上述表的连接匹配条件，即哪些列或常量被用于查找索引列上的值
+
+eq_ref: 类似ref，区别就在使用的索引是唯一索引，对于每个索引键值，表中只有一条记录匹配，简单来说，就是多表连接中使用primary key或者 unique key作为关联条件
+
+const、system: 当MySQL对查询某部分进行优化，并转换为一个常量时，使用这些类型访问。如将主键置于where列表中，MySQL就能将该查询转换为一个常量，
+system是const类型的特例，当查询的表只有一行的情况下，使用system
+
+NULL: MySQL在优化过程中分解语句，执行时甚至不用访问表或索引，例如从一个索引列里选取最小值可以通过单独索引查找完成。
+
+## profile
+show profile和show Profiles都是不建议使用的，在mysql后期的版本中可能会被删除；
+官网建议使用Performance Schema（运行时实时检查server的内部执行情况）
+```sql
+set profiling=1;  				//打开分析
+run your sql1;
+run your sql2;
+show profiles;					//查看sql1,sql2的语句分析
+show profile for query 1;		//查看sql1的具体分析
+show profile ALL for query 1;	//查看sql1相关的所有分析【主要看i/o与cpu,下边分析中有各项意义介绍】
+set profiling=0;
+```
+可以查看sql语句中各个步骤的执行时间，cpu用户/系统的占用
+starting：开始
+checking permissions：检查权限
+Opening tables：打开表
+init ： 初始化
+System lock ：系统锁
+optimizing ： 优化
+statistics ： 统计
+preparing ：准备
+executing ：执行
+Sending data ：发送数据
+Sorting result ：排序
+end ：结束
+query end ：查询 结束
+closing tables ： 关闭表 ／去除TMP 表
+freeing items ： 释放物品
+cleaning up ：清理
 
 ## 参考
 * [浅入深出MySQL中事务的实现](https://draveness.me/mysql-transaction)
