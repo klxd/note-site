@@ -64,7 +64,7 @@ Mysql服务器通过权限表来控制用户对数据库的访问，权限表存
 以上四种隔离级别最高的是Serializable级别，最低的是Read uncommitted级别，当然级别越高，
 执行效率就越低。像Serializable这样的级别，就是以锁表的方式(类似于Java多线程中的锁)
 使得其他的线程只能在锁外等待，所以平时选用何种隔离级别应该根据实际情况。
-在MySQL数据库中默认的隔离级别为Repeatable read (可重复读)。
+在MySQL数据库中默认的隔离级别为Repeatable read (可重复读), Innodb的可重复读级别其实已经解决了幻读的问题。
 oracle默认隔离级别 Read committed
 
 ### 设置隔离级别
@@ -305,8 +305,16 @@ innodb在创建或重建B树索引时执行批量加载.这种索引构建方法
 
 ## 数据库的优化 最好不要设置null值 避免sql语句中进行计算 避免in ，导致全表扫描
 
-* 数据库列有索引， 什么时候不使用索引
-* 两个列都有索引，优先使用哪个索引
+## 数据库列有索引， 什么时候不使用索引
+* 如果MySQL估计使用索引比全表扫描慢，则不使用索引，例如，如果列key均匀分布在1和100之间，下面的查询使用索引就不是很好：select * from table_name where key>1 and key<90;
+* 用or分隔开的条件，如果or前的条件中的列有索引，而后面的列没有索引，那么涉及到的索引都不会被用到，
+  例如：select * from table_name where key1='a' or key2='b';如果在key1上有索引而在key2上没有索引，则该查询也不会走索引
+* 复合索引，如果索引列不是复合索引的第一部分，则不使用索引（即不符合最左前缀），
+  例如，复合索引为(key1,key2),则查询select * from table_name where key2='b';将不会使用索引
+* 如果like是以‘%’开始的，则该列上的索引不会被使用。例如select * from table_name where key1 like '%a'；
+  该查询即使key1上存在索引，也不会被使用
+* 数据类型出现隐式转换的时候不会使用索引，如果列为字符串，则where条件中必须将字符常量值加引号，否则即使该列上存在索引，也不会被使用。
+  例如,select * from table_name where key1=1;如果key1列保存的是字符串，即使key1上有索引，也不会被使用。
 
 ## explain
 Explain命令在解决数据库性能上是第一推荐使用命令

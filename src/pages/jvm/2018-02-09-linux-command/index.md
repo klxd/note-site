@@ -172,6 +172,9 @@ Processes: 301 total, 2 running, 299 sleeping, 1414 threads
 
 ## JVM实时状态监控
 
+### jinfo
+
+
 ### jstack
 jstack用于打印出给定的java进程ID或core file或远程调试服务的Java**堆栈信息**
 
