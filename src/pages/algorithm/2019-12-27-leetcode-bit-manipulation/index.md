@@ -37,3 +37,17 @@ class Solution {
     }
 }
 ```
+
+## 不用加减乘除做加法
+```java
+public class Solution {
+    public int Add(int num1,int num2) {
+        while (num2 != 0) {
+            int temp = num1 ^ num2; // 忽略进位的结果
+            num2 = (num1 & num2) << 1; // 需要进位的结果
+            num1 = temp;
+        }
+        return num1;
+    }
+}
+```

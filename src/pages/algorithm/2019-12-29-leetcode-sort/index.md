@@ -79,6 +79,49 @@ class Solution {
 }
 ```
 
+## 归并排序
+给出一个数组， 求其中逆序对的数量.
+思路： 使用归并排序，合并数组时，若从第二个数组往前放数， 则第一个数组中剩余的所有数字为新增的逆序对
+```java
+public class Solution {
+        public int InversePairs(int [] array) {
+        temp = new int[array.length + 1];
+        solve(array, 0, array.length - 1);
+        return ans;
+    }
+
+    int ans = 0;
+    int temp[];
+
+    private void solve(int[] arr, int left, int right) {
+        if (left >= right) {
+            return;
+        }
+        int mid = left + ((right - left) >> 1);
+        solve(arr, left, mid);
+        solve(arr, mid + 1, right);
+        int a = left, b = mid + 1, idx = left;
+        while (idx <= right) {
+            if (a > mid) {
+                temp[idx++] = arr[b++];
+            } else if (b > right) {
+                temp[idx++] = arr[a++];
+            } else {
+                if (arr[a] > arr[b]) {
+                    temp[idx++] = arr[b++];
+                    ans = (ans + (mid - a + 1)) % 1000000007;
+                } else {
+                    temp[idx++] = arr[a++];
+                }
+            }
+        }
+        for (int i = left; i <= right; i++) {
+            arr[i] = temp[i];
+        }
+    }
+}
+```
+
 ## Timsort
 * Java中对象排序没有采用快速排序，是因为快速排序是不稳定的.
 * JSE7以后对象排序使用的是Timsort实现(之前是Merge sort) 

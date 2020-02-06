@@ -22,32 +22,25 @@ tags:
 快指针已经绕环走了一圈，此时相遇点就是环的入口
 ```java
 public class Solution {
-    public ListNode detectCycle(ListNode head) {
-        if (head == null || head.next == null) {
-            return null;
-        }
-        ListNode slow = head, fast = head;
-        boolean hasCycle = false;
+    public ListNode EntryNodeOfLoop(ListNode root) {
+        ListNode slow = root, fast = root;
         while (fast != null && fast.next != null) {
             fast = fast.next.next;
             slow = slow.next;
             if (fast == slow) {
-                hasCycle = true;
                 break;
             }
         }
-        if (!hasCycle) {
+        if (fast == null || fast.next == null) {
             return null;
         }
-        int cycleLen = 0;
+        int len = 0;
         do {
-            fast = fast.next.next;
             slow = slow.next;
-            cycleLen++;
-        } while (fast != slow);
-
-        fast = slow = head;
-        while (cycleLen-- > 0) {
+            len++;
+        } while (slow != fast);
+        fast = slow = root;
+        while (len-- > 0) {
             fast = fast.next;
         }
         while (fast != slow) {
