@@ -27,3 +27,28 @@ class Solution {
     }
 }
 ```
+
+## 把数组排成最小的数
+例如输入数组{3，32，321}，则打印出这三个数字能排成的最小数字为321323。
+思路：数字转为字符串，然后按照如下规则排序，对于两个字符串，通过正序和逆序分别合并，比较合并后的字符串，
+然后按序依次拼接即可。
+```java
+public class Solution {
+    public String PrintMinNumber(int [] numbers) {
+        List<String> list = new ArrayList<>();
+        for (int num : numbers) {
+            list.add(String.valueOf(num));
+        }
+        list.sort((a, b) -> {
+            String s1 = a + b;
+            String s2 = b + a;
+            return s1.compareTo(s2);
+        });
+        StringBuilder sb = new StringBuilder();
+        for (String str : list) {
+            sb.append(str);
+        }
+        return sb.toString();
+    }
+}
+```
