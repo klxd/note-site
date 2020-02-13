@@ -202,6 +202,10 @@ public class ThreadLocal<T> {
 * 使用static的ThreadLocal，延长了ThreadLocal的生命周期，可能导致的内存泄漏
 * 分配使用了ThreadLocal又不再调用get(),set(),remove()方法，那么就会导致内存泄漏
 
+Q:
+为什么ThreadLocalMap中的value不设置为弱引用？
+* 若value这个对象除了ThreadLocalMap之外就没有其他强引用了，那它在下一次垃圾收集时会被回收，
+  此时若想用对应的key获取这个value，则会出现错误
 
 ## 参考资料
 * **Java并发编程实战 第3章第3节**

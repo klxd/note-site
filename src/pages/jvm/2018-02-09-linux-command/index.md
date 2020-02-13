@@ -437,6 +437,10 @@ concurrent mark-sweep generation:
    * jvisualvm, 可以直接查看heap dump, 类实例内存占用比; 也能直接查看thread dump
    * MAT(Memory Analyzer Tool,一个基于Eclipse的内存分析工具)
 
+* CPU利用率高如何排查
+  * top， jstack
+  * 可能原因： 线程过多，上下文调度； 死循环；
+
 ## 参考
 * [Java 命令行工具的使用](http://blog.csdn.net/fenglibing/article/details/6411951)
 * [netstat 的10个基本用法](https://linux.cn/article-2434-1.html)
