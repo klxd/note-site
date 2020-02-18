@@ -29,30 +29,65 @@ class Main {
 
     public static void main(String[] args) {
         Main main = new Main();
-        System.out.println(main.InversePairs(new int[] {364,637,341,406,747,995,234,971,571,219,993,407,416,366,315,301,601,650,418,355,460,505,360,965,516,648,727,667,465,849,455,181,486,149,588,233,144,174,557,67,746,550,474,162,268,142,463,221,882,576,604,739,288,569,256,936,275,401,497,82,935,983,583,523,697,478,147,795,380,973,958,115,773,870,259,655,446,863,735,784,3,671,433,630,425,930,64,266,235,187,284,665,874,80,45,848,38,811,267,575}));
+        System.out.println(main.findMin("abcadedf"));
     }
 
+    public int findFirst(int[] arr, int k) {
+        int left = 0, right = arr.length - 1;
+        while (left <= right) {
 
+            int mid = left + (right - left) / 2;
 
-    public int kthSmallest(int[][] mat, int k) {
-        int n = mat.length, row = 0, col = n - 1;
-        while (true) {
-            int cntLt = 0, cntLe = 0, colLt = n - 1, colLe = n - 1;
-            for (int i = 0; i < n; i++) {
-                while (colLt >= 0 && mat[i][colLt] >= mat[row][col]) colLt--;
-                while (colLe >= 0 && mat[i][colLe] > mat[row][col]) colLe--;
-                cntLt += colLt + 1;
-                cntLe += colLe + 1;
-            }
-            if (cntLe < k) {
-                row++;
-            } else if (cntLt >= k) {
-                col--;
+            if (arr[mid] < k) {
+                left = mid + 1;
             } else {
-                return mat[row][col];
+                right = mid - 1;
+            }
+            System.out.println(left + " " + right + " " + mid + " " + arr[mid]);
+        }
+        return left;
+    }
+
+    public char findMin2(String str) {
+        if (str == null || str.length() == 0) {
+            return 0;
+        }
+        Map<Character, Integer> map = new HashMap<>();
+        TreeSet<Integer> set = new TreeSet<>();
+        for (int i = 0; i < str.length(); i++) {
+            Integer idx = map.get(str.charAt(i));
+            if (idx == null) {
+                map.put(str.charAt(i), i);
+                set.add(i);
+            } else {
+                set.remove(idx);
             }
         }
+        return str.charAt(set.first());
     }
+
+    public char findMin(String str) {
+        if (str == null || str.length() == 0) {
+            return 0;
+        }
+        int idx[] = new int[256];
+        Arrays.fill(idx, -1);
+        for (int i = 0; i < str.length(); i++) {
+            if (idx[str.charAt(i)] == -1) {
+                idx[str.charAt(i)] = i;
+            } else {
+                idx[str.charAt(i)] = -2;
+            }
+        }
+        int min = Integer.MAX_VALUE;
+        for (int i = 0; i < idx.length; i++) {
+            if (idx[i] >= 0) {
+                min = Math.min(min, idx[i]);
+            }
+        }
+        return str.charAt(min);
+    }
+
 
     public int singleNumber(int[] nums) {
         int one = 0, two = 0, mask;
@@ -64,35 +99,6 @@ class Main {
             two &= mask;
         }
         return one;
-    }
-
-    public void quickSort(int arr[], int left, int right) {
-        if (left >= right) {
-            return;
-        }
-        int p = partition(arr, left, right);
-        quickSort(arr, left, p - 1);
-        quickSort(arr, p + 1, right);
-    }
-
-    private int partition(int arr[], int left, int right) {
-        int pivot = arr[left];
-        int i = left, j = right;
-        while (true) {
-            while (arr[i] < pivot) {
-                i++;
-            }
-            while (arr[j] > pivot) {
-                j--;
-            }
-            if (i < j) {
-                int temp = arr[i];
-                arr[i++] = arr[j];
-                arr[j--] = temp;
-            } else {
-                return j;
-            }
-        }
     }
 
 }

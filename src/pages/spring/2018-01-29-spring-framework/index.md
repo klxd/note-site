@@ -6,6 +6,13 @@ tags:
    - spring
 ---
 
+## BeanFactoryPostProcessor的作用
+* 扫描
+* 新建RootBeanDefinition, 配置好属性（描述Bean：name，scope，beanClass，isLazy）， 放入BeanDefinitionMap中
+* invokeBeanFactoryPostProcessor(beanFactory): 执行已经注册的Factory processor
+  * 注册自己的BeanFactoryProcessor可参与到BeanFactory的构建过程，例如修改BeanDefinition中的BeanClass，来指定 后续Bean实例化时使用的类
+* 注册BeanPostProcessor 
+
 ## spring bean的生命周期
 
 1. 实例化Bean
@@ -99,12 +106,7 @@ tags:
 ## FactoryBean和BeanFactory的区别
 * 实例化时机， 单例池
 
-## BeanFactoryPostProcessor的作用
-* 扫描
-* 新建RootBeanDefinition, 配置好属性（描述Bean：name，scope，beanClass，isLazy）， 放入BeanDefinitionMap中
-* invokeBeanFactoryPostProcessor(beanFactory): 执行已经注册的Factory processor
-  * 注册自己的BeanFactoryProcessor可参与到BeanFactory的构建过程，例如修改BeanDefinition中的BeanClass，来指定 后续Bean实例化时使用的类
-* 注册BeanPostProcessor 
+
 
 ## 值得探索的问题
 

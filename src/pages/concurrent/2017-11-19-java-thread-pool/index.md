@@ -275,3 +275,7 @@ private class ScheduledFutureTask<V>
 ```
 * DelayQueue封装了一个PriorityQueue, 这个队列会使用time对FutureTask进行排序,
   保证任务time小的排在前面, 若time相等则sequenceNumber小的排前面
+  
+## Q & A
+* ThreadPoolExecutor的工作流程
+* 如何控制线程池线程的优先级

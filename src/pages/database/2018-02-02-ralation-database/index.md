@@ -370,6 +370,9 @@ closing tables ： 关闭表 ／去除TMP 表
 freeing items ： 释放物品
 cleaning up ：清理
 
+## Q & A
+* binlog,redolog,undolog都是什么, 起什么作用
+
 ## 参考
 * [浅入深出MySQL中事务的实现](https://draveness.me/mysql-transaction)
 * [MySQL索引背后的数据结构及算法原理](https://www.kancloud.cn/kancloud/theory-of-mysql-index/41856)

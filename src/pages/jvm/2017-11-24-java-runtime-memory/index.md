@@ -198,7 +198,7 @@ tags:
 
 
 -Xmx5120m 
--Xms5120m 
+-Xms5120m # 最大最小设置成一样，避免运行时申请内存
 -Xmn1536m 
 -XX:MetaspaceSize=256m 
 -XX:+UseCompressedOops 
