@@ -136,6 +136,57 @@ class Solution {
 }
 ```
 
+## 1351. Count Negative Numbers in a Sorted Matrix
+给出一个行列分别递增的矩阵, 找出其中负数的数量
+
+解法一: 从右上开始遍历
+```java
+class Solution {
+    public int countNegatives(int[][] grid) {
+        if (grid.length == 0) {
+            return 0;
+        }
+        int ans = 0, n = grid.length, m = grid[0].length;
+        int i = 0, j = m - 1;
+        while (i < n && j >= 0) {
+            if (grid[i][j] < 0) {
+                j--;
+                if (j < 0) {
+                    ans += (n - i) * m;
+                    break;
+                }
+            } else {
+                ans += m - j - 1;
+                i++;
+            }
+        }
+        return ans;
+    }
+}
+```
+
+解法二, 从左下开始遍历
+```java
+class Solution {
+    public int countNegatives(int[][] grid) {
+        if (grid.length == 0) {
+            return 0;
+        }
+        int ans = 0, n = grid.length, m = grid[0].length;
+        int i = n - 1, j = 0;
+        while (i >= 0 && j < m) {
+            if (grid[i][j] >= 0) {
+                j++;
+            } else {
+                ans += m - j;
+                i--;
+            }
+        }
+        return ans;
+    }
+}
+```
+
 ## 378. Kth Smallest Element in a Sorted Matrix
 给出一个行列分别递增的`n*n`矩阵, 找出其中第k小的数字
 
