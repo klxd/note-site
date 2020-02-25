@@ -84,19 +84,34 @@ Java的Selector对于Linux系统来说，有一个致命限制：同一个channe
 虽然read()和write()是比较高效无阻塞的函数，但毕竟会占用CPU，如果面对更高的并发则无能为力。
 
 
-## Selector.wakeup()
-主要作用
+## Selector
 
-* 解除阻塞在Selector.select()/select(long)上的线程，立即返回。
-* 两次成功的select之间多次调用wakeup等价于一次调用。
-* 如果当前没有阻塞在select上，则本次wakeup调用将作用于下一次select——“记忆”作用。
+* select 阻塞
+* select(long timeout) 最多阻塞timeout毫秒
+* selectNow 不阻塞
+* wakeup() 唤醒selector
+    * 解除阻塞在Selector.select()/select(long)上的线程，立即返回。
+    * 两次成功的select之间多次调用wakeup等价于一次调用。
+    * 如果当前没有阻塞在select上，则本次wakeup调用将作用于下一次select——“记忆”作用(可调用selectNow来解除记忆)。
+   为什么要唤醒？
+   * 注册了新的channel或者事件。
+   * channel关闭，取消注册。
+   * 优先级更高的事件触发（如定时器事件），希望及时处理。
 
-为什么要唤醒？
 
-* 注册了新的channel或者事件。
-* channel关闭，取消注册。
-* 优先级更高的事件触发（如定时器事件），希望及时处理。
-
+每一个 Selector 对象维护三个键的集合
+* 已注册的键的集合(Registered key set)
+* 已选择的键的集合(Selected key set) 已注册的键的集合的子集。这个集合的每个成员都是相关的通道被选择器
+  （在前一个选择操作中）判断为已经准备好的，并且包含于键的 interest 集合中的操作。
+  这个集合通过selectedKeys( )方法返回
+* 已取消的键的集合(Cancelled key set) 已注册的键的集合的子集，这个集合包含了 cancel( )方法被调用过的键
+  （这个键已经被无效化），但它们还没有被注销。这个集合是选择器对象的私有成员，因而无法直接访问
+  
+### 选择器的常用做法
+* 选择器上调用一次 select 操作(这将更新已选择的键的集合)，
+* 然后遍历 selectKeys( )方法返回的键的集合。在按顺序进行检查每个键的过程中，相关的通道也根据键的就绪集合进行处理。
+* 然后键将从已选择的键的集合中被移除（通过在 Iterator对象上调用 remove( )方法），然后检查下一个键。
+* 完成后，通过再次调用 select( )方法重复这个循环
 
 ## Buffer
 与Java基本类型相对应，NIO提供了多种 Buffer 类型，如ByteBuffer、CharBuffer、IntBuffer等，
@@ -120,6 +135,34 @@ Buffer的工作方式跟C语言里的字符数组非常的像，类比一下，c
 * compact(): 将未读取完的数据（position 与 limit 之间的数据）移动到缓冲区开头，并将 position设置为这段数据末尾的下一个位置。
   其实就等价于重新向缓冲区中写入了这么一段数据。
 
+## Channel
+
+* ServerSocketChannel： 在服务端监听新的客户端socket连接， AbstractSelectableChannel的子类
+  * open 静态方法，得到一个ServerSocketChannel
+  * bind 设置服务器端口号
+  * accept：接受一个连接，返回这个连接的通道对象
+* SocketChannel：网络IO通道，具体负责进行读写操作，也是AbstractSelectableChannel的子类
+  * boolean connect(SocketAddress remote)： 阻塞模式下阻塞直到连接成功， 非阻塞模式返回是否已经连接成功
+  * boolean finishConnect()： connect方法失败后的补偿方法
+  * int read(ByteBuffer dst)
+  * int write(ByteBuffer src)
+
+
+## NIO与零拷贝
+
+* mmap优化，通过内存映射，将文件映射到内核缓冲区，用户空间可以共享内核空间的数据，可以减少一次内核空间到用户空间的拷贝（内核切换次数不变）
+  适合小数据量的读写，需要4次上下文切换，3次数据拷贝（必须从内核拷贝到Socket缓冲区）
+* sendFile优化，linux2.1版本：数据根本不经过用户态，直接从内核缓冲区进入到SocketBuffer，由于和用户态完全无关，减少了一次上下文切换
+  linux2.4版本，避免了从内核缓冲区拷贝到SocketBuffer的操作，直接拷贝的协议栈（网卡），实现了零拷贝（无CPU拷贝，都是DMA拷贝）
+  适合大文件传输，需要3次上下文切换，最小需要2次数据拷贝.
+  JDK的FileChannel.transferTo函数利用到此技术
+  
+## AIO
+异步不阻塞IO，引入异步通道的概念，采用Proactor模式，特点是先由操作系统完成后才通知服务端程序启动线程去处理。
+一般适用于连接数较多且连接时间较长的应用。
+目前还没有广泛的应用
+
+## epoll底层原理
 
 ## Q & A
 * IO模型有哪些, nio, bio，aio的区别, reactor模型

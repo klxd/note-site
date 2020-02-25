@@ -34,7 +34,8 @@ public class NioTestServer {
             while (keyIter.hasNext()) {
                 SelectionKey key = keyIter.next();
 
-                if (key.isAcceptable()) { // 有连接可以接受
+                if (key.isAcceptable()) { // 有新连接可以接受
+                    // 此处强制转化是安全的，因为只有ServerSocketChannel支持连接accept操作
                     SocketChannel channel = ((ServerSocketChannel) key.channel()).accept();
                     channel.configureBlocking(false);
                     channel.register(selector, SelectionKey.OP_READ);

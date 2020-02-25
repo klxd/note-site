@@ -513,3 +513,21 @@ class Solution {
     }
 }
 ```
+
+## 1到n的所有数字中1出现的次数
+```java
+public class Solution {
+    public int NumberOf1Between1AndN_Solution(int n) {
+        if (n == 0) {
+            return 0;
+        }
+        int ans = 0;
+        for (long i = 1; i <= n; i *= 10) {
+            long div = i * 10;
+            ans += (n / div * i) + Math.min(i,
+                                           Math.max(n % div - i + 1, 0));
+        }
+        return ans;
+    }
+}
+```
