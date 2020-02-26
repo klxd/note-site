@@ -88,6 +88,45 @@ public class Integer {
 * 上界为变量limit, 根据是正数或负数来变化
 * 累积过程采用负数来保存result, 因为负数上界绝对值比正数上界大1, 可以防止转化Integer.MIN_VALUE时的溢出
 
+## 牛客-把字符串转换成整数
+```java
+public class Solution {
+    public int StrToInt(String str) {
+        if (str == null || str.length() == 0) {
+            return 0;
+        }
+        int idx = 0, ans = 0;
+        boolean isNa = false;
+        if (str.charAt(0) == '+' || str.charAt(0) == '-') {
+            if (str.length() == 1) {
+                return 0;
+            }
+            idx = 1;
+            isNa = str.charAt(0) == '-';
+        }
+        int preMin = -(Integer.MAX_VALUE / 10);
+        while (idx < str.length()) {
+            int num = str.charAt(idx++) - '0';
+            if (num < 0 || num > 9) {
+                return 0;
+            }
+            if (ans < preMin) {
+                return 0;
+            }
+            ans *= 10;
+            if (ans < Integer.MIN_VALUE + num) {
+                return 0;
+            }
+            ans -= num;
+        }
+        if (!isNa && ans == Integer.MIN_VALUE) {
+            return 0;
+        }
+        return isNa ? ans : -ans;
+    }
+}
+```
+
 练习题
 - leetcode-7 [https://leetcode.com/problems/reverse-integer/]
 - leetcode-8 [https://leetcode.com/problems/string-to-integer-atoi/]
