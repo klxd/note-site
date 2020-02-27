@@ -53,7 +53,7 @@ public class ScheduledThreadPoolExecutor
 * RejectedExecutionHandler handler: 拒绝策略
 
 ```java
-public class ThreadPoolExecutor extends AbstractExecutorService {
+public class h extends AbstractExecutorService {
 
     /**
      * -- 核心线程池的大小
@@ -162,10 +162,57 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
     }
 }
 ```
-* 新任务提交时, 若核心线程数未满, 尝试新建线程执行
+* 新任务提交时, 若核心线程数未满, 尝试新建线程执行 (注意不管当前的核心线程是否空闲, 都会创建新的线程)
 * 核心线程已满, 尝试放入任务队列
 * 任务队列已满, 尝试新建线程(不能超过最大线程数)
 * 以上都不满足, 执行拒绝策略
+
+## 线程池预热
+```java
+public class ThreadPoolExecutor extends AbstractExecutorService {
+    /**
+     * 开始所有的核心线程, 让他们进入空闲状态等待,
+     * 默认的线程开启策略是当工作进来时才会开启,
+     * @return 预热时启动的线程数量 
+     */
+    public int prestartAllCoreThreads() {
+        int n = 0;
+        while (addWorker(null, true))
+            ++n;
+        return n; 
+    }
+    
+    /**
+     * 预热开启一个核心线程
+     * @return 是否成功开启一个线程
+     */
+    public boolean prestartCoreThread() {
+        return workerCountOf(ctl.get()) < corePoolSize &&
+            addWorker(null, true);
+    }
+}
+```
+
+## 空闲核心线程销毁
+```java
+public class ThreadPoolExecutor extends AbstractExecutorService {
+    
+    /**
+     * 默认策略核心线程即使空闲了也不会被销毁,  allowCoreThreadTimeOut为false
+     * 此方法可改变这个策略, 让线程池在核心线程空闲的时候被销毁
+     * @param value
+     */
+    public void allowCoreThreadTimeOut(boolean value) {
+        if (value && keepAliveTime <= 0)
+            throw new IllegalArgumentException("Core threads must have nonzero keep alive times");
+        if (value != allowCoreThreadTimeOut) {
+            allowCoreThreadTimeOut = value;
+            if (value)
+                interruptIdleWorkers();
+        }
+    }
+}
+```
 
 ## FixedThreadPool
 
@@ -238,6 +285,7 @@ public class Executors {
 ```
 
 * CachedThreadPool 是大小无界的线程池,适用于执行很多的短期异步任务的小程序,或者是负载较轻的服务器
+* 使用队列为SynchronousQueue, 并不会存储元素, 仅传递元素
 
 ## ScheduledThreadPoolExecutor
 
@@ -275,6 +323,10 @@ private class ScheduledFutureTask<V>
 ```
 * DelayQueue封装了一个PriorityQueue, 这个队列会使用time对FutureTask进行排序,
   保证任务time小的排在前面, 若time相等则sequenceNumber小的排前面
+  
+## Tomcat线程池
+
+tomcat中的线程池和JDK线程池的策略稍微有些不同。仔细推敲JDK线程池实现的方式可能会觉得并不是太完美，当队列里有多余的任务并且无空闲线程的时候，这个时候比较好的做法可能是继续增加线程直到达到maxSize而不是等到队列满了以后再做此操作。因此Tomcat自己实现了优先增加线程的策略，它的实现方式其实并不复杂（并没有重写ThreadPoolExecutor），核心的思想是构造一个任务队列去控制offer的状态（成功或者失败），因为ThreadPoolExecutor是根据offer的状态来控制是否要增加线程的（达到coreSize以后）。除此之外还增加了一个统计当前空闲线程个数的属性submittedCount（JDK提供的方法持有锁的时间比较长，不适合高并发）。
   
 ## Q & A
 * ThreadPoolExecutor的工作流程
