@@ -7,6 +7,7 @@ tags:
 ---
 
 ## 数字在排序数组中出现的次数
+思路一: 由于原数组都是整数, 找分别找`k+0.5`和`k-0.5`相关的下标(第一个...最后一个...均可)
 ```java
 public class Solution {
     public int GetNumberOfK(int [] array , int k) {
@@ -24,6 +25,41 @@ public class Solution {
         }
         // 返回left或right都可以
         return left;
+    }
+}
+```
+
+思路二: 找到第一个大于等于的下标, 最后一个小于等于的下标, 相减+1即可 
+```java
+public class Solution {
+    public int GetNumberOfK(int [] arr , int k) {
+       return lastEqualSmaller(arr, k) - firstEqualGreater(arr, k) + 1;
+    }
+    
+    private int firstEqualGreater(int arr[], int k) {
+        int left = 0, right = arr.length - 1;
+        while (left <= right) {
+            int mid = left + ((right - left) >>> 1);
+            if (arr[mid] >= k) {
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return left;
+    }
+    
+    private int lastEqualSmaller(int arr[], int k) {
+        int left = 0, right = arr.length - 1;
+        while (left <= right) {
+            int mid = left + ((right - left) >>> 1);
+            if (arr[mid] <= k) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        return right;
     }
 }
 ```
