@@ -48,11 +48,22 @@ class Solution {
 public class Solution {
     public int Add(int num1,int num2) {
         while (num2 != 0) {
-            int temp = num1 ^ num2; // 忽略进位的结果
+            int temp = num1 ^ num2; // 忽略进位的结果, 注意这里不是 num1 | num2 
             num2 = (num1 & num2) << 1; // 需要进位的结果
             num1 = temp;
         }
         return num1;
     }
 }
+```
+
+### 不用中间变量交换两个数字的值
+```
+a = a + b;
+b = a - b;
+a = a - b;
+---
+a = a ^ b;
+b = a ^ b;
+a = a ^ b;
 ```

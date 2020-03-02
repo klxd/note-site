@@ -122,6 +122,52 @@ public class Solution {
 }
 ```
 
+### 315. Count of Smaller Numbers After Self
+题意: 给出一个数组, 求每个数字右边比它小的数字的个数
+思路: 同逆序对, 但是需要求每个数字对应的逆序对的数量
+```java
+class Solution {
+    private void mergeSort(int nodes[][], int left, int right, List<Integer> ans) {
+        if (left >= right) {
+            return;
+        }
+        int mid = left + (right - left) / 2;
+        mergeSort(nodes, left, mid, ans);
+        mergeSort(nodes, mid + 1, right, ans);
+        int holder[][] = new int[right - left + 1][], idx1 = left, idx2 = mid + 1, idx = 0;
+        while (idx1 <= mid || idx2 <= right) {
+            if (idx1 > mid) {
+                holder[idx++] = nodes[idx2++];
+            } else if (idx2 > right) {
+                ans.set(nodes[idx1][1], ans.get(nodes[idx1][1]) + right - mid);
+                holder[idx++] = nodes[idx1++];
+            } else {
+                if (nodes[idx1][0] <= nodes[idx2][0]) {
+                    ans.set(nodes[idx1][1], ans.get(nodes[idx1][1]) + idx2 - mid - 1);
+                    holder[idx++] = nodes[idx1++];
+                } else {
+                    holder[idx++] = nodes[idx2++];
+                }
+            }
+        }
+        System.arraycopy(holder, 0, nodes, left, holder.length);
+    }
+
+    public List<Integer> countSmaller(int[] nums) {
+        int nodes[][] = new int[nums.length][2];
+        for (int i = 0 ; i < nums.length; i++) {
+            nodes[i] = new int[]{nums[i], i};
+        }
+        List<Integer> ans = new ArrayList<>(nums.length);
+        for (int i = 0; i < nums.length; i++) {
+            ans.add(0);
+        }
+        mergeSort(nodes, 0, nums.length - 1, ans);
+        return ans;
+    }
+}
+```
+
 ## Timsort
 * Java中对象排序没有采用快速排序，是因为快速排序是不稳定的.
 * JSE7以后对象排序使用的是Timsort实现(之前是Merge sort) 

@@ -7,7 +7,9 @@ tags:
 ---
 
 ## LinkedList
+
 ### 从尾到头打印链表
+
 ### 15 链表中倒数第k个结点
 思路: 快慢指针, 快指针先走k-1步, 注意判断链表长度小于k的情况
 
@@ -46,7 +48,8 @@ public class Solution {
 注意当节点为最后一个节点, 仍需要遍历链表, 时间复杂度退化.
 注意删除节点是头节点的情况.
 
-Tree
+## Tree
+
 ### 重建二叉树    
 
 ### 18 树的子结构
@@ -118,10 +121,37 @@ public class Solution {
 }
 ```
 
-057-二叉树的下一个结点    
-058-对称的二叉树    
-059-按之字形顺序打印二叉树    
-060-把二叉树打印成多行    
+### 二叉树的下一个结点
+题意:求二叉树中序遍历的下一个节点, 树节点有指向父亲节点的指针
+思路: 先看当前节点的右子树, 若存在右子树, 寻找右子树最左的节点;
+若没有右子树, 看父亲节点, 当前节点是其父亲节点的左节点, 则输出父亲节点,
+否则向上循环找到第一个是父亲节点左节点的父亲节点
+```java
+public class Solution {
+    public TreeLinkNode GetNext(TreeLinkNode root) {
+        if (root == null) {
+            return null;
+        }
+        TreeLinkNode right = root.right;
+        while (right != null && right.left != null) {
+            right = right.left;
+        }
+        if (right != null) {
+            return right;
+        }
+        TreeLinkNode visited = root;
+        while (visited.next != null && visited.next.right == visited) {
+            visited = visited.next;
+        }
+        // 此时visited为根节点 或 第一个是其父亲左节点的祖宗节点
+        return visited.next;
+    }
+}
+```
+ 
+### 对称的二叉树
+### 按之字形顺序打印二叉树
+### 把二叉树打印成多行
 ### 37 序列化二叉树
 思路一: 递归法. 前序遍历二叉树(注意不能用中序或后序), 
 序列化时遇到空节点输出特殊字符,
@@ -246,9 +276,63 @@ public class Solution {
 }
 ```
 
+### 68 树中两个节点的最低公共祖先
+二叉搜索树: 根据节点大小递归判断
+带父亲指针的数: 转化为链表第一个公共节点
+普通二叉树: 
+思路一: O(n)的辅助空间记录两条路径, 转化为链表公共节点问题
+思路二: DFS, 遍历的时候直接用指针判断
+```java
+class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if (root == null || root == p || root == q) {
+            return root;
+        }
+        TreeNode left = lowestCommonAncestor(root.left, p, q);
+        TreeNode right = lowestCommonAncestor(root.right, p, q);
+        if (left == null && right == null) {
+            return null;
+        }
+        if (left != null && right != null) {
+            return root;
+        }
+        return left == null ? right : left;
+    }
+}
+```
+思路三: DFS+全局变量, 遍历的时候用数量判断
+```java
+class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        find(root, p, q);
+        return ans;
+    }
+    
+    private TreeNode ans = null;
+    
+    private int find(TreeNode root, TreeNode p, TreeNode q) {
+        if (root == null) {
+            return 0;
+        }
+        int cur = (root.val == p.val || root.val == q.val) ? 1 : 0;
+        int l = find(root.left, p, q);
+        int r = find(root.right, p, q);
+        if (l == 1 && r == 1 || cur == 1 && l + r == 1) {
+            ans = root;
+        }
+        return l + r + cur;
+    }
+}
+```
 ## Stack & Queue
 
 ### 用两个栈实现队列
+思路: 入队栈, 正常push元素,
+出队栈, 当出队栈为空, 将入队栈所有元素一次弹出推到入队栈, 不为空则按序弹出即可
+
+### 两个队列实现栈
+正常压入其中一个队列的对尾, 当需要弹出时, 将一个队列的所有元素出队压入另一个队列, 留下最后的一个元素为弹出元素,
+弹出复杂度为O(n)
 
 ### 30 包含min函数的栈
 思路: 入栈:判断元素是否小于等于min栈顶, 满足则也入min栈;
@@ -508,10 +592,75 @@ public class Solution {
 思路: 按序生产丑数, 每个新丑数都是都前面的丑数乘以2,3,5得到的,维护三个指针,
 每次从这三个指针对应的丑数中生成新的丑数, 选最小的一个, 移动指针该指针(可能同时多个) 
 
-  
-043-左旋转字符串(矩阵翻转)
-046-孩子们的游戏-圆圈中最后剩下的数(约瑟夫环)   
-051-构建乘积数组
+
+### 圆圈中最后剩下的数(约瑟夫环)
+题意: n个孩子(从0开始编号), 轮流报数(从0到m-1), 报到m-1的孩子出列, 求最后一个孩子
+思路一: 使用linkedList模拟, 空间O(n), 时间O(n)
+```java
+public class Solution {
+    public int LastRemaining_Solution(int n, int m) {
+        if (n == 0) {
+            return -1;
+        }
+        LinkedList<Integer> list = new LinkedList<>();
+        for (int i = 0; i < n; i++) {
+            list.add(i);
+        }
+        int curCnt = 0;
+        while (list.size() > 1) {
+            curCnt = (curCnt + m - 1) % list.size();
+            list.remove(curCnt);
+        }
+        return list.get(0);
+    }
+}
+```
+
+思路二: 寻找递推公式, 
+考虑n个人的情况下, 首次出圈的人为`k=(m-1)%n`, 剩下`n-1`个人组成新的圈, 将下标映射成`0~n-2`,
+```
+k+1  0
+k+2  1
+...
+n-1  n-k-2
+0    n-k-1
+...
+k-1  n-2 (k-1-(k+1)%n = -2%n = n - 1
+```
+所以从f(n,m)时的下标变化到f(n-1,m)时的变化函数是`p(x)=(x-k-1)%n`, 对应逆变换为`p*(x)=(x+k+1)%n`, 
+代入`k=(m-1)%n`得到下标变化函数为`p*(x)=(x+m)%n`,考虑f(n,m)与f(n-1,m)的关系, 可以得到
+`f(n,m)=[f(n-1,m) + m] % n`;
+递归解法:
+```java
+public class Solution {
+    public int LastRemaining_Solution(int n, int m) {
+        if (n == 0 || m == 0) {
+            return -1;
+        }
+        if (n == 1) {
+            return 0;
+        }
+        return (LastRemaining_Solution(n - 1, m) + m) % n;
+    }
+}
+```
+
+循环解法:
+```java
+public class Solution {
+    public int LastRemaining_Solution(int n, int m) {
+        if (n == 0 || m == 0) {
+            return -1;
+        }
+        int last = 0;
+        for (int i = 2; i <= n; i++) {
+            last = (last + m) % i;
+        }
+        return last;
+    }
+}
+```
+
 
 ###　011-二进制中1的个数
 
@@ -526,3 +675,37 @@ public class Solution {
 可用循环实现, 模拟直到n个骰子.
 
 
+### 不用if else求1+2+..n
+思路: 利用逻辑断路+递归
+```java
+public class Solution {
+    public int Sum_Solution(int n) {
+        int ans = 0;
+        boolean flag = (n > 0 && (ans += (n + Sum_Solution(n - 1))) > 0);
+        return ans;
+    }
+}
+```
+
+### 不使用除法构建乘积数组
+思路: 从左往右, 记录前n-1个数的乘积, 再从右往左, 乘上后面的乘积
+```java
+public class Solution {
+    public int[] multiply(int[] a) {
+        int b [] = new int[a.length];
+        if (a.length == 0) {
+            return b;
+        }
+        b[0] = 1;
+        for (int i = 1, cur = 1; i < a.length; i++) {
+            cur *= a[i - 1];
+            b[i] = cur;
+        }
+        for (int i = a.length - 2, cur = 1; i >= 0; i--) {
+            cur *= a[i + 1];
+            b[i] *= cur;
+        }
+        return b;
+    }
+}
+```
