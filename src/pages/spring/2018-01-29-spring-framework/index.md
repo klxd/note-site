@@ -43,11 +43,13 @@ spring 容器初始化流程：
   当经过上述几个步骤后，bean对象已经被正确构造，但如果你想要对象被使用前再进行一些自定义的处理，就可以通过BeanPostProcessor接口实现。 该接口提供了两个函数：
   * postProcessBeforeInitialization( Object bean, String beanName ) 当前正在初始化的bean对象会被传递进来，我们就可以对这个bean作任何处理。
     这个函数会先于InitializingBean执行，因此称为前置处理。 所有Aware接口的注入就是在这一步完成的。
-    @Autowired注解就是通过postProcessBeforeInitialization实现的（AutowiredAnnotationBeanPostProcessor）。
-    `@Post`
+    `@PostConstruct`注解在此步骤实现方法调用
+    `@Autowired`注解就是通过postProcessBeforeInitialization实现的（AutowiredAnnotationBeanPostProcessor）。
+    `@Resource`注解通过`CommonAnnotationBeanPostProcessor`实现
   * postProcessAfterInitialization( Object bean, String beanName ) 当前正在初始化的bean对象会被传递进来，我们就可以对这个bean作任何处理。
     这个函数会在InitializingBean完成后执行，因此称为后置处理。注意此方法是在InitializingBean与init-method之后调用, 
-    完成spring-aop代理是在此步骤完成， `wrappedBean = applyBeanPostProcessorAfterInitialization(...)`
+    完成spring-aop代理是在此步骤完成， `wrappedBean = applyBeanPostProcessorAfterInitialization(...)`；
+    相关处理类： `AnnotationAwareAspectJAutoProxyCreator`
     
 5. InitializingBean与init-method
   当BeanPostProcessor的前置处理完成后就会进入本阶段。 
@@ -239,7 +241,9 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 					ObjectFactory<?> singletonFactory = this.singletonFactories.get(beanName);
 					if (singletonFactory != null) {
 						singletonObject = singletonFactory.getObject();
+						// 放到三级缓存
 						this.earlySingletonObjects.put(beanName, singletonObject);
+                        // 从二级缓存清除
 						this.singletonFactories.remove(beanName);
 					}
 				}
@@ -249,6 +253,12 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	}
 }
 ```
+
+### bean创建过程中的三个map
+1. singletonObject： 单例池
+2. singletonFactories： 二级缓存, 单例工厂, 如果后续创建过程中有循环依赖需要从二级缓存中拿对象, 则根据需要提前进行aop, 生成一个代理过的类
+3. earlySingletonObjects: 从二级缓存的工厂生成对象，为防止重复创建，将其缓存到三级缓存
+
 
 ```java
 public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFactory
@@ -623,3 +633,17 @@ mLookup方法注入的内部机制是Spring利用了CGLIB库在运行时生成�
 * 过滤器和拦截器的区别 
  
 * spring sort for list 的应用
+
+IoC
+* spring中有哪些扩展点开源来修改beanDefinition
+* BeanDefinitionRegistry的作用
+* BeanNameGenerator如何改变beanName的生成策略
+* BeanDefinitionRegistryPostProcessor和BeanFactoryPostProcessor的关系
+* ConfigurationClassPostProcessor这个类如何完成bean的扫描
+* @Import的三种类型，spring在底层源码当中如何来解析这三种import
+* 如何利用importSelector来完成对spring的扩展
+* @Configuration为什么可以不加，底层为什么使用cglib
+* @Bean是如何保证单例的，为什么需要这么配置
+* FactoryBean和BeanFactory的区别，有哪些经典应用场景
+* ImportBeanDefinitionRegistrar接口的作用
+

@@ -49,3 +49,5 @@ spring.datasource.hikari.connection-test-query=SELECT 1
 * spring boot中监听器和设计模式中观察者模式的关系，模拟java中事件驱动编程模型
 * Spring boot启动流程分析，如何初始化DispatchServlet和tomcat
 * Spring boot配置文件类型，语法和加载顺序
+* spring boot的日志系统有什么优势
+
