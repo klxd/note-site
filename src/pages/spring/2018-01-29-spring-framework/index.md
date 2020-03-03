@@ -7,6 +7,12 @@ tags:
 ---
 
 ## BeanFactoryPostProcessor的作用
+BeanFactoryPostProcessor可以对bean的定义（配置元数据）进行处理。也就是说，Spring IoC容器允许
+BeanFactoryPostProcessor在容器实际实例化任何其它的bean之前读取配置元数据，并有可能修改它.
+bean工厂后置处理器可以手工（如果是BeanFactory）或自动（如果是ApplicationContext）地施加某些变化给定义在容器中的配置元数据。
+Spring自带了许多bean工厂后置处理器，比如下面将提到的PropertyResourceConfigurer和PropertyPlaceholderConfigurer以及BeanNameAutoProxyCreator，
+它们用于对bean进行事务性包装或者使用其他的proxy进行包装。
+
 spring 容器初始化流程：
 * 扫描
 * 新建RootBeanDefinition, 配置好属性（描述Bean：name，scope，beanClass，isLazy）， 放入BeanDefinitionMap中
@@ -491,12 +497,21 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 ## spring循环依赖
 * 单例才支持循环依赖， 若是prototype，可利用lookup method
 
+## 方法注入 lookup method
+通常情况下将一个bean定义为另一个bean的property值就完成注入(不管是单例还是原型), 对于具有不同生命周期的bean来说这样做就会有问题了，
+比如在调用一个singleton类型bean A的某个方法时，需要引用另一个非singleton（prototype）类型的bean B，对于bean A来说，
+容器只会创建一次，这样就没法在需要的时候每次让容器为bean A提供一个新的的bean B实例。
+* 一个解决办法就是放弃控制反转, 通过实现BeanFactoryAware接口, 取得BeanFactory自己构造bean
+* 另一个方法即**方法注入**, Lookup方法注入利用了容器的覆盖受容器管理的bean方法的能力，从而返回指定名字的bean实例, 
+mLookup方法注入的内部机制是Spring利用了CGLIB库在运行时生成二进制代码功能，通过动态创建Lookup方法bean的子类而达到复写Lookup方法的目的。
+
 ## Spring Bean 作用域
 * singleton	该作用域将 bean 的定义的限制在每一个 Spring IoC 容器中的一个单一实例(默认)。
 * prototype	该作用域将单一 bean 的定义限制在任意数量的对象实例。请求方自己负责对象后继的生命周期管理工作
 * request	该作用域将 bean 的定义限制为 HTTP 请求。只在 web-aware Spring ApplicationContext 的上下文中有效。
 * session	该作用域将 bean 的定义限制为 HTTP 会话。 只在web-aware Spring ApplicationContext的上下文中有效。
 * global-session 该作用域将 bean 的定义限制为全局 HTTP 会话。只在 web-aware Spring ApplicationContext 的上下文中有效。
+* 自定义作用域, 利用CustomScopeConfigurer类(BeanFactoryPostProcessor接口的实现之一)
 
 ## Spring IoC 容器
 * BeanFactory: 基础类型IoC容器, 默认采用延迟初始化(lazy-load)
@@ -534,6 +549,11 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
   如作用于controller上的Advice`@Around("execution(public * com.company.web.controller.*Controller.*(..))")`
 
 ## 扩展Spring的几种方式
+容器扩展点
+* BeanPostProcessor
+* BeanFactoryPostProcessor
+* FactoryBean 定制实例化逻辑
+
 基于XML配置的扩展 1.定义schema 2.创建NamespaceHandler 3.注册Spring handler和Spring schema
 
 基于Java配置的扩展
@@ -541,10 +561,47 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 自定义ImportBeanDefinitionRegistrar实现
 [扩展Spring的几种方式](https://blog.csdn.net/liyantianmin/article/details/81049579)
 
-## FactoryBean和BeanFactory的区别
+### FactoryBean和BeanFactory的区别 
 * 实例化时机， 单例池
+* FactoryBean定制实例化逻辑, FactoryBean接口是插入到Spring IoC容器用来定制实例化逻辑的一个接口点。如果你有一些复杂的初始化代码用Java可以更好来表示，
+  而不是用(可能)冗长的XML，那么你就可以创建你自己的FactoryBean，并在那个类中写入复杂的初始化动作，然后把你定制的FactoryBean插入容器中。
+* FactoryBean接口提供三个方法：
+  * Object getObject()：返回一个由这个工厂创建的对象实例。这个实例可能被共享（取决于isSingleton()的返回值是singleton或prototype）。
+  * boolean isSingleton()：如果要让这个FactoryBean创建的对象实例为singleton则返回true，否则返回false。
+  * Class getObjectType()：返回通过getObject()方法返回的对象类型，如果该类型无法预料则返回null。
+* 最后，有时需要向容器请求一个真实的FactoryBean实例本身，而不是它创建的bean。这可以通过在FactoryBean（包括ApplicationContext）调用getBean方法时
+  在bean id前加'&'(没有单引号)来完成。因此对于一个假定id为myBean的FactoryBean，在容器上调用getBean("myBean")将返回FactoryBean创建的bean实例，
+  但是调用getBean("&myBean")将返回FactoryBean本身的实例。
 
+* FactoryBean的使用场景: 使用实例工厂方法实例化, 用来进行实例化的实例工厂方法位于另外一个已有的bean中，容器将调用该bean的工厂方法来创建一个新的bean实例,
+为使用此机制，class属性必须为空，而factory-bean属性必须指定为当前(或其祖先)容器中包含工厂方法的bean的名称，而该工厂bean的工厂方法本身必须通过factory-method属性来设定(参看以下的例子)。
+```xml
+<!-- the factory bean, which contains a method called createInstance() -->
+<bean id="myFactoryBean" class="...">
+  ...
+</bean>
+  <!-- the bean to be created via the factory bean -->
+<bean id="exampleBean"
+      factory-bean="myFactoryBean"
+      factory-method="createInstance"/>
+```
 
+### autowire 类型
+ 
+* no	
+不使用自动装配。必须通过ref元素指定依赖，这是默认设置。由于显式指定协作者可以使配置更灵活、更清晰，因此对于较大的部署配置，推荐采用该设置。而且在某种程度上，它也是系统架构的一种文档形式。
+
+* byName	
+根据属性名自动装配。此选项将检查容器并根据名字查找与属性完全一致的bean，并将其与属性自动装配。例如，在bean定义中将autowire设置为by name，而该bean包含master属性（同时提供setMaster(..)方法），Spring就会查找名为master的bean定义，并用它来装配给master属性。
+
+* byType	
+如果容器中存在一个与指定属性类型相同的bean，那么将与该属性自动装配。如果存在多个该类型的bean，那么将会抛出异常，并指出不能使用byType方式进行自动装配。若没有找到相匹配的bean，则什么事都不发生，属性也不会被设置。如果你不希望这样，那么可以通过设置dependency-check="objects"让Spring抛出异常。
+
+* constructor	
+与byType的方式类似，不同之处在于它应用于构造器参数。如果在容器中没有找到与构造器参数类型一致的bean，那么将会抛出异常。
+
+* autodetect	(3.0之后不推荐使用)
+通过bean类的自省机制（introspection）来决定是使用constructor还是byType方式进行自动装配。如果发现默认的构造器，那么将使用byType方式。
 
 ## 值得探索的问题
 
@@ -554,8 +611,6 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 * Spring事务的传播属性
 
 * Springmvc 中DispatcherServlet初始化过程
-
-* 如何解决两个Bean之间的循环依赖
 
 * 一个HTTP请求怎么被分发到方法上
 
@@ -568,8 +623,3 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 * 过滤器和拦截器的区别 
  
 * spring sort for list 的应用
-
-* spring bean的加载模式？如何实现代理
-* 代理的几种模式？ gclib？
-
-## 参考
