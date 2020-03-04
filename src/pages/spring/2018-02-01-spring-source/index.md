@@ -280,7 +280,6 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		// Instantiate the bean.
 		BeanWrapper instanceWrapper = null;
 		if (mbd.isSingleton()) {
-		    // todo: 理解factoryBean的作用
 			instanceWrapper = this.factoryBeanInstanceCache.remove(beanName);
 		}
 		if (instanceWrapper == null) {
@@ -296,6 +295,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			if (!mbd.postProcessed) {
 				try {
                     // 第三次调用后置处理器
+                    // 缓存了注入元素信息, 通过后置处理器来应用合并后的beanDefinition
 					applyMergedBeanDefinitionPostProcessors(mbd, beanType, beanName);
 				}
 				catch (Throwable ex) {
@@ -509,8 +509,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
    `SmartInstantiationAwareBeanPostProcessor.getEarlyBeanReference(Object bean, String beanName)`
    
 5. 填充bean, 即自动注入, 里面完成第五次和第六次后置处理器的调用, populateBean(beanName, mbd, instanceWrapper);
-   `InstantiationAwareBeanPostProcessor.postProcessAfterInstantiation(Object bean, String beanName)`: 
-   注意单词Instantiation, 不是`Initialization`, 此方法可以修改bean, 如做一些依赖注入
+   `boolean InstantiationAwareBeanPostProcessor.postProcessAfterInstantiation(Object bean, String beanName)`: 
+   注意单词Instantiation, 不是`Initialization`, 此方法可以修改bean, 如做一些依赖注入, 注意此方法若返回false可让所有依赖注入失效
 
 6. `InstantiationAwareBeanPostProcessor(PropertyValues pvs, PropertyDescriptor[] pds, Object bean, String beanName)`
 

@@ -15,10 +15,19 @@ Spring自带了许多bean工厂后置处理器，比如下面将提到的Propert
 
 spring 容器初始化流程：
 * 扫描
+* 解析类, 判断类是不是符合标准，是否需要现在实例化（不是抽象，是单例，不是lazyInit，无dependsOn）
+* 通过类文件实例化BeanDefinition，放入一个map中
 * 新建RootBeanDefinition, 配置好属性（描述Bean：name，scope，beanClass，isLazy）， 放入BeanDefinitionMap中
 * invokeBeanFactoryPostProcessor(beanFactory): 执行已经注册的Factory processor
   * 注册自己的BeanFactoryProcessor可参与到BeanFactory的构建过程，例如修改BeanDefinition中的BeanClass，来指定 后续Bean实例化时使用的类
 * 注册BeanPostProcessor 
+* 验证 -> 推断构造方法 -> 用反射new对象 -> 缓存注解信息 解析合并后的definition对象 
+ -> 提前暴露自己工厂
+ -> 判断是否需要完成属性注入 `InstantiationAwareBeanPostProcessor.postProcessAfterInstantiation` 
+ -> 完成属性注入 
+ -> 调用部分Aware beanName beanFactory
+ -> 调用生命周期回调方法
+ -> 完成aop代理 -> put容器 -> 销毁
 
 ## spring bean的生命周期
 
