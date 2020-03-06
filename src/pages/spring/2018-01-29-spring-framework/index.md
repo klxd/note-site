@@ -168,22 +168,23 @@ mLookup方法注入的内部机制是Spring利用了CGLIB库在运行时生成�
       factory-method="createInstance"/>
 ```
 
-### autowire 类型
+### autowiring 模型 (autowiring modes)
  
-* no	
-不使用自动装配。必须通过ref元素指定依赖，这是默认设置。由于显式指定协作者可以使配置更灵活、更清晰，因此对于较大的部署配置，推荐采用该设置。而且在某种程度上，它也是系统架构的一种文档形式。
+* no 不使用自动装配。必须通过ref元素指定依赖，这是默认设置。由于显式指定协作者可以使配置更灵活、更清晰，因此对于较大的部署配置，推荐采用该设置。
+  而且在某种程度上，它也是系统架构的一种文档形式。
 
-* byName	
-根据属性名自动装配。此选项将检查容器并根据名字查找与属性完全一致的bean，并将其与属性自动装配。例如，在bean定义中将autowire设置为by name，而该bean包含master属性（同时提供setMaster(..)方法），Spring就会查找名为master的bean定义，并用它来装配给master属性。
+* byName 根据属性名自动装配。此选项将检查容器并根据名字查找与属性完全一致的bean，并将其与属性自动装配。例如，
+  在bean定义中将autowire设置为by name，而该bean包含master属性（同时提供setMaster(..)方法），
+  Spring就会查找名为master的bean定义，并用它来装配给master属性。
 
-* byType	
-如果容器中存在一个与指定属性类型相同的bean，那么将与该属性自动装配。如果存在多个该类型的bean，那么将会抛出异常，并指出不能使用byType方式进行自动装配。若没有找到相匹配的bean，则什么事都不发生，属性也不会被设置。如果你不希望这样，那么可以通过设置dependency-check="objects"让Spring抛出异常。
+* byType 如果容器中存在一个与指定属性类型相同的bean，那么将与该属性自动装配。如果存在多个该类型的bean，
+  那么将会抛出异常，并指出不能使用byType方式进行自动装配。若没有找到相匹配的bean，则什么事都不发生，属性也不会被设置。
+  如果你不希望这样，那么可以通过设置dependency-check="objects"让Spring抛出异常。
 
-* constructor	
-与byType的方式类似，不同之处在于它应用于构造器参数。如果在容器中没有找到与构造器参数类型一致的bean，那么将会抛出异常。
+* constructor 与byType的方式类似，不同之处在于它应用于构造器参数。如果在容器中没有找到与构造器参数类型一致的bean，那么将会抛出异常。
 
-* autodetect	(3.0之后不推荐使用)
-通过bean类的自省机制（introspection）来决定是使用constructor还是byType方式进行自动装配。如果发现默认的构造器，那么将使用byType方式。
+* autodetect (3.0之后不推荐使用) 通过bean类的自省机制（introspection）来决定是使用constructor还是byType方式进行自动装配。
+  如果发现默认的构造器，那么将使用byType方式。
 
 ## 值得探索的问题
 

@@ -214,6 +214,15 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
 }
 ```
 
+## 内置4种线程池拒绝策略
+* CallerRunsPolicy 调用者运行策略, 当触发拒绝策略时，只要线程池没有关闭，就由提交任务的当前线程处理
+* AbortPolicy（中止策略）, 当触发拒绝策略时，直接抛出拒绝执行的**异常**，中止策略的意思也就是打断当前执行流程,
+  ThreadPoolExecutor中默认的策略就是AbortPolicy, 注意若工作队列为无界队列不会触发拒绝策略
+* DiscardPolicy（丢弃策略）: 直接忽略当前任务
+* DiscardOldestPolicy（弃老策略）, 如果线程池未关闭，就弹出队列头部的元素，然后尝试执行
+
+
+
 ## FixedThreadPool
 
 ```java
