@@ -372,6 +372,7 @@ cleaning up ：清理
 
 ## Q & A
 * binlog,redolog,undolog都是什么, 起什么作用
+* 一张表最多可以有几个索引？ 16
 
 ## 参考
 * [浅入深出MySQL中事务的实现](https://draveness.me/mysql-transaction)

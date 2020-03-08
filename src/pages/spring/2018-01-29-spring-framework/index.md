@@ -129,12 +129,32 @@ mLookup方法注入的内部机制是Spring利用了CGLIB库在运行时生成�
 * 后置通知(After Advice): 无论连接点是通过什么方式退出的(正常返回或者抛出异常)都会执行在结束后执行这些Advice。通过@After注解使用。
 * 围绕通知(Around Advice): 围绕连接点执行的Advice，这是最强大的Advice, 通常说的拦截器类型的advice。通过 @Around注解使用,
   如作用于controller上的Advice`@Around("execution(public * com.company.web.controller.*Controller.*(..))")`
+  
+## ProceedingJoinPoint 和 JoinPoint 的区别
+JoinPoint只能获取相关参数, 无法执行连接点
+```java
+public interface JoinPoint { // 部分方法
+    Object getThis();   // 代理对象本身
+    Object getTarget(); // 连接点所在的目标对象
+    Object[] getArgs(); // 参数列表
+    Signature getSignature(); // 签名对象
+}
+```
+```java
+public interface ProceedingJoinPoint extends JoinPoint {
+    void set$AroundClosure(AroundClosure arc);
+    public Object proceed() throws Throwable;
+    public Object proceed(Object[] args) throws Throwable;
+
+}
+```
 
 ## 扩展Spring的几种方式
 容器扩展点
 * BeanPostProcessor
 * BeanFactoryPostProcessor
 * FactoryBean 定制实例化逻辑
+* ImportBeanDefinitionRegistrar
 
 基于XML配置的扩展 1.定义schema 2.创建NamespaceHandler 3.注册Spring handler和Spring schema
 

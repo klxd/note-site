@@ -518,3 +518,14 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
    `Object BeanPostProcessor.postProcessBeforeInitialization(Object bean, String beanName)`
 
 8. `Object postProcessAfterInitialization(Object bean, String beanName)`
+
+
+## spring提供的后置处理器
+* ApplicationContextAwareProcessor
+* InitDestroyAnnotationBeanPostProcessor 处理自定义的初始化方法和销毁方法
+* InstantiationAwareBeanPostProcessor
+* CommonAnnotationBeanPostProcessor
+* AutowiredAnnotationBeanPostProcessor
+* RequiredAnnotationBeanPostProcessor
+* BeanValidationPostProcessor
+* AbstractAutoProxyCreator
