@@ -18,11 +18,17 @@ tags:
 * MapperFactoryBean实现了FactoryBean的接口，可以避免多次new Bean
 
 ## Q & A
+应用
+* Config, Sql, Mapper配置，有几种注册mapper的方法，优先级如何
 * mybatis的一级缓存，二级缓存，为啥二级缓存是鸡肋
 * mapper的实现, 编写sql的三种方式
 * 如何利用mybatis源码来扩展插件
+
+源码
 * MapperScan的源码分析
+* mybatis如何扩展spring的扫描器， 扫描完之后如何利用factoryBean
 * Mybatis底层如何把一个代理对象放到spring容器中,用到spring的那些知识
 * mybatis和spring核心接口ImportBeanDefinitionRegister的关系
-* mybatis的一级缓存为什么失效, 如何解决
+* mybatis的一级缓存为什么失效, spring为什么让其失效，如何解决
 * mybatis的执行流程, 什么时候进行缓存
+* mybatis中方法名为什么需要和mapper中的id一致

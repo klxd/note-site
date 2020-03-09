@@ -164,7 +164,6 @@ public interface ProceedingJoinPoint extends JoinPoint {
 [扩展Spring的几种方式](https://blog.csdn.net/liyantianmin/article/details/81049579)
 
 ### FactoryBean和BeanFactory的区别 
-* 实例化时机， 单例池
 * FactoryBean定制实例化逻辑, FactoryBean接口是插入到Spring IoC容器用来定制实例化逻辑的一个接口点。如果你有一些复杂的初始化代码用Java可以更好来表示，
   而不是用(可能)冗长的XML，那么你就可以创建你自己的FactoryBean，并在那个类中写入复杂的初始化动作，然后把你定制的FactoryBean插入容器中。
 * FactoryBean接口提供三个方法：
@@ -205,6 +204,15 @@ public interface ProceedingJoinPoint extends JoinPoint {
 
 * autodetect (3.0之后不推荐使用) 通过bean类的自省机制（introspection）来决定是使用constructor还是byType方式进行自动装配。
   如果发现默认的构造器，那么将使用byType方式。
+  
+## @Configuration为什么可以不加，底层为什么使用cglib
+* @Configuration可以确保该类中@Bean产生的对象是单例， 底层原理是动态代理
+
+## 如何把自己产生的对象交给spring管理
+* @Bean
+* ConfigurableListableBeanFactory.registerSingleton(beanName, object)
+* FactoryBean
+* Factory Method
 
 ## 值得探索的问题
 
