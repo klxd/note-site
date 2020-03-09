@@ -168,6 +168,42 @@ protected <T> T doGetBean(
 
 ```java
 public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements SingletonBeanRegistry {
+    
+    /** Cache of singleton objects: bean name --> bean instance */
+	private final Map<String, Object> singletonObjects = new ConcurrentHashMap<String, Object>(256);
+
+	/** Cache of singleton factories: bean name --> ObjectFactory */
+	private final Map<String, ObjectFactory<?>> singletonFactories = new HashMap<String, ObjectFactory<?>>(16);
+
+	/** Cache of early singleton objects: bean name --> bean instance */
+	private final Map<String, Object> earlySingletonObjects = new HashMap<String, Object>(16);
+
+	// 已经注册的所有单例bean的名字, 按照注册顺序排序
+	/** Set of registered singletons, containing the bean names in registration order */
+	private final Set<String> registeredSingletons = new LinkedHashSet<String>(256);
+	
+	// 当前正在创建中的bean的名字
+	/** Names of beans that are currently in creation */
+	private final Set<String> singletonsCurrentlyInCreation =
+			Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>(16));
+    
+    
+	/**
+	 * 将单例工厂放入map
+	 */
+	protected void addSingletonFactory(String beanName, ObjectFactory<?> singletonFactory) {
+		Assert.notNull(singletonFactory, "Singleton factory must not be null");
+		synchronized (this.singletonObjects) {
+			if (!this.singletonObjects.containsKey(beanName)) {
+			    // 放入二级缓存
+				this.singletonFactories.put(beanName, singletonFactory);
+				// 从三级缓存删除
+				this.earlySingletonObjects.remove(beanName);
+				this.registeredSingletons.add(beanName);
+			}
+		}
+	}
+    
 	/**
 	 * Return the (raw) singleton object registered under the given name.
 	 * <p>Checks already instantiated singletons and also allows for an early
@@ -181,6 +217,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
         // 单例池中拿不到, 判断是否是正在创建中的bean
 		if (singletonObject == null && isSingletonCurrentlyInCreation(beanName)) {
 			synchronized (this.singletonObjects) {
+			    // 尝试从三级缓存中拿
 				singletonObject = this.earlySingletonObjects.get(beanName);
 				if (singletonObject == null && allowEarlyReference) {
 					ObjectFactory<?> singletonFactory = this.singletonFactories.get(beanName);
@@ -200,9 +237,9 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 ```
 
 ### bean创建过程中的三个map
-1. singletonObject： 单例池
+1. singletonObject： 一级缓存, 即单例池
 2. singletonFactories： 二级缓存, 单例工厂, 如果后续创建过程中有循环依赖需要从二级缓存中拿对象, 则根据需要提前进行aop, 生成一个代理过的类
-3. earlySingletonObjects: 从二级缓存的工厂生成对象，为防止重复创建，将其缓存到三级缓存
+3. earlySingletonObjects: 三级缓存, 从二级缓存的工厂生成对象，为防止重复创建，将其缓存到三级缓存
 
 
 ```java
@@ -529,3 +566,24 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 * RequiredAnnotationBeanPostProcessor
 * BeanValidationPostProcessor
 * AbstractAutoProxyCreator
+
+
+## BeanDefinitionRegistry的作用
+```java
+public interface BeanDefinitionRegistry extends AliasRegistry {
+
+	void registerBeanDefinition(String beanName, BeanDefinition beanDefinition)
+			throws BeanDefinitionStoreException;
+
+	void removeBeanDefinition(String beanName) throws NoSuchBeanDefinitionException;
+
+	BeanDefinition getBeanDefinition(String beanName) throws NoSuchBeanDefinitionException;
+
+	boolean containsBeanDefinition(String beanName);
+	
+	// ... 
+}
+```
+* 对BeanDefinition进行增删查改
+* spring中内置实现类主要两个, DefaultListableBeanFactory与GenericApplicationContext, 后者只是简单代理了前者
+* DefaultListableBeanFactory使用`Map<String, BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<>()`实现此接口
