@@ -14,7 +14,9 @@ tags:
   可以拿到mapper类中声明的`@Select`注解中的sql语句，再使用sqlSession执行
  
 ## 实例化后的Mapper如何交给spring管理
-* 利用注解`@MapperScan`, 其中利用`@Import(MapperScannerRegister.class)`导入所有mapper
+* 利用注解`@MapperScan`, 其中利用`@Import(MapperScannerRegistrar.class)`,
+* MapperScannerRegistrar实现了spring提供的ImportBeanDefinitionRegistrar接口, 可以注册BeanDefinition
+* MapperScannerRegistrar中创建了ClassPathMapperScanner用于扫描mapper, 该类扩展自spring提供的ClassPathBeanDefinitionScanner类
 * MapperFactoryBean实现了FactoryBean的接口，可以避免多次new Bean
 
 ## Q & A

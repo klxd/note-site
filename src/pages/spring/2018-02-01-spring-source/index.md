@@ -332,7 +332,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			if (!mbd.postProcessed) {
 				try {
                     // 第三次调用后置处理器
-                    // 缓存了注入元素信息, 通过后置处理器来应用合并后的beanDefinition
+                    // 缓存了注入元素信息, 通过后置处理器来应用合并后的beanDefinition(如检查注解等数据类型是否冲突)
+                    // 注意此处没有直接对实例化后的对象做操作, 是对beanDefinition做操作, 但处理器仍是BeanPostProcessor
 					applyMergedBeanDefinitionPostProcessors(mbd, beanType, beanName);
 				}
 				catch (Throwable ex) {
@@ -566,6 +567,63 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 * RequiredAnnotationBeanPostProcessor
 * BeanValidationPostProcessor
 * AbstractAutoProxyCreator
+
+## 注解相关的4个bean后置处理器
+* AutowiredAnnotationBeanPostProcessor: @Autowired, 
+* CommonAnnotationBeanPostProcessor: @Resource @PostConstruct @PreDestroy
+* PersistenceAnnotationBeanPostProcessor: @PersistenceContext
+* RequiredAnnotationBeanPostProcessor: @Required
+
+
+```java
+public class CommonAnnotationBeanPostProcessor extends InitDestroyAnnotationBeanPostProcessor
+		implements InstantiationAwareBeanPostProcessor, BeanFactoryAware, Serializable {
+
+	/**
+	 * @Resource 注入逻辑的关键函数
+	 * Obtain a resource object for the given name and type through autowiring
+	 * based on the given factory.
+	 * @param factory the factory to autowire against
+	 * @param element the descriptor for the annotated field/method
+	 * @param requestingBeanName the name of the requesting bean
+	 * @return the resource object (never {@code null})
+	 * @throws BeansException if we failed to obtain the target resource
+	 */
+	protected Object autowireResource(BeanFactory factory, LookupElement element, String requestingBeanName)
+			throws BeansException {
+
+		Object resource;
+		Set<String> autowiredBeanNames;
+		String name = element.name;
+
+		if (this.fallbackToDefaultTypeMatch && element.isDefaultName &&
+				factory instanceof AutowireCapableBeanFactory && !factory.containsBean(name)) {
+		    // 当前工厂中按照名字无法找到对应的bean, 利用AutowireCapableBeanFactory.resolveDependency按照类型来找bean,
+		    // 找到多个或者找不到则报错
+			autowiredBeanNames = new LinkedHashSet<String>();
+			resource = ((AutowireCapableBeanFactory) factory).resolveDependency(
+					element.getDependencyDescriptor(), requestingBeanName, autowiredBeanNames, null);
+		}
+		else {
+		    // 按照name注入
+			resource = factory.getBean(name, element.lookupType);
+			autowiredBeanNames = Collections.singleton(name);
+		}
+
+        // 将依赖关系注册到beanFactory
+		if (factory instanceof ConfigurableBeanFactory) {
+			ConfigurableBeanFactory beanFactory = (ConfigurableBeanFactory) factory;
+			for (String autowiredBeanName : autowiredBeanNames) {
+				if (beanFactory.containsBean(autowiredBeanName)) {
+					beanFactory.registerDependentBean(autowiredBeanName, requestingBeanName);
+				}
+			}
+		}
+
+		return resource;
+	}
+}
+```
 
 
 ## BeanDefinitionRegistry的作用

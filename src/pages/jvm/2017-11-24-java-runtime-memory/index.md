@@ -199,6 +199,7 @@ tags:
 
 -Xmx5120m 
 -Xms5120m # 最大最小设置成一样，避免运行时申请内存
+-XX:+AlwaysPreTouch # 让jvm启动时申请内存(会让启动变慢), 与Xms参数配合使用
 -Xmn1536m 
 -XX:MetaspaceSize=256m 
 -XX:+UseCompressedOops 
@@ -214,7 +215,7 @@ tags:
 -XX:CMSInitiatingOccupancyFraction=65 
 -XX:CMSScheduleRemarkEdenPenetration=20 
 -XX:+ParallelRefProcEnabled 
--XX:+AlwaysPreTouch
+
 
 -XX:SurvivorRatio (默认为8, 新生代中Eden区域与Survivor区域的容量比值)
 
