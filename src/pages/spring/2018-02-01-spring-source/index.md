@@ -579,6 +579,22 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 public class CommonAnnotationBeanPostProcessor extends InitDestroyAnnotationBeanPostProcessor
 		implements InstantiationAwareBeanPostProcessor, BeanFactoryAware, Serializable {
 
+    // 处理注入的必经方法
+	@Override
+	public PropertyValues postProcessPropertyValues(
+			PropertyValues pvs, PropertyDescriptor[] pds, Object bean, String beanName) throws BeansException {
+
+		InjectionMetadata metadata = findResourceMetadata(beanName, bean.getClass(), pvs);
+		try {
+			metadata.inject(bean, beanName, pvs);
+		}
+		catch (Throwable ex) {
+			throw new BeanCreationException(beanName, "Injection of resource dependencies failed", ex);
+		}
+		return pvs;
+	}
+
+
 	/**
 	 * @Resource 注入逻辑的关键函数
 	 * Obtain a resource object for the given name and type through autowiring
@@ -594,12 +610,13 @@ public class CommonAnnotationBeanPostProcessor extends InitDestroyAnnotationBean
 
 		Object resource;
 		Set<String> autowiredBeanNames;
+        // 若使用@Resource注解, 此name的中值为resource注解中name属性的名字或字段的名字
 		String name = element.name;
 
 		if (this.fallbackToDefaultTypeMatch && element.isDefaultName &&
 				factory instanceof AutowireCapableBeanFactory && !factory.containsBean(name)) {
 		    // 当前工厂中按照名字无法找到对应的bean, 利用AutowireCapableBeanFactory.resolveDependency按照类型来找bean,
-		    // 找到多个或者找不到则报错
+		    // 找不到则报错, 找到多个则判断是否有@Qualifier或@Primary的注解
 			autowiredBeanNames = new LinkedHashSet<String>();
 			resource = ((AutowireCapableBeanFactory) factory).resolveDependency(
 					element.getDependencyDescriptor(), requestingBeanName, autowiredBeanNames, null);
@@ -625,6 +642,64 @@ public class CommonAnnotationBeanPostProcessor extends InitDestroyAnnotationBean
 }
 ```
 
+`@Resource`注解的匹配优先级
+1. 根据名字匹配, 名字 = (@Resource注解中的name属性 或 字段名或方法名), 根据名字无法获得bean, 则进入2
+2. 根据类型匹配, 类型 = {@Resource注解中的type属性 -> 字段类型自动推断 (注意若两个有冲突会在处理MergeBeanDefinition时报错)}, 找到多个则进入3
+3. 根据注解`@Qualifier`匹配(若提供了Qualifier注解但是无法找到对应bean则报错), 若无此注解 ->　根据@Primary注解匹配
+
+`@Autowired`注解的匹配优先级
+1. 根据类型寻找, 若只找到一个匹配, 若找不到则进入2
+2. 根据`@Qualifier`匹配(若提供了`@Qualifier`注解但是无法找到则在第1步就报错), 若无此注解 -> 根据`@Primary`匹配
+3. 根据字段名字匹配bean的名称, 匹配不上则报错
+
+```java
+public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBeanPostProcessorAdapter
+		implements MergedBeanDefinitionPostProcessor, PriorityOrdered, BeanFactoryAware {
+    
+	
+	@Override
+	public PropertyValues postProcessPropertyValues(
+			PropertyValues pvs, PropertyDescriptor[] pds, Object bean, String beanName) throws BeanCreationException {
+
+		InjectionMetadata metadata = findAutowiringMetadata(beanName, bean.getClass(), pvs);
+		try {
+			metadata.inject(bean, beanName, pvs);
+		}
+		catch (BeanCreationException ex) {
+			throw ex;
+		}
+		catch (Throwable ex) {
+			throw new BeanCreationException(beanName, "Injection of autowired dependencies failed", ex);
+		}
+		return pvs;
+	}
+
+    private class AutowiredFieldElement extends InjectionMetadata.InjectedElement {
+		@Override
+		protected void inject(Object bean, String beanName, PropertyValues pvs) throws Throwable {
+			Field field = (Field) this.member;
+			Object value;
+			if (this.cached) {
+				value = resolvedCachedArgument(beanName, this.cachedFieldValue);
+			}
+			else {
+				DependencyDescriptor desc = new DependencyDescriptor(field, this.required);
+				desc.setContainingClass(bean.getClass());
+				Set<String> autowiredBeanNames = new LinkedHashSet<String>(1);
+				TypeConverter typeConverter = beanFactory.getTypeConverter();
+				try {
+				    // 直接调用beanFactory的方法, 而不判断名字等属性, 即直接按照类型匹配
+					value = beanFactory.resolveDependency(desc, beanName, autowiredBeanNames, typeConverter);
+				}
+				catch (BeansException ex) {
+					throw new UnsatisfiedDependencyException(null, beanName, new InjectionPoint(field), ex);
+				}
+                // other code ...
+            }
+        }
+    }
+}
+```
 
 ## BeanDefinitionRegistry的作用
 ```java

@@ -187,7 +187,13 @@ public interface ProceedingJoinPoint extends JoinPoint {
       factory-method="createInstance"/>
 ```
 
-### autowiring 模型 (autowiring modes)
+### 依赖注入方式
+* 构造函数注入
+* setter注入 (域上调用反射也属于这种)
+
+### 自动注入模型 (autowiring modes)
+注意在代码中加上`@Autowired`注解属于手动注入, 和自动注入模型没有关系;
+自动注入模型是beanDefinition上的一个属性, 也可以通过xml配置这个属性 
  
 * no 不使用自动装配。必须通过ref元素指定依赖，这是默认设置。由于显式指定协作者可以使配置更灵活、更清晰，因此对于较大的部署配置，推荐采用该设置。
   而且在某种程度上，它也是系统架构的一种文档形式。
