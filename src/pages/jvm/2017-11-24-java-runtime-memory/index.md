@@ -161,6 +161,7 @@ tags:
 * 新生代 GC(MinorGC / YoungGC): 发生在新生代的垃圾收集动作,非常频繁,速度较快
 * 老年代 GC(MajorGC / FullGC): 发生在老年代的 GC,一般会伴随至少一次的 MinorGC,
   速度一般会比 MinorGC 慢十倍以上
+* OldGC, CMS特有的GC类型， 只回收老年代
 
   
 ## Eden & Survivor收集方法

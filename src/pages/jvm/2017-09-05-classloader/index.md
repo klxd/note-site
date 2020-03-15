@@ -130,6 +130,8 @@ JDK1.2之后不提倡用户再去覆盖loadClass方法,而应该把自己的类�
 * JDK1.2以前没有findClass方法, 实现自己的类加载器的时候均重写了loadClass
 * JNDI服务, 线程上下文类加载器, 父亲类加载器请求子类加载器去完成加载, Java中涉及SPI的加载动作基本都采用这种方式
 * 代码热替换, 模块热部署, OSGi中, 每更换一个Bundle时, 把Bundle连同类加载器一起换掉以实现代码的热替换
+* tomcat： 同一个jvm下可能部署了多个war包，war包中可能有同一个类的多个版本，tomcat为了实现隔离定义了自己的类加载器
+*Jdbc
 
 ### Question:
 
