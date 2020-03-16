@@ -19,13 +19,20 @@ tags:
 * AOP代理（AOP Proxy）：AOP框架创建的对象，包含通知（Advice）。在Spring中，AOP代理可以是JDK动态代理或者CGLIB代理。
 
 
-## Spring AOP 实现
-* 静态AOP, AspectJ(不同于Spring AOP的一种AOP实现), 通过编译器将Java字节码注入到Java类中, 每次改动需要重新编译, 灵活性不足;
+## Spring AOP 底层机制
+* 静态AOP(非spring实现), AspectJ(不同于Spring AOP的一种AOP实现), 通过编译器将Java字节码注入到Java类中, 每次改动需要重新编译, 灵活性不足;
   注意, spring 2.0之后集成了AspectJ的相关注解`@Aspect`, 但底层还是spring原先的实现体系
-* 动态代理, Spring AOP默认的实现方式, [InvocationHandler](./DynamicProxy.java),
+* JDK动态代理, Spring AOP默认的实现方式, [InvocationHandler](./DynamicProxy.java),
   所有横切关注点类都得实现相应的接口, 因为Java动态代理机制只针对接口有效
-* 动态字节码增强, SpringAOP无法采用动态代理机制实现AOP的时候, 就会采用CGLIB(Code Generation Library)库的动态字节码增强来实现
+* CGLIB动态字节码增强, SpringAOP无法采用动态代理机制实现AOP的时候, 就会采用CGLIB(Code Generation Library)库的动态字节码增强来实现
   让程序在运行期间使用动态生成的子类, 即使没有实现相应接口也可以扩展; 注意如果类以及类中的实例方法声明为final的话则无法对其进行子类化的扩展.
+* 强制使用CGLIB代理, 如想代理所有接口(不仅是接口中声明的方法), 则可在配置中声明proxy-target-class, 
+如注解`@EnableAspectJAutoProxy(proxyTargetClass = true)`, 或xml
+```xml
+<aop:config proxy-target-class="true"/>
+<aop:aspectj-autoproxy proxy-target-class="true"/>
+```
+
   
 ## Spring中有哪些不同的advice类型
 通知(advice)是你在你的程序中想要应用在其他模块中的横切关注点的实现。Advice主要有以下5种类型。

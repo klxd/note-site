@@ -148,9 +148,13 @@ public class ReplacementComputeValue implements MethodReplacer {
 * prototype	该作用域将单一 bean 的定义限制在任意数量的对象实例。请求方自己负责对象后继的生命周期管理工作
 * request	该作用域将 bean 的定义限制为 HTTP 请求。只在 web-aware Spring ApplicationContext 的上下文中有效。
 * session	该作用域将 bean 的定义限制为 HTTP 会话。 只在web-aware Spring ApplicationContext的上下文中有效。
-* global-session 该作用域将 bean 的定义限制为全局 HTTP 会话。只在 web-aware Spring ApplicationContext 的上下文中有效。
+* global-session 已弃用, 该作用域将 bean 的定义限制为全局 HTTP 会话。只在 web-aware Spring ApplicationContext 的上下文中有效。 
+* application 该作用域将bean定义限制为ServletContext, 只在web-aware Spring ApplicationContext的上下文中有效。
+* websocket 该作用域将bean定义限制为WebSocket, 只在web-aware Spring ApplicationContext的上下文中有效。
 * 自定义作用域, 利用CustomScopeConfigurer类(BeanFactoryPostProcessor接口的实现之一)
 
+注意: Request, Session, Application, and WebSocket只能在web-aware Spring ApplicationContext的上下文中有效,
+如XmlWebApplicationContext, 若在常规的spring ioc容器中使用, 如ClassPathXmlApplicationContext, 则会报错IllegalStateException
 
 ## 扩展Spring的几种方式
 容器扩展点
