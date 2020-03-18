@@ -381,10 +381,40 @@ throws InterruptedException {
 * join方法一共有三种形式,它们最终都是调用`join(long millis)`方法,
   当millis为0时,a线程会一直等待b执行完成;
   当millis大于零时,a最多等待millis毫秒,然后a和b并行
-* join是一个synchronized方法,调用时必须获得线程的同步锁,
-  如果外部占用了该线程的同步锁,可能导致这里等待大于millis的时间
+* join是一个synchronized方法,调用时必须获得线程的同步锁, 如果外部占用了该线程的同步锁,可能导致这里等待大于millis的时间,
+  所以java文档中不推荐在thread实例上加锁和使用wait-notify机制
 * join方法的实现使用了**等待-通知**机制, 以线程的isAlive()(native方法)作为循环判断条件
-
+* 注意, java源码中Thread类只有wait相关的代码, notifyAll方法的调用在hotspot的源码中,
+```cpp
+void JavaThread::exit(bool destroy_vm, ExitType exit_type) {  
+    assert(this == JavaThread::current(),  "thread consistency check");
+    ... 
+   // Notify waiters on thread object. This has to be done after exit() is called 
+   // on the thread (if the thread is the last thread in a daemon ThreadGroup the  
+   // group should have the destroyed bit set before waiters are notified). 
+   ensure_join(this);
+   assert(!this->has_pending_exception(), "ensure_join should have cleared");
+   ...
+}
+static void ensure_join(JavaThread* thread) {
+  // We do not need to grap the Threads_lock, since we are operating on ourself.
+  Handle threadObj(thread, thread->threadObj());
+  assert(threadObj.not_null(), "java thread object must exist");
+  ObjectLocker lock(threadObj, thread);
+  // Ignore pending exception (ThreadDeath), since we are exiting anyway
+  thread->clear_pending_exception();
+  // Thread is exiting. So set thread_status field in  java.lang.Thread class to TERMINATED.
+  java_lang_Thread::set_thread_status(threadObj(), java_lang_Thread::TERMINATED);
+  // Clear the native thread instance - this makes isAlive return false and allows the join()
+  // to complete once we've done the notify_all below
+  //这里是清除native线程，这个操作会导致isAlive()方法返回false
+  java_lang_Thread::set_thread(threadObj(), NULL);
+  lock.notify_all(thread);//注意这里
+  // Ignore pending exception (ThreadDeath), since we are exiting anyway
+  thread->clear_pending_exception();
+}
+```
+* ensure_join方法中，调用`lock.notify_all(thread);` 唤醒所有等待thread锁的线程，意味着调用了join方法被阻塞的主线程会被唤醒
 
 ## 过期的suspend()、resume()和stop()
 * suspend()方法在调用后,线程不会释放已经占有的资源(比如锁),而是占有着资源进入睡眠状态,这样容易引发死锁问题。

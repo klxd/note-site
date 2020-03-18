@@ -71,6 +71,20 @@ spring 容器初始化流程：
   
 6. DisposableBean和destroy-method和init-method一样，通过给destroy-method指定函数，就可以在bean销毁前执行指定的逻辑。
 
+## bean生命周期回调
+混用配置多个初始化方法, 若指向了相同的方法名, spring会保证只调用一次, 若指定多个方法, 则调用顺序如下:
+1. @PostConstruct注解指定的方法
+2. InitializingBean接口声明的afterPropertiesSet方法
+3. `@Bean`注解中的`initMethod`方法, 
+   或 `<bean init-method="init"/>`
+   或 `<beans default-init-method="init">`
+
+混用配置销毁方法, 调用顺序类似:
+1. @PostConstruct
+2. DisposableBean.destroy()
+3. `@Bean`注解中的`destroyMethod`方法, 
+   或 `<bean destroy-method="cleanup"/>`
+   或 `<beans default-destroy-method="cleanup">`
 
 ## @Autowired 和 @Resource
 * @Resource 使用`CommonAnnotationBeanPostProcessor`完成注入
@@ -155,6 +169,63 @@ public class ReplacementComputeValue implements MethodReplacer {
 
 注意: Request, Session, Application, and WebSocket只能在web-aware Spring ApplicationContext的上下文中有效,
 如XmlWebApplicationContext, 若在常规的spring ioc容器中使用, 如ClassPathXmlApplicationContext, 则会报错IllegalStateException
+
+## Scoped Beans的注入
+当不同作用域的bean需要相互注入时, 如scope为request的bean需要注入到另一个bean中, 此时可以选择使用aop代理来注入, 那么需要注入一个AOP代理来替代被注入的作用域bean。
+也就是说，你需要注入一个代理对象，该对象具有与被代理对象一样的公共接口，而容器则可以足够智能地从相关作用域中（比如一个HTTP request）获取到真实的目标对象,
+并把方法调用委派给实际的对象. 注意区分此功能与方法注入的异同
+```xml
+<bean id="userPreferences" class="com.something.UserPreferences" scope="session">
+    <!-- instructs the container to proxy the surrounding bean -->
+    <aop:scoped-proxy proxy-target-class="false"/> 
+</bean>
+<!-- a singleton-scoped bean injected with a proxy to the above bean -->
+<bean id="userService" class="com.something.SimpleUserService">
+    <!-- a reference to the proxied userPreferences bean -->
+    <property name="userPreferences" ref="userPreferences"/>
+</bean>
+```
+java代码示例
+```java
+public class AppConfig {
+    @Bean
+    // 如果不加proxyMode配置, 则A中只会注入一个真实的B类, 即只生成一个B对象
+    @Scope(value = "prototype", proxyMode= ScopedProxyMode.TARGET_CLASS)
+    public B some() {
+        return new B();
+    }
+}
+
+public class B {
+    private long timestamp;
+    public B() {
+        System.out.println("b 1 construct");
+        timestamp = new Date().getTime();
+    }
+
+    public void show() {
+        System.out.println(this + " " + timestamp);
+    }
+}
+
+@Component
+public class A {
+
+    // 注意此处的B是通过cglib生成的子类
+    @Autowired
+    private B b;
+
+    public void test() {
+        // class com.example.springplayground.raw.B$$EnhancerBySpringCGLIB$$d67b90f7
+        System.out.println(b.getClass());
+
+        // 每次调用b中的方法, 代理类会生成一个新的b类对象
+        b.show(); // com.example.springplayground.raw.B@1bd39d3c 1584430412729
+        b.show(); // com.example.springplayground.raw.B@6f19ac19 1584430412757
+    }
+}
+```
+
 
 ## 扩展Spring的几种方式
 容器扩展点

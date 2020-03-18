@@ -239,6 +239,7 @@ Redis虽然是一种内存型数据库，一旦服务器进程退出，数据库
    * AOF持久化是通过保存Redis服务器所执行的写命令来记录数据库状态的，配置`appendonly yes`来开启
    * 命令请求会先保存到AOF缓冲区(内存)里面, 再定期写入并同步到AOF文件，类似rocketmq的异步刷盘
    * appendfsync选项的不同值对AOF持久化功能的安全性和服务器性能有很大影响，`always，everysec，no`，常用`everysec`，最多丢失两秒的数据
+     (主线程负责写入AOF缓冲区, AOF线程负责每秒执行一次同步磁盘操作, 主线程负责对比上次AOF同步时间, 若小于2秒则直接返回, 超过则阻塞)k
    * AOF重写可以产生一个新的AOF文件, 这个新的文件和原有的文件所保存的数据库状态一样, 但体积更小
    * AOF重写是通过读取数据库中的键值对来实现的,无须对现有的AOF文件进行任何分析操作，
      手动触发`bgrewriteaof`命令，自动触发：配置`auto-aof-rewrite-min-size`和`auto-aof-rewrite-percentage`
