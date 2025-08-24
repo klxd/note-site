@@ -4,10 +4,10 @@
   "version": "0.0.1",
   "author": "Stone Peng",
   "dependencies": {
-    "gatsby": "^1.8.12",
+    "gatsby": "^5.14.6",
     "gatsby-link": "^1.6.8",
     "gatsby-plugin-google-analytics": "^1.0.4",
-    "gatsby-plugin-less": "^1.0.8",
+    "gatsby-plugin-less": "^7.14.0",
     "gatsby-plugin-manifest": "^1.0.4",
     "gatsby-plugin-offline": "^1.0.4",
     "gatsby-plugin-preact": "^1.0.3",
