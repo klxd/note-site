@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "author": "Stone Peng",
   "dependencies": {
-    "gatsby": "^1.8.12",
+    "gatsby": "^1.9.279",
     "gatsby-link": "^1.6.8",
     "gatsby-plugin-google-analytics": "^1.0.4",
     "gatsby-plugin-less": "^1.0.8",
@@ -23,14 +23,14 @@
     "gatsby-source-filesystem": "^1.4.3",
     "gatsby-transformer-remark": "^1.7.1",
     "gatsby-transformer-sharp": "^1.6.1",
-    "lodash": "^4.15.0",
+    "lodash": "^4.17.23",
     "react-responsive-grid": "^0.3.3",
     "typeface-merriweather": "^0.0.35",
     "typeface-montserrat": "^0.0.37",
     "typography-theme-wordpress-2016": "^0.15.1"
   },
   "devDependencies": {
-    "babel-eslint": "^8.1.1",
+    "babel-eslint": "^8.2.6",
     "eslint": "^4.14.0",
     "eslint-config-prettier": "^2.9.0",
     "eslint-config-standard": "^11.0.0-beta.0",
